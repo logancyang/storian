@@ -1,0 +1,23 @@
+[project]
+name = "storian"
+version = "0.1.0"
+description = "Agent-first tool that turns hours of raw footage into a director-quality storyboard."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26", "pillow>=10.0"]
+
+[project.scripts]
+storian = "storian.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["storian"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]

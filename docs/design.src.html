@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storian Design Doc</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #000000; --ink: #FFFFFF; --paper-2: #FFD147; --ink-soft: #5765FF;
+  --grid: rgba(255,255,255,0.10); --ink-faint: rgba(255,255,255,0.18); --muted: rgba(255,255,255,0.64);
+  --card: #0a0a0c;
+  --serif: "Newsreader", Georgia, serif; --sans: "Hanken Grotesk", system-ui, sans-serif; --mono: "DM Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--sans);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px; background-attachment: fixed; }
+a { color: var(--paper-2); text-decoration: none; border-bottom: 1px solid rgba(255,209,71,.35); }
+a:hover { border-color: var(--paper-2); }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+.wide { max-width: 1440px; }
+.micro { font: 600 12px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.mono { font-family: var(--mono); }
+hr.rule { border: 0; border-top: 1.5px solid var(--ink); margin: 0; }
+
+header.top { position: sticky; top: 0; z-index: 10; background: rgba(0,0,0,.9); backdrop-filter: blur(8px); border-bottom: 1.5px solid var(--ink); }
+header.top .wrap { display: flex; align-items: center; gap: 22px; height: 52px; overflow-x: auto; }
+.brand { font: 500 14px var(--mono); letter-spacing: .2em; white-space: nowrap; }
+.brand b { color: var(--paper-2); font-weight: 500; }
+header.top nav { display: flex; gap: 18px; }
+header.top nav a { border: 0; color: var(--muted); font: 600 11px var(--sans); letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+header.top nav a:hover { color: var(--ink); }
+
+.cover { padding: 88px 0 56px; }
+.cover h1 { font: 400 clamp(64px, 11vw, 168px)/0.86 var(--serif); letter-spacing: -0.015em; margin: 18px 0 26px; }
+.cover h1 em { color: var(--paper-2); font-style: italic; }
+.cover .lede { font: italic 400 clamp(22px, 2.4vw, 32px)/1.3 var(--serif); color: var(--muted); max-width: 900px; margin: 0; }
+.meta { display: flex; flex-wrap: wrap; gap: 0; margin-top: 44px; border: 1.5px solid var(--ink); }
+.meta div { padding: 14px 22px; border-right: 1px solid var(--ink-faint); }
+.meta div:last-child { border-right: 0; }
+.meta .v { font: 400 22px/1.1 var(--serif); margin-top: 6px; }
+
+section { padding: 72px 0 24px; }
+.sec-head { display: grid; grid-template-columns: 110px 1fr; gap: 24px; align-items: end; border-bottom: 1.5px solid var(--ink); padding-bottom: 14px; margin-bottom: 32px; }
+.sec-num { font: 400 76px/0.8 var(--serif); color: var(--paper-2); }
+.sec-head h2 { font: 400 clamp(36px, 4.4vw, 56px)/1 var(--serif); margin: 0; letter-spacing: -0.005em; }
+h3 { font: 400 30px/1.1 var(--serif); margin: 40px 0 12px; }
+p { max-width: 820px; }
+.big { font: 400 clamp(20px, 1.8vw, 24px)/1.55 var(--serif); max-width: 900px; }
+ul.clean { padding-left: 0; list-style: none; max-width: 900px; }
+ul.clean li { padding: 12px 0 12px 28px; border-bottom: 1px solid var(--ink-faint); position: relative; }
+ul.clean li::before { content: "→"; position: absolute; left: 0; color: var(--paper-2); font-family: var(--mono); }
+ul.clean li b { font-weight: 600; }
+
+.tldr { display: grid; grid-template-columns: repeat(3, 1fr); border: 1.5px solid var(--ink); }
+.tldr > div { padding: 24px; border-right: 1px solid var(--ink-faint); }
+.tldr > div:last-child { border-right: 0; }
+.tldr .n { font: 400 48px/1 var(--serif); color: var(--paper-2); }
+.tldr p { margin: 10px 0 0; font-size: 15px; color: var(--muted); }
+
+/* survey */
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 0 0 14px; }
+.toolbar input, .toolbar select { background: #000; color: var(--ink); border: 1.5px solid var(--ink); font: 13px var(--mono); padding: 9px 11px; }
+.toolbar input { flex: 1; min-width: 200px; }
+.toolbar .count { font: 12px var(--mono); color: var(--muted); }
+.tablewrap { overflow-x: auto; border: 1.5px solid var(--ink); background: rgba(0,0,0,.6); }
+table { border-collapse: collapse; width: 100%; min-width: 1500px; font-size: 13px; line-height: 1.45; }
+th { position: sticky; top: 0; background: #000; text-align: left; font: 600 11px var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 12px 12px; border-bottom: 1.5px solid var(--ink); cursor: pointer; white-space: nowrap; }
+th:hover { color: var(--ink); }
+td { padding: 12px; border-bottom: 1px solid var(--ink-faint); vertical-align: top; }
+tr:hover td { background: rgba(87,101,255,.08); }
+td.name { min-width: 170px; }
+td.name a { font: 400 18px/1.15 var(--serif); border: 0; color: var(--ink); }
+td.name a:hover { color: var(--paper-2); }
+td.name .tp { display: inline-block; margin-top: 6px; font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 2px 6px; border: 1px solid var(--ink-faint); color: var(--muted); }
+td.name .tp.open-source { border-color: var(--paper-2); color: var(--paper-2); }
+td.does { min-width: 280px; }
+td.price { min-width: 160px; color: var(--muted); font-size: 12px; }
+td.lim { min-width: 240px; color: var(--muted); }
+td.yn { min-width: 150px; font-size: 12px; color: var(--muted); }
+td.yn b { display: block; font: 500 11px var(--mono); letter-spacing: .06em; color: var(--ink); }
+td.yn b.y { color: var(--paper-2); }
+td.nle, td.agent { min-width: 150px; font-size: 12px; color: var(--muted); }
+td.fit { min-width: 150px; }
+.score { display: flex; align-items: center; gap: 8px; }
+.score .num { font: 400 26px/1 var(--serif); width: 26px; }
+.cells { display: grid; grid-template-columns: repeat(10, 7px); gap: 2px; }
+.cells i { height: 14px; background: var(--grid); }
+.cells i.on { background: var(--ink-soft); }
+.score.hi .cells i.on { background: var(--paper-2); }
+.fitwhy { font-size: 12px; color: var(--muted); margin-top: 6px; }
+tr.storian td { background: rgba(255,209,71,.07); }
+tr.storian td.name a { color: var(--paper-2); }
+
+.chart { display: grid; gap: 6px; margin: 28px 0; max-width: 900px; }
+.chart .row { display: grid; grid-template-columns: 260px 1fr 34px; gap: 14px; align-items: center; font-size: 13px; }
+.chart .row span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chart .bar { height: 12px; background: var(--ink-soft); }
+.chart .row.me .bar { background: var(--paper-2); }
+.chart .row.me span { color: var(--paper-2); }
+.chart .row .mono { text-align: right; color: var(--muted); }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.card { border: 1.5px solid var(--ink-faint); background: var(--card); padding: 22px; }
+.card .rank { font: 400 44px/1 var(--serif); color: var(--paper-2); }
+.card h4 { font: 400 24px/1.1 var(--serif); margin: 10px 0 8px; }
+.card p { font-size: 14px; color: var(--muted); margin: 0; }
+
+/* design */
+.principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); border-top: 1.5px solid var(--ink); }
+.principles > div { padding: 22px 22px 22px 0; border-bottom: 1px solid var(--ink-faint); }
+.principles h4 { font: 400 24px/1.15 var(--serif); margin: 8px 0; }
+.principles p { font-size: 14px; color: var(--muted); margin: 0; padding-right: 18px; }
+.diagram { border: 1.5px solid var(--ink); background: rgba(0,0,0,.65); padding: 22px; overflow-x: auto; margin: 24px 0; }
+.diagram svg { display: block; min-width: 980px; width: 100%; height: auto; }
+.stages { width: 100%; min-width: 900px; }
+.stages td:first-child { font: 400 20px var(--serif); white-space: nowrap; }
+.stages td.cmd { font: 12px var(--mono); color: var(--paper-2); white-space: nowrap; }
+.who { font: 10px var(--mono); padding: 2px 6px; letter-spacing: .08em; text-transform: uppercase; }
+.who.tool { background: var(--ink-soft); }
+.who.agent { background: var(--paper-2); color: #000; }
+.who.human { border: 1px solid var(--ink); }
+pre { background: #050507; border: 1px solid var(--ink-faint); padding: 18px; overflow-x: auto; font: 12.5px/1.55 var(--mono); color: #dfe2ff; max-width: 100%; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.chat { border: 1.5px solid var(--ink-faint); background: var(--card); padding: 8px 22px; max-width: 900px; }
+.chat .m { padding: 14px 0; border-bottom: 1px solid var(--ink-faint); font-size: 15px; }
+.chat .m:last-child { border-bottom: 0; }
+.chat .who2 { font: 600 11px var(--sans); letter-spacing: .14em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+.chat .h .who2 { color: var(--paper-2); }
+.chat .a .who2 { color: #aab1ff; }
+.chat .a { color: var(--muted); }
+.chat code { font: 12px var(--mono); color: var(--paper-2); }
+.ptable { border-collapse: collapse; width: 100%; max-width: 900px; min-width: 0; font-size: 14px; }
+.ptable th { position: static; }
+.results { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border: 1.5px solid var(--ink); }
+.results > div { padding: 18px 20px; border-right: 1px solid var(--ink-faint); border-bottom: 1px solid var(--ink-faint); }
+.results .n { font: 400 36px/1 var(--serif); }
+.results .l { font: 11px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-top: 6px; }
+.roadmap { border-left: 2px solid var(--paper-2); padding-left: 24px; max-width: 900px; }
+.roadmap > div { padding: 0 0 26px; position: relative; }
+.roadmap > div::before { content: ""; position: absolute; left: -31px; top: 8px; width: 12px; height: 12px; background: var(--paper-2); }
+.roadmap h4 { font: 400 24px/1.1 var(--serif); margin: 0 0 6px; }
+.roadmap .v { font: 12px var(--mono); color: var(--paper-2); }
+.roadmap p { color: var(--muted); margin: 4px 0 0; font-size: 15px; }
+footer { border-top: 1.5px solid var(--ink); margin-top: 80px; padding: 20px 0 48px; font: 12px var(--mono); color: var(--muted); }
+
+@media (max-width: 820px) {
+  .wrap { padding: 0 16px; }
+  .tldr, .cols { grid-template-columns: 1fr; }
+  .tldr > div { border-right: 0; border-bottom: 1px solid var(--ink-faint); }
+  .sec-head { grid-template-columns: 1fr; }
+  .chart .row { grid-template-columns: 130px 1fr 28px; }
+  header.top nav { display: none; }
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap wide">
+  <div class="brand">STORIAN<b>.</b></div>
+  <nav><a href="#problem">Problem</a><a href="#survey">Survey</a><a href="#gaps">Gaps</a><a href="#design">Design</a><a href="#craft">Craft</a><a href="#data">Data</a><a href="#mvp">MVP</a><a href="#roadmap">Roadmap</a></nav>
+</div></header>
+
+<div class="wrap">
+<section class="cover">
+  <div class="micro">Design doc · open source · agent-first</div>
+  <h1>Storian<em>.</em></h1>
+  <p class="lede">From hundreds of gigabytes of ungraded raw footage to a director-quality story sequence: storyboarded, timecoded and ready to cut. Every operation is done by an AI agent; the human just talks to it.</p>
+  <div class="meta">
+    <div><div class="micro">Repo</div><div class="v">logancyang/storian</div></div>
+    <div><div class="micro">Status</div><div class="v">v0.1 MVP</div></div>
+    <div><div class="micro">Date</div><div class="v">21 Oct 2026</div></div>
+    <div><div class="micro">Surveyed</div><div class="v" id="nSurveyed">54 products</div></div>
+    <div><div class="micro">License</div><div class="v">MIT</div></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="tldr">
+    <div><div class="n">1</div><p><b>Nobody does wordless story assembly.</b> Every commercial rough-cut tool builds its spine from a transcript. Travel and lifestyle films are mostly B-roll, so those tools treat the film itself as "cutaways".</p></div>
+    <div><div class="n">2</div><p><b>Storian encodes shot grammar.</b> Shot size, focal feel, movement, screen direction and match-action are first-class data, and a written director's playbook turns them into pacing and cuts.</p></div>
+    <div><div class="n">3</div><p><b>Files are the API.</b> Labels, treatments and the sequence are plain JSON that any coding agent can read, diff and edit in conversation. The storyboard re-renders live.</p></div>
+  </div>
+</section>
+
+<!-- 01 -->
+<section id="problem">
+  <div class="sec-head"><div class="sec-num">01</div><h2>The problem</h2></div>
+  <p class="big">A creator comes home from a trip with 70 GB of S-Log3 4K H.265: 352 clips, 1.3 hours, almost no dialogue. Turning that into a 15-minute cinematic film in the style of Life of Riza or Natalie Lynn takes days of logging before a single creative decision is made.</p>
+  <ul class="clean">
+    <li><b>Volume.</b> Hours of footage at ~100 Mbps 10-bit 4:2:2. Uploading it to a cloud tool is slow and expensive, and decoding all of it is slow even locally.</li>
+    <li><b>Log footage.</b> Flat, desaturated S-Log3 frames fool both humans and vision models. Analysis must see a display-referred image.</li>
+    <li><b>No transcript to lean on.</b> The story lives in pictures: shot sizes, motion, light, faces. Speech-to-text gives you nothing.</li>
+    <li><b>Taste is the product.</b> A sequence that "uses the good shots" is not a film. Perspective changes, cutting on action, pacing curves, VO gaps, motif and bookends are what make it feel directed.</li>
+    <li><b>Iteration.</b> The human wants to say "make act 3 faster" or "swap this for something with more motion", not to drag clips around.</li>
+  </ul>
+</section>
+
+<!-- 02 -->
+<section id="survey">
+  <div class="sec-head"><div class="sec-num">02</div><h2>Market survey</h2></div>
+  <p>We looked at every paid and open-source product that touches part of this pipeline, as of October 2026: AI rough-cut editors, footage search and media intelligence, storyboard tools, NLE bridges, and the new wave of open-source agentic editors. Each gets a <b>fit score</b> from 0 to 10 against storian's goal: <i>raw, wordless, log footage in; a director-quality, story-driven sequence out; driven by an agent.</i> Product facts were checked against vendors' own pages where possible. Prices marked approximate come from third-party sources.</p>
+  <div class="chart" id="chart"></div>
+</div>
+<div class="wrap wide">
+  <div class="toolbar">
+    <input id="q" placeholder="filter: MCP, Resolve, style, open source…">
+    <select id="fg"><option value="">all groups</option></select>
+    <select id="ft"><option value="">paid + open source</option><option>paid</option><option>freemium</option><option>open-source</option></select>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="tablewrap"><table id="tbl"><thead><tr>
+    <th data-k="name">Product</th><th data-k="group">Group</th><th data-k="what_it_does">What it does</th>
+    <th data-k="v">Visual understanding</th><th data-k="s">Story assembly</th><th data-k="l">Style learning</th>
+    <th data-k="nle_integration">NLE handoff</th><th data-k="agent_friendly">Agent / API</th><th data-k="pricing_or_license">Price / license</th>
+    <th data-k="limitations">Limits vs. storian</th><th data-k="fit_score">Fit ↓</th>
+  </tr></thead><tbody></tbody></table></div>
+</div>
+<div class="wrap">
+  <h3>The five closest</h3>
+  <div class="cards">
+    <div class="card"><div class="rank">1</div><h4>RoughCut Agent <span class="mono" style="font-size:13px;color:var(--muted)">fit 7</span></h4><p>Open source (MIT), with an architecture closest to storian: Claude Code / Codex skills, a local VLM footage DB, a beat blueprint, a deterministic compile and a QA loop, plus OTIO export to Resolve. About 5 stars; it has no notion of cinematic shot grammar and doesn't handle log footage.</p></div>
+    <div class="card"><div class="rank">2</div><h4>Eddie AI <span class="mono" style="font-size:13px;color:var(--muted)">fit 6</span></h4><p>The strongest commercial overlap: visual B-roll logging, rough cuts from a chat brief, a hosted MCP with ~100 tools, and export to Premiere, Resolve and FCP. But the story spine comes from dialogue, and all footage goes to the cloud at ~$5 per source hour.</p></div>
+    <div class="card"><div class="rank">3</div><h4>Selects by Cutback <span class="mono" style="font-size:13px;color:var(--muted)">fit 6</span></h4><p>The only product that rebuilds an edit from a pasted reference video ("copies the edit, not the clip"), with MCP on every plan and project files for all four NLEs. Leans toward social highlights; analysis is capped by hours.</p></div>
+    <div class="card"><div class="rank">4</div><h4>OpenMontage &amp; video-use <span class="mono" style="font-size:13px;color:var(--muted)">fit 5</span></h4><p>Hugely popular agent-first projects (~70k and ~29k stars) that prove the "skills inside Claude Code" model. Neither exports to an NLE, and video-use never actually looks at the video.</p></div>
+    <div class="card"><div class="rank">5</div><h4>Imaginario StoryLab <span class="mono" style="font-size:13px;color:var(--muted)">fit 5</span></h4><p>Brief-to-rough-cut across a multimodal index, with export to Premiere, Resolve and Avid. Marketing-oriented, $89+/seat, and no MCP.</p></div>
+  </div>
+</div>
+
+<div class="wrap">
+<!-- 03 -->
+<section id="gaps">
+  <div class="sec-head"><div class="sec-num">03</div><h2>Gaps in the market</h2></div>
+  <ul class="clean">
+    <li><b>Transcript-centric story logic.</b> Eddie, Quickture, Descript, Gling, Resolve IntelliScript and video-use all build the spine from speech. Wordless B-roll is treated as cutaways, never as the narrative.</li>
+    <li><b>No shot grammar.</b> No product treats shot size, lens feel, camera movement, screen direction or match-on-action as editing variables. ShotBench (NeurIPS 2025) measured frontier VLMs below 60% on these dimensions, so the gap is real and needs explicit structure.</li>
+    <li><b>Craft rules aren't modeled.</b> Wide→close progressions, focal-length contrast, cuts on motion, J/L cuts, per-act pacing curves, VO gaps, motif and bookends: none of this is encoded anywhere.</li>
+    <li><b>Style learning is shallow.</b> Selects, invideo and editstyle copy pacing, captions and effects. Nobody extracts shot-grammar statistics from a reference film, such as size-transition matrices, ASL per section, movement ratio or VO share.</li>
+    <li><b>Log footage at scale.</b> No tool claims log-aware analysis, and cloud tools bill per hour or per GB. A local-first pipeline with LUT-corrected proxies and keyframe-only decode wins on both cost and privacy.</li>
+    <li><b>MCP is everywhere; inspectable artifacts aren't.</b> Agent access alone no longer differentiates. An open, file-based pipeline that an agent can read, diff and revise in conversation does.</li>
+    <li><b>No storyboard of real footage.</b> Storyboard tools are pre-production image generators. Nothing produces a post-production paper edit of real frames with in/out timecodes, labels and a playable animatic.</li>
+  </ul>
+</section>
+
+<!-- 04 -->
+<section id="design">
+  <div class="sec-head"><div class="sec-num">04</div><h2>The design</h2></div>
+  <p class="big">Storian is a small, deterministic CLI plus a written body of director knowledge. The CLI does everything cheap and mechanical. The agent does everything that needs eyes or taste. The human only talks.</p>
+  <div class="principles">
+    <div><div class="micro">Principle</div><h4>Agent-first, not agent-added</h4><p>Commands are idempotent, print compact JSON, and say what to do next (<span class="mono">storian status</span>). The README is written for agents; AGENTS.md is the operating manual.</p></div>
+    <div><div class="micro">Principle</div><h4>Files are the API</h4><p>clips.json, labels/*.json, story.json and sequence.json. Nothing lives in a database the agent can't open, and every human request is a surgical edit to a file.</p></div>
+    <div><div class="micro">Principle</div><h4>Local-first, keyframe-only</h4><p>Raw footage never leaves the disk and is never fully decoded. Keyframes (≈1/s) decode with hardware acceleration in under a second per clip, whatever the bitrate.</p></div>
+    <div><div class="micro">Principle</div><h4>Log-aware from frame one</h4><p>Camera gamma is read from metadata, and S-Log3 frames go through a generated S-Gamut3.Cine→709 LUT before any model or human sees them.</p></div>
+    <div><div class="micro">Principle</div><h4>Taste is written down</h4><p>knowledge/director.md is an opinionated playbook covering structure, pacing, sequence patterns, cut types and VO rules. Rules can be broken only on purpose, with a written reason.</p></div>
+    <div><div class="micro">Principle</div><h4>Review where editors review</h4><p>A localhost storyboard: theme, mood and idea first, then acts of shot cards with frames, labels, in/out, VO lines and director notes, plus a playable animatic. It updates live as the agent edits.</p></div>
+  </div>
+
+  <h3>Architecture</h3>
+  <div class="diagram">
+  <svg viewBox="0 0 1100 430" role="img" aria-label="Storian pipeline diagram">
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fff"/></marker></defs>
+    <style>
+      .bx{fill:#000;stroke:#fff;stroke-width:1.5}.ag{fill:#FFD147}.tl{fill:#5765FF}.hm{fill:#000;stroke:#FFD147;stroke-width:1.5;stroke-dasharray:4 3}
+      .t{font:500 13px 'DM Mono',monospace;fill:#fff}.td{font:500 13px 'DM Mono',monospace;fill:#000}.s{font:11px 'Hanken Grotesk',sans-serif;fill:rgba(255,255,255,.65)}.sd{font:11px 'Hanken Grotesk',sans-serif;fill:rgba(0,0,0,.7)}
+      .ln{stroke:#fff;stroke-width:1.3;fill:none;marker-end:url(#ar)}.lnf{stroke:rgba(255,255,255,.4);stroke-width:1.2;fill:none;stroke-dasharray:5 4;marker-end:url(#ar)}
+      .lab{font:600 10px 'Hanken Grotesk',sans-serif;letter-spacing:.14em;fill:rgba(255,255,255,.55)}
+    </style>
+    <text x="10" y="22" class="lab">INGEST · DETERMINISTIC</text>
+    <text x="10" y="200" class="lab">UNDERSTAND + DIRECT · AGENT</text>
+    <text x="10" y="376" class="lab">REVIEW + HANDOFF</text>
+    <!-- row 1 -->
+    <rect x="10" y="36" width="150" height="62" class="bx"/><text x="22" y="62" class="t">raw footage</text><text x="22" y="82" class="s">S-Log3 4K H.265, GBs</text>
+    <rect x="200" y="36" width="160" height="62" class="tl"/><text x="212" y="62" class="t">storian scan</text><text x="212" y="82" class="s" style="fill:rgba(255,255,255,.8)">ffprobe + exiftool</text>
+    <rect x="400" y="36" width="190" height="62" class="tl"/><text x="412" y="62" class="t">storian frames</text><text x="412" y="82" class="s" style="fill:rgba(255,255,255,.8)">keyframes · LUT · motion</text>
+    <rect x="630" y="36" width="190" height="62" class="bx"/><text x="642" y="62" class="t">contact sheets</text><text x="642" y="82" class="s">12 frames + timestamps</text>
+    <rect x="860" y="36" width="230" height="62" class="hm"/><text x="872" y="62" class="t">reference films</text><text x="872" y="82" class="s">optional · style source</text>
+    <path d="M160 67 H196" class="ln"/><path d="M360 67 H396" class="ln"/><path d="M590 67 H626" class="ln"/>
+    <!-- row 2 -->
+    <rect x="200" y="212" width="170" height="70" class="ag"/><text x="212" y="240" class="td">label (vision)</text><text x="212" y="262" class="sd">N parallel agents</text>
+    <rect x="410" y="212" width="160" height="70" class="bx"/><text x="422" y="240" class="t">labels/*.json</text><text x="422" y="262" class="s">size · move · moments</text>
+    <rect x="610" y="212" width="150" height="70" class="ag"/><text x="622" y="240" class="td">treatments</text><text x="622" y="262" class="sd">story.json · 3 moods</text>
+    <rect x="800" y="212" width="130" height="70" class="hm"/><text x="812" y="240" class="t">human picks</text><text x="812" y="262" class="s">in chat</text>
+    <rect x="960" y="212" width="130" height="70" class="ag"/><text x="972" y="240" class="td">sequence</text><text x="972" y="262" class="sd">director.md</text>
+    <rect x="860" y="122" width="230" height="56" class="bx"/><text x="872" y="146" class="t">style profile</text><text x="872" y="164" class="s">ASL · size matrix · VO share</text>
+    <path d="M725 98 C 725 150, 285 150, 285 208" class="ln"/>
+    <path d="M370 247 H406" class="ln"/><path d="M570 247 H606" class="ln"/><path d="M760 247 H796" class="ln"/><path d="M930 247 H956" class="ln"/>
+    <path d="M975 98 V118" class="lnf"/><path d="M1025 178 V208" class="lnf"/>
+    <!-- row 3 -->
+    <rect x="960" y="318" width="130" height="62" class="tl"/><text x="972" y="344" class="t">check</text><text x="972" y="364" class="s" style="fill:rgba(255,255,255,.8)">lint vs rules</text>
+    <rect x="770" y="318" width="150" height="62" class="tl"/><text x="782" y="344" class="t">previews</text><text x="782" y="364" class="s" style="fill:rgba(255,255,255,.8)">only chosen ranges</text>
+    <rect x="530" y="318" width="200" height="62" class="bx"/><text x="542" y="344" class="t">storyboard :7878</text><text x="542" y="364" class="s">live · animatic</text>
+    <rect x="300" y="318" width="190" height="62" class="hm"/><text x="312" y="344" class="t">human feedback</text><text x="312" y="364" class="s">"faster act 3"</text>
+    <rect x="10" y="318" width="250" height="62" class="hm"/><text x="22" y="344" class="t">OTIO / FCPXML → Resolve</text><text x="22" y="364" class="s">v0.3 · timeline handoff</text>
+    <path d="M1025 282 V314" class="ln"/><path d="M960 349 H924" class="ln"/><path d="M770 349 H734" class="ln"/><path d="M530 349 H494" class="ln"/>
+    <path d="M395 318 C 395 300, 1010 300, 1010 286" class="lnf"/>
+    <path d="M300 349 H264" class="lnf"/>
+  </svg>
+  </div>
+  <p style="font-size:14px;color:var(--muted)"><span class="who tool">tool</span> deterministic CLI step · <span class="who agent">agent</span> needs vision or taste · <span class="who human">human</span> decision, in chat · dashed = optional / future</p>
+
+  <h3>Pipeline</h3>
+  <div class="tablewrap" style="border-width:1px"><table class="stages"><thead><tr><th>Stage</th><th>Command</th><th>Who</th><th>Writes</th><th>Notes</th></tr></thead><tbody>
+    <tr><td>Init</td><td class="cmd">storian init &lt;footage&gt; -p &lt;proj&gt;</td><td><span class="who tool">tool</span></td><td>project.json, LUT</td><td>Optional <span class="mono">--brief</span> for a script or idea paragraph; target defaults to 15 min.</td></tr>
+    <tr><td>Scan</td><td class="cmd">storian scan</td><td><span class="who tool">tool</span></td><td>clips.json</td><td>Duration, codec, fps, gamma, lens, body, record time. Parallel; 352 clips in 11 s.</td></tr>
+    <tr><td>Frames</td><td class="cmd">storian frames</td><td><span class="who tool">tool</span></td><td>frames/, sheets/</td><td>Keyframe-only HW decode → LUT → 480 px JPEGs; brightness, sharpness, change and phase-correlation pan hints; one contact sheet per clip.</td></tr>
+    <tr><td>Label</td><td class="cmd">storian label todo --shard k/n</td><td><span class="who agent">agent</span></td><td>labels/&lt;clip&gt;.json</td><td>Agents view the sheets and write shot size, focal feel, angle, movement, subject, action, mood, story role, quality and <b>moments</b> (usable in/out ranges with match-action cues).</td></tr>
+    <tr><td>Digest</td><td class="cmd">storian digest</td><td><span class="who tool">tool</span></td><td>stdout</td><td>One line per clip with all moments, so the director agent reads the whole library at once.</td></tr>
+    <tr><td>Treatments</td><td class="cmd">story.json</td><td><span class="who agent">agent</span> + <span class="who human">human</span></td><td>story.json</td><td>Three moods built only from footage that exists; the human picks or blends. If a brief exists, it is expanded instead.</td></tr>
+    <tr><td>Sequence</td><td class="cmd">sequence.json</td><td><span class="who agent">agent</span></td><td>sequence.json</td><td>Acts → shots with clip, in/out, role (VO, B-roll, nat sound, hold), VO line, cut type and a written <i>why</i>.</td></tr>
+    <tr><td>Check</td><td class="cmd">storian check</td><td><span class="who tool">tool</span></td><td>stdout</td><td>Hard errors (bad ranges, unknown clips) and craft lints (same size + focal without a motivated cut, jump cuts, overlong shots, reused footage, runtime vs target).</td></tr>
+    <tr><td>Previews</td><td class="cmd">storian previews</td><td><span class="who tool">tool</span></td><td>previews/*.mp4</td><td>Only the chosen ranges, 960 px H.264 with LUT and nat sound; 123 shots in 52 s.</td></tr>
+    <tr><td>Review</td><td class="cmd">storian serve</td><td><span class="who human">human</span></td><td>—</td><td>Storyboard on localhost with live reload; the animatic plays the film in order with VO subtitles.</td></tr>
+  </tbody></table></div>
+</section>
+
+<!-- 05 -->
+<section id="craft">
+  <div class="sec-head"><div class="sec-num">05</div><h2>Encoding the director</h2></div>
+  <p class="big">The playbook (<span class="mono">storian/knowledge/director.md</span>) is what makes storian a director rather than a search engine. It is plain prose and tables, so any model can follow it and any human can argue with it.</p>
+  <div class="cols">
+    <div>
+      <h3 style="margin-top:0">Story before footage</h3>
+      <ul class="clean">
+        <li>A controlling idea in one sentence: what the film is <i>about</i>, not what it shows.</li>
+        <li>A visual motif that opens, returns and pays off. That's how a plotless film feels designed.</li>
+        <li>An arc built on change (outsider → insider, noise → quiet), ordered by the arc, not the camera clock.</li>
+        <li>No script? Three treatments with distinct moods, cast only from footage that exists.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Cutting</h3>
+      <ul class="clean">
+        <li>Change size by two steps or the focal feel on every cut; wide ↔ tele on one subject is the cheapest cinematic trick.</li>
+        <li>Motivated cuts first: match-on-action, cut-on-motion, graphic match, whip, J/L. Each shot records how it enters.</li>
+        <li>Keep screen direction within a scene; reset with a neutral or insert shot.</li>
+        <li>Pause VO for hero shots, sound moments, chapter starts and the turn.</li>
+      </ul>
+    </div>
+  </div>
+  <h3>Default shape of a 15-minute cinematic film</h3>
+  <div class="tablewrap" style="border-width:1px"><table class="ptable"><thead><tr><th>Act</th><th>Share</th><th>Purpose</th><th>ASL</th></tr></thead><tbody>
+    <tr><td>Cold open / hook</td><td class="mono">0:00–0:45</td><td>A promise: the most striking images out of order, plus one line that raises a question</td><td class="mono">1–2 s</td></tr>
+    <tr><td>Arrival</td><td class="mono">~1 min</td><td>Where, who, why here: establishing → detail, travel-in shots</td><td class="mono">3 s</td></tr>
+    <tr><td>Chapters ×2–4</td><td class="mono">2–3.5 min each</td><td>One place or idea each, scene sequences of 4–8 shots, each ending on a small turn</td><td class="mono">2.5–3.5 s</td></tr>
+    <tr><td>Turn / reflection</td><td class="mono">1.5–2 min</td><td>The emotional centre: motif returns, longer holds, sparse VO</td><td class="mono">4–7 s</td></tr>
+    <tr><td>Resolution</td><td class="mono">1–1.5 min</td><td>Answer the hook; bookend the first image; last shot ≥ 4 s</td><td class="mono">4 s</td></tr>
+  </tbody></table></div>
+  <h3>Learning from reference films (v0.2)</h3>
+  <p>The user drops one or more films they love into <span class="mono">refs/</span>. Storian detects cuts (ffmpeg scdet / PySceneDetect), extracts a mid-frame per shot, and has the agent label every shot with the same grammar as the footage. The result is <span class="mono">style.json</span>: ASL by section, a shot-size transition matrix, focal and movement ratios, cut-type frequencies, VO share and act proportions. That profile overrides the playbook's defaults, and <span class="mono">storian check</span> lints the sequence against it ("your act 2 ASL is 4.1 s; the reference averages 2.8 s"). Selects copies an edit's pacing; storian copies its <i>grammar</i>.</p>
+</section>
+
+<!-- 06 -->
+<section id="data">
+  <div class="sec-head"><div class="sec-num">06</div><h2>Data model &amp; agent loop</h2></div>
+  <div class="cols">
+<pre>// labels/C5493.json  (abridged)
+{
+  "summary": "Follow shot behind the woman through a
+              glowing colour tunnel, red → violet",
+  "shot_size": "MS", "focal_feel": "wide",
+  "angle": "eye", "camera_move": "walk-follow",
+  "mood": ["wonder", "playful"],
+  "story_role": ["hero", "transition"],
+  "quality": 5,
+  "moments": [
+    {"in": 0.5, "out": 8.5, "score": 5,
+     "desc": "red tunnel into orange glow",
+     "match_action": "walks away from camera"},
+    {"in": 46.0, "out": 53.0, "score": 5,
+     "desc": "steps out, turns back to camera",
+     "match_action": "turns over shoulder"}
+  ]
+}</pre>
+<pre>// sequence.json  (abridged)
+{
+  "title": "Still Water",
+  "theme": "Stillness inside motion",
+  "mood": "Contemplative, opening up to warm",
+  "central_idea": "…the city didn't get quieter, we did.",
+  "motif": "Water",
+  "acts": [{
+    "title": "Pockets of quiet",
+    "vo": "Hong Kong has pockets…",
+    "shots": [{
+      "id": "s047", "clip": "C5495",
+      "in": 0.5, "out": 5.0, "role": "vo",
+      "vo_line": "A room made only of colour.",
+      "cut": "match-on-action",
+      "why": "Continues her walk-away from the
+              tunnel; silhouette shrinking."
+    }]
+  }]
+}</pre>
+  </div>
+  <h3>What talking to it looks like</h3>
+  <div class="chat">
+    <div class="m h"><span class="who2">Human</span>Act 3 drags a bit. And I want more of her turning to the camera. Blend in the "Through Her Lens" idea.</div>
+    <div class="m a"><span class="who2">Agent</span>Trimmed 9 shots in act 3 to 1.8–2.4 s (ASL 2.9 → 2.2 s), dropped s032 (the second escalator). Added C5730 12.0–14.4 (she exits the market and looks over her shoulder) after s043, and C5715 6.0–8.4 (she turns into the lens) as the act 3 out. <code>storian check</code>: 0 errors, 0 warnings. Previews re-rendered for 3 new shots; the storyboard has already updated.</div>
+    <div class="m h"><span class="who2">Human</span>s080, the robot: too goofy for this film?</div>
+    <div class="m a"><span class="who2">Agent</span>It's the only laugh in act 5, which keeps the tone from going precious. Two alternatives: C5722 (robot rolling through the hall, wider and subtler) or cut it and move the VO line to the kitten. Which do you want?</div>
+  </div>
+</section>
+
+<!-- 07 -->
+<section id="mvp">
+  <div class="sec-head"><div class="sec-num">07</div><h2>MVP on real footage</h2></div>
+  <p>Test input: <span class="mono">2025_china_trip/2025HK</span>, Sony a6700 + Sigma 17–40 F1.8, S-Log3 / S-Gamut3.Cine, XAVC HS 4K 23.976p 4:2:2 10-bit, on an M3 Max. No script was given, so the agent wrote three treatments and picked "Still Water" as the default.</p>
+  <div class="results">
+    <div><div class="n">352</div><div class="l">clips</div></div>
+    <div><div class="n">74.5 GB</div><div class="l">raw footage</div></div>
+    <div><div class="n">1.3 h</div><div class="l">runtime</div></div>
+    <div><div class="n">11 s</div><div class="l">scan</div></div>
+    <div><div class="n">75 s</div><div class="l">keyframes + sheets</div></div>
+    <div><div class="n">4.5 min</div><div class="l">labeling, 8 agents</div></div>
+    <div><div class="n">568</div><div class="l">labeled moments</div></div>
+    <div><div class="n">123</div><div class="l">shots in sequence</div></div>
+    <div><div class="n">7:28</div><div class="l">film runtime</div></div>
+    <div><div class="n">52 s</div><div class="l">preview render</div></div>
+  </div>
+  <p style="margin-top:22px">The sequence runs 8 minutes rather than the 15-minute default. A director would say this one city's folder supports about 8 minutes at full quality; 15 would mean quality-2 filler, or folding in the rest of the China trip. That is exactly the kind of call the agent should make and explain. Labeling took ~0.9M tokens across the shards, the main cost to optimize (see v0.4).</p>
+</section>
+
+<!-- 08 -->
+<section id="roadmap">
+  <div class="sec-head"><div class="sec-num">08</div><h2>Roadmap</h2></div>
+  <div class="roadmap">
+    <div><span class="v">v0.1 · now</span><h4>Storyboard MVP</h4><p>Scan, log-aware frames, agent labeling, digest, treatments, sequence, craft lints, previews, live storyboard + animatic.</p></div>
+    <div><span class="v">v0.2</span><h4>Learn from reference films</h4><p><span class="mono">storian learn refs/*.mp4</span> → style.json (shot grammar statistics) that overrides the defaults and drives <span class="mono">check</span>.</p></div>
+    <div><span class="v">v0.3</span><h4>Timeline handoff</h4><p>OpenTimelineIO as the internal model; export FCPXML / .otio that Resolve imports directly, with markers carrying the VO lines and director notes. Optional davinci-resolve-mcp for Studio users to build the timeline live.</p></div>
+    <div><span class="v">v0.4</span><h4>Cheaper eyes</h4><p>Pluggable labelers: the agent itself (default), a local VLM (Qwen-VL / ShotVL) for first-pass labels that the agent then reviews, or Gemini / Twelve Labs for people who prefer cloud. Embedding search for match-cut candidates.</p></div>
+    <div><span class="v">v0.5</span><h4>Sound &amp; VO</h4><p>Music beat detection to snap montage cuts, nat-sound peak detection (tram bells, sizzle), and VO timing from a recorded scratch track, so VO lines land on real durations.</p></div>
+    <div><span class="v">later</span><h4>MCP server &amp; multi-folder projects</h4><p>The same commands exposed as MCP tools for any agent host, and whole trips spanning many folders and cameras with cross-camera colour matching.</p></div>
+  </div>
+  <h3>Risks</h3>
+  <ul class="clean">
+    <li><b>Label quality bounds the film.</b> VLMs are weak on shot grammar. Mitigated by contact sheets with timestamps, motion signals from pixels, and a written schema, and later by specialist models and reference calibration.</li>
+    <li><b>Token cost at 10+ hours.</b> Contact sheets keep it linear (≈2.5k tokens per clip). Local first-pass labeling is the plan for very large libraries.</li>
+    <li><b>Taste is subjective.</b> That's why taste is a readable file, reference films can override it, and every shot carries a "why" the human can veto.</li>
+  </ul>
+</section>
+</div>
+
+<footer><div class="wrap">storian · design doc v0.1 · github.com/logancyang/storian · survey data in docs/survey.json</div></footer>
+
+<script id="survey-data" type="application/json">__SURVEY__</script>
+<script>
+const RAW = JSON.parse(document.getElementById("survey-data").textContent);
+const STORIAN = {name: "storian (this design)", url: "#design", type: "open-source", pricing_or_license: "MIT", category: "agent-first story assembly",
+  what_it_does: "Log-aware ingest, agent vision labeling with shot grammar and usable moments, director playbook, treatments, sequence with VO/B-roll roles and cut types, craft lints, live storyboard + animatic; reference-style learning and Resolve handoff on the roadmap.",
+  visual_understanding: {value: true, note: "Contact sheets + per-frame motion signals; shot size, focal, movement, moments"},
+  story_assembly: {value: true, note: "Treatment → acts → shots, VO vs B-roll"},
+  style_learning: {value: true, note: "Playbook defaults now; reference grammar stats in v0.2"},
+  nle_integration: "Storyboard now; OTIO/FCPXML → Resolve in v0.3", agent_friendly: "Agent-first CLI + plain JSON files; any coding agent",
+  limitations: "v0.1: no NLE export yet; labeling cost scales with clip count", fit_score: 9, fit_reason: "Built for exactly this goal", me: true};
+const group = d => {
+  if (d.me) return "storian";
+  const c = (d.category || "").toLowerCase();
+  if (d.type === "open-source") return c.includes("mcp") || c.includes("bridge") || c.includes("interchange") || c.includes("component") ? "OSS components & bridges" : "Open-source agents & tools";
+  if (/storyboard|shot list|previs/.test(c)) return "Storyboard & pre-production";
+  if (/search|intelligence|logging|asset|media manager|hosting|understanding|building blocks|workflow|review/.test(c)) return "Footage intelligence & search";
+  if (/nle/.test(c) && !/plugin/.test(c)) return "NLEs";
+  return "AI editors (commercial)";
+};
+const DATA = [STORIAN, ...RAW].map(d => ({...d, group: group(d)}));
+document.getElementById("nSurveyed").textContent = RAW.length + " products";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const groups = [...new Set(DATA.map(d => d.group))];
+document.getElementById("fg").innerHTML += groups.map(g => `<option>${esc(g)}</option>`).join("");
+
+// fit chart: top 14 + storian
+const topRows = [...DATA].sort((a, b) => b.fit_score - a.fit_score).slice(0, 15);
+document.getElementById("chart").innerHTML = `<div class="micro" style="margin-bottom:8px">Fit score · top 15</div>` + topRows.map(d =>
+  `<div class="row ${d.me ? "me" : ""}"><span>${esc(d.name)}</span><div><div class="bar" style="width:${d.fit_score * 10}%"></div></div><span class="mono">${d.fit_score}</span></div>`).join("");
+
+let sortK = "fit_score", sortDir = -1;
+const yn = o => o ? `<b class="${o.value ? "y" : ""}">${o.value ? "YES" : "NO"}</b>${esc(o.note || "")}` : "";
+function render() {
+  const q = document.getElementById("q").value.toLowerCase(), fg = document.getElementById("fg").value, ft = document.getElementById("ft").value;
+  let rows = DATA.filter(d => (!fg || d.group === fg) && (!ft || d.type === ft || d.me) && (!q || JSON.stringify(d).toLowerCase().includes(q)));
+  const key = d => sortK === "v" ? +d.visual_understanding?.value : sortK === "s" ? +d.story_assembly?.value : sortK === "l" ? +d.style_learning?.value : d[sortK];
+  rows.sort((a, b) => { const x = key(a), y = key(b); return (typeof x === "number" ? x - y : String(x).localeCompare(String(y))) * sortDir; });
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr class="${d.me ? "storian" : ""}">
+    <td class="name"><a href="${esc(d.url)}" target="_blank" rel="noopener">${esc(d.name)}</a><br><span class="tp ${esc(d.type)}">${esc(d.type)}</span></td>
+    <td class="price" style="min-width:140px">${esc(d.group)}<br><span style="opacity:.7">${esc(d.category)}</span></td>
+    <td class="does">${esc(d.what_it_does)}</td>
+    <td class="yn">${yn(d.visual_understanding)}</td><td class="yn">${yn(d.story_assembly)}</td><td class="yn">${yn(d.style_learning)}</td>
+    <td class="nle">${esc(d.nle_integration)}</td><td class="agent">${esc(d.agent_friendly)}</td>
+    <td class="price">${esc(d.pricing_or_license)}</td><td class="lim">${esc(d.limitations)}</td>
+    <td class="fit"><div class="score ${d.fit_score >= 7 ? "hi" : ""}"><span class="num">${d.fit_score}</span><span class="cells">${Array.from({length: 10}, (_, i) => `<i class="${i < d.fit_score ? "on" : ""}"></i>`).join("")}</span></div><div class="fitwhy">${esc(d.fit_reason)}</div></td></tr>`).join("");
+  document.getElementById("count").textContent = `${rows.length} of ${DATA.length}`;
+}
+document.querySelectorAll("#tbl th").forEach(th => th.addEventListener("click", () => {
+  const k = th.dataset.k; sortDir = sortK === k ? -sortDir : (k === "fit_score" ? -1 : 1); sortK = k;
+  document.querySelectorAll("#tbl th").forEach(t => t.textContent = t.textContent.replace(/ [↑↓]$/, ""));
+  th.textContent += sortDir < 0 ? " ↓" : " ↑"; render();
+}));
+["q", "fg", "ft"].forEach(id => document.getElementById(id).addEventListener("input", render));
+render();
+</script>
+</body>
+</html>

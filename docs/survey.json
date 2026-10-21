@@ -1,0 +1,1406 @@
+[
+  {
+    "name": "Eddie AI",
+    "url": "https://www.heyeddie.ai/",
+    "type": "freemium",
+    "pricing_or_license": "Pay-as-you-go credits since Aug 2026 (subscriptions dropped): 500-1,000 free credits, $10/1k, $45/5k, $120/15k, $350/50k; import ~500 credits (~$5) per source hour; enterprise custom",
+    "category": "AI rough-cut / assistant editor",
+    "what_it_does": "Cloud assistant editor: transcribes every clip, logs B-roll with visual descriptions (subject, movement), finds soundbites, builds a rough cut from a story described in chat, places B-roll, adds music/VO/captions, multicam switching; exports to NLEs.",
+    "inputs": "Uploaded footage to cloud (interviews, docs, podcasts, B-roll). No public statement on S-Log3/H.265 10-bit handling or upload size; many-GB uploads are slow and billed per hour.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Tags B-roll with visual descriptions (subject, camera movement), but story spine is built from transcript/soundbites."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Documentary/interview-style rough cut with B-roll placement from a chat brief."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "Has 'styles and color' presets; no learning of editing patterns from reference videos found."
+    },
+    "nle_integration": "XML/project export to Premiere Pro, DaVinci Resolve, Final Cut Pro (originals relinked); Avid beta.",
+    "agent_friendly": "Very: hosted MCP server (mcp.heyeddie.ai, ~100-113 tools) for Claude/ChatGPT/Codex/Cursor; iPhone app.",
+    "limitations": "Dialogue-first story logic; no shot-grammar model (shot size progression, match-on-action); cloud upload of hundreds of GB of 4K log; no log-aware analysis; proprietary.",
+    "fit_score": 6,
+    "fit_reason": "Closest commercial analogue (visual B-roll logging + rough cut + MCP + Resolve export) but interview-centric, cloud-bound and not cinematic-craft aware."
+  },
+  {
+    "name": "Selects (by Cutback)",
+    "url": "https://tryselects.com/",
+    "type": "freemium",
+    "pricing_or_license": "Free (timeline editor + NLE handoff, analysis trial only); Starter $20/mo (10 h footage analysis); Pro/Max $100/mo (40 h); Team $1,000/mo (200 h); Enterprise custom. Launched NAB 2026 (US beta Dec 2025).",
+    "category": "AI rough-cut / assistant editor",
+    "what_it_does": "Chat-driven pre-editor: multicam sync, transcription, organizes footage, detects repeated takes, speakers, topics and visual scenes; builds drafts by conversation; can rebuild a pasted reference video's cuts, pacing, captions and effects around your footage ('copies the edit, not the clip'); can generate missing shots.",
+    "inputs": "Uploaded footage (cloud). No public info on log/RAW, H.265 10-bit, or size limits. Analysis capped by plan hours (10-200 h).",
+    "visual_understanding": {
+      "value": true,
+      "note": "Claims it 'actually watches the video' (shots, faces, best takes, moments like crowd reactions)."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Highlight / draft edits from prompts; less about narrative documentary structure."
+    },
+    "style_learning": {
+      "value": true,
+      "note": "Reference-link style transfer of cut rhythm, pacing, captions, effects - the only commercial tool found that markets copying an edit from a reference video."
+    },
+    "nle_integration": "Project-file handoff to Premiere Pro, Final Cut Pro, DaVinci Resolve, Avid (all plans).",
+    "agent_friendly": "Very: MCP for Claude Code, Claude Desktop, Codex, OpenClaw on every plan.",
+    "limitations": "Social/highlight bias; style transfer is pacing/caption level, not shot-grammar; cloud processing of huge log libraries is costly; hour caps; generative features may tempt fake B-roll.",
+    "fit_score": 6,
+    "fit_reason": "Strongest overlap on 'learn from a reference edit + MCP + NLE handoff', but not built for wordless cinematic vlogs or local multi-GB log libraries."
+  },
+  {
+    "name": "Quickture",
+    "url": "https://www.quickture.com/",
+    "type": "paid",
+    "pricing_or_license": "Subscription; pricing on site (not verified). $4.5M seed Apr 2026.",
+    "category": "AI rough-cut / assistant editor (pro docu/unscripted)",
+    "what_it_does": "'Editorial Intelligence' for editors: transcripts with speaker ID, agentic chat to find key shots, Story Window to arrange and score story beats, assemble one or dozens of rough cuts; Quickture Vision finds b-roll, cutaways, faces, scene summaries.",
+    "inputs": "Pro footage via Avid/Premiere projects; aimed at unscripted/documentary/news; no specific log claims.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Quickture Vision locates b-roll/cutaways and summarizes scenes; core is still transcript/beat driven."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Beat-based story building and rough-cut assembly."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "Scores beats against user criteria; no reference-video learning found."
+    },
+    "nle_integration": "Avid Media Composer panel, Premiere Pro extension; no Resolve mentioned.",
+    "agent_friendly": "Low: no API/MCP mentioned.",
+    "limitations": "No Resolve; dialogue/beat-centric; closed; enterprise orientation.",
+    "fit_score": 4,
+    "fit_reason": "Good story-beat UX for unscripted docs, but no Resolve, no agent API, little for wordless B-roll."
+  },
+  {
+    "name": "Imaginario AI (StoryLab)",
+    "url": "https://www.imaginario.ai/",
+    "type": "paid",
+    "pricing_or_license": "Power users from $89/user/mo; team plans flat annual; AWS Marketplace API contracts ~$7,200-$10,800/yr for visual indexing tiers.",
+    "category": "AI rough-cut + media intelligence",
+    "what_it_does": "Multimodal video intelligence: search by what is said/shown/heard, recognizes people, objects, brands, locations, actions, expressions; StoryLab agents propose clips and build rough cuts from a brief across one or many videos.",
+    "inputs": "Cloud ingest of libraries; marketing/post teams; no log-specific handling stated.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Visual indexing of objects/actions/expressions, timestamped shots."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "StoryLab rough cuts from a brief, outputs sequences with timecodes or social cuts."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None found."
+    },
+    "nle_integration": "Sequences with timecodes to Premiere Pro, DaVinci Resolve, Avid.",
+    "agent_friendly": "Medium: enterprise API exists on AWS Marketplace; positioned as an app, no MCP mentioned.",
+    "limitations": "Marketing/repurposing slant; expensive; cloud; no shot-grammar or cinematic craft rules.",
+    "fit_score": 5,
+    "fit_reason": "Visual + brief-driven rough cut + Resolve export, but marketing-oriented, pricey and not agent-first."
+  },
+  {
+    "name": "Adobe Firefly Video Editor - Quick Cut (beta)",
+    "url": "https://helpx.adobe.com/firefly/web/firefly-video-editor/create-quick-cut/quick-cut-overview.html",
+    "type": "freemium",
+    "pricing_or_license": "Included with Firefly/Creative Cloud plans (generative credits); beta since Feb 2026.",
+    "category": "AI rough-cut",
+    "what_it_does": "Builds a first cut from uploaded footage and a text prompt using scene detection, shot selection and audio analysis; options for aspect ratio, duration, pacing, a B-roll track, and video type 'dialogue-driven' vs 'visual-only'.",
+    "inputs": "Web upload; consumer/prosumer; no log handling stated.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Scene detection + shot selection; explicit visual-only mode."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Prompt-to-timeline first draft."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "No reference learning."
+    },
+    "nle_integration": "None: download as video only; cannot export to Premiere (per Adobe docs/press).",
+    "agent_friendly": "Low: web UI only, no API/MCP.",
+    "limitations": "No NLE export, cloud, short-form focus, no shot grammar control.",
+    "fit_score": 4,
+    "fit_reason": "Notable for an explicit 'visual-only' cut mode, but a closed web toy with no timeline handoff."
+  },
+  {
+    "name": "Mosaic (mosaic.so, now 'Motion' agent)",
+    "url": "https://mosaic.so/",
+    "type": "freemium",
+    "pricing_or_license": "Credits/subscription (not verified); YC W25.",
+    "category": "Agentic video editing canvas",
+    "what_it_does": "Node-based canvas of multimodal editing agents (cut, captions, B-roll insert, etc.), branching variants from same raw footage, timeline editor for final touches; now marketed as 'Motion' video agent with video API.",
+    "inputs": "Uploaded raw footage, mostly creator/marketing content.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Built-in multimodal understanding / captioning research."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Workflow-driven edits (80-90% autopilot claim); autonomous sequencing was roadmap."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "Templates/workflows reusable, not learned from references."
+    },
+    "nle_integration": "XML export to Premiere, Resolve, FCP (per 2025 launch).",
+    "agent_friendly": "Medium: API + event triggers; MCP not stated.",
+    "limitations": "Creator/marketing repurposing; cloud; not cinematic narrative.",
+    "fit_score": 4,
+    "fit_reason": "Agentic and visual with XML export, but workflow-automation for creator content rather than director-grade storytelling."
+  },
+  {
+    "name": "Descript (Underlord)",
+    "url": "https://www.descript.com/",
+    "type": "freemium",
+    "pricing_or_license": "Free (60 media min/mo); Hobbyist ~$16-24/mo; Creator ~$24-35/mo; Business ~$50-60/mo (third-party figures).",
+    "category": "AI rough-cut / text-based editor",
+    "what_it_does": "Transcript-based editor with Underlord agent: removes filler/silence, flags bad takes, suggests B-roll, makes social clips; public API beta with MCP in 2026.",
+    "inputs": "Talking-head, podcast, screen recordings; cloud sync; weak for wordless footage.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Edits via transcript; B-roll suggestion is mostly stock/generative."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Rough cuts of spoken content."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Exports XML/AAF to Premiere, FCP, Resolve (timeline export).",
+    "agent_friendly": "Medium-high: API open beta + MCP (2026).",
+    "limitations": "Transcript-only paradigm fails on B-roll travel footage; no shot grammar.",
+    "fit_score": 3,
+    "fit_reason": "Great for dialogue, irrelevant for wordless cinematic sequences."
+  },
+  {
+    "name": "Gling",
+    "url": "https://www.gling.ai/",
+    "type": "freemium",
+    "pricing_or_license": "Free (1 h/mo, watermark); Plus ~$15-20/mo; Pro ~$30/mo (sources vary).",
+    "category": "AI rough-cut for YouTubers",
+    "what_it_does": "Removes silences, filler words and bad takes from A-roll; titles/chapters, captions, auto framing, multicam, AI B-roll.",
+    "inputs": "Talking-head YouTube recordings.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Audio/transcript driven."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Cleans A-roll; does not build narrative from B-roll."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "XML to Premiere, Final Cut Pro, Resolve.",
+    "agent_friendly": "Low: no public API/MCP found.",
+    "limitations": "Dialogue-only.",
+    "fit_score": 2,
+    "fit_reason": "Talking-head cleanup, not story assembly from visuals."
+  },
+  {
+    "name": "AutoPod / FireCut / AutoCut / Wisecut (silence-cut plugins)",
+    "url": "https://www.autocut.com/",
+    "type": "paid",
+    "pricing_or_license": "AutoPod ~$29/mo; FireCut ~$24-34/mo; AutoCut EUR 6.6-14.9/mo (annual); Wisecut freemium.",
+    "category": "NLE automation plugins",
+    "what_it_does": "Premiere/Resolve plugins (Wisecut web) that remove silences, auto multicam-switch podcasts, add zoom cuts, captions, chapters, resize.",
+    "inputs": "Dialogue footage inside the NLE.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Audio-level only."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Mechanical cleanup, no narrative."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Native Premiere panels; AutoCut/FireCut/AutoPod(beta) for Resolve.",
+    "agent_friendly": "Low: no APIs (AutoPod explicitly none).",
+    "limitations": "Irrelevant to B-roll storytelling.",
+    "fit_score": 1,
+    "fit_reason": "Pure dialogue cleanup utilities."
+  },
+  {
+    "name": "Simon Says Assemble / Reduct",
+    "url": "https://www.simonsaysai.com/",
+    "type": "paid",
+    "pricing_or_license": "Simon Says pay-as-you-go to $150/mo; Reduct subscription.",
+    "category": "Transcript-based assembly",
+    "what_it_does": "Transcribe, pick soundbites from text, drag into a sequence; export XML. Reduct: transcript-based search, annotate, clip, share.",
+    "inputs": "Interview/dialogue footage.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Transcript only."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Manual soundbite paper-edit assembly."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "XML to Premiere, FCP, Resolve, Avid (Simon Says).",
+    "agent_friendly": "Low.",
+    "limitations": "Dialogue only; appears dated (Assemble page references 2022).",
+    "fit_score": 1,
+    "fit_reason": "Paper-edit-by-transcript; nothing for visual storytelling."
+  },
+  {
+    "name": "OpusClip (+ Agent Opus)",
+    "url": "https://www.opus.pro/",
+    "type": "freemium",
+    "pricing_or_license": "Free 60 min/mo; Starter $15/mo; Pro $29/mo; Business custom. Agent Opus MCP on Pro+.",
+    "category": "Short-form repurposing / generative",
+    "what_it_does": "Turns long videos into captioned shorts with virality scores; Agent Opus generates new videos from prompts/scripts (MCP).",
+    "inputs": "Long talking videos; generation from text.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Clipping weighs visuals, sound, emotion (Starter+)."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Clip extraction, not long-form story assembly."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "Style presets/reference images for generation, not edit learning."
+    },
+    "nle_integration": "Premiere XML export on some plans (verify); otherwise direct social publish.",
+    "agent_friendly": "Medium: MCP for generation agent.",
+    "limitations": "Shorts/virality focus; Agent Opus is generative not raw-footage editing.",
+    "fit_score": 2,
+    "fit_reason": "Repurposing tool, wrong problem."
+  },
+  {
+    "name": "CapCut / Captions / Filmora (consumer AI editors)",
+    "url": "https://www.capcut.com/",
+    "type": "freemium",
+    "pricing_or_license": "CapCut free + Pro subscription; Captions subscription; Filmora ~annual/perpetual license.",
+    "category": "Consumer AI editors",
+    "what_it_does": "CapCut AutoCut agent: analyzes raw footage, detects key moments, proposes cuts with pacing/transitions/music sync, templates incl. travel vlog; Captions: AI edit for talking heads; Filmora: timeline + AI enhancements.",
+    "inputs": "Phone/consumer footage; short-form; struggles with many GB of 4K log.",
+    "visual_understanding": {
+      "value": true,
+      "note": "CapCut uses scene changes and pacing; shallow understanding."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Template/beat-synced montages, short-form."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "Templates mimic trends, no learning from your references."
+    },
+    "nle_integration": "No Resolve/OTIO export (CapCut drafts only via third-party tools).",
+    "agent_friendly": "Low: no official agent APIs.",
+    "limitations": "Short-form templates; no pro handoff; ByteDance cloud/privacy concerns.",
+    "fit_score": 3,
+    "fit_reason": "Template montages for shorts, not director-grade long-form sequences."
+  },
+  {
+    "name": "Kapwing / VEED",
+    "url": "https://www.kapwing.com/",
+    "type": "freemium",
+    "pricing_or_license": "Freemium; paid ~$16-30/seat/mo + AI credits.",
+    "category": "Browser AI editors",
+    "what_it_does": "Kapwing 'Kai' agent turns uploaded footage into a first-draft project (May 2026), transcript-driven B-roll insertion; VEED focuses on avatars, subtitles, lip-sync APIs.",
+    "inputs": "Browser uploads, social/marketing content.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Mostly transcript-driven B-roll matching."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "First-draft projects (Kapwing Kai)."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Limited (MP4, SRT); no Resolve XML.",
+    "agent_friendly": "Medium: VEED APIs; Kapwing agent in-app.",
+    "limitations": "Browser upload limits; marketing focus.",
+    "fit_score": 2,
+    "fit_reason": "Generic web editors, not cinematic or pro-pipeline."
+  },
+  {
+    "name": "invideo AI (agent + MCP)",
+    "url": "https://invideo.io/",
+    "type": "freemium",
+    "pricing_or_license": "Free manual editor; AI generation via credits/subscription; invideo MCP announced Sep 30 2026.",
+    "category": "Generative video agent with reference-style matching",
+    "what_it_does": "Agent that studies a reference video (camera work, lighting, palette, pacing, cut rhythm) and builds edits or generated shots in that style; timeline editor; MCP connects external agents to the editor.",
+    "inputs": "Primarily generated media plus uploaded footage.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Extracts motion, camera moves and cut rhythm from references (vendor claim)."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Builds edits/episodes, mostly generative."
+    },
+    "style_learning": {
+      "value": true,
+      "note": "Reference-video style extraction stored in project context (vendor marketing, unverified)."
+    },
+    "nle_integration": "No Resolve/FCPXML export documented.",
+    "agent_friendly": "High: MCP server for Claude/ChatGPT.",
+    "limitations": "Generative-first; claims unverified; no NLE handoff; cloud.",
+    "fit_score": 4,
+    "fit_reason": "Has reference-style extraction + MCP, but aimed at AI generation, not cutting your real log footage."
+  },
+  {
+    "name": "Pictory / Visla (script-to-video)",
+    "url": "https://pictory.ai/",
+    "type": "freemium",
+    "pricing_or_license": "Pictory from ~$19-25/mo; Visla freemium.",
+    "category": "Script/text-to-video",
+    "what_it_does": "Turn scripts/articles into videos with stock footage, captions, VO; Visla scene-based editing, auto-cut filler, 'AI Director Mode' generation (Feb 2026).",
+    "inputs": "Text + stock; some uploaded footage.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Keyword-to-stock matching."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Scene lists from scripts."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "None of note.",
+    "agent_friendly": "Low-medium.",
+    "limitations": "Stock-footage slideshow paradigm.",
+    "fit_score": 1,
+    "fit_reason": "Different problem (stock assembly)."
+  },
+  {
+    "name": "Jumper",
+    "url": "https://getjumper.io/",
+    "type": "paid",
+    "pricing_or_license": "Lifetime license per seat (Jumper); Pro lifetime/monthly/yearly (adds API, agentic editing, faces); Enterprise custom. Prices not listed publicly.",
+    "category": "Footage search (local)",
+    "what_it_does": "Local, offline visual + speech search inside Premiere, FCP, Resolve, Avid or standalone; Match Similar / match source-monitor frame; face recognition; script editor to add ranges to sequence.",
+    "inputs": "Any footage the NLE can read, indexed locally (no upload) - good for multi-GB libraries; BRAW/RED reported.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Strong local CLIP-style visual search and similarity."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Search and add-to-timeline only."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Plugins for Premiere, FCP, Resolve, Avid.",
+    "agent_friendly": "High: Pro includes API + 'agentic editing' (Claude/ChatGPT/Codex search footage locally) and MCP pages per NLE.",
+    "limitations": "No labels for shot size/movement; no sequencing; closed source.",
+    "fit_score": 5,
+    "fit_reason": "Best local visual search with agent access - a component, not a storyteller."
+  },
+  {
+    "name": "Adobe Premiere (26.x) - Media Intelligence",
+    "url": "https://www.adobe.com/products/premiere.html",
+    "type": "paid",
+    "pricing_or_license": "Creative Cloud subscription (~$23/mo single app, approx.).",
+    "category": "NLE with AI search",
+    "what_it_does": "Natural-language visual/dialogue search over clips in the open project, filter by camera, focal length metadata, date; Generative Extend; AI Object Mask (26.0, Jan 2026); caption translation.",
+    "inputs": "All pro codecs incl. S-Log via color management; analysis limited to imported project media.",
+    "visual_understanding": {
+      "value": true,
+      "note": "On-device visual search of objects/scenes."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "No auto story assembly."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Native NLE.",
+    "agent_friendly": "Medium: UXP/ExtendScript scripting; third-party MCP servers exist.",
+    "limitations": "Search only; project-scoped; closed.",
+    "fit_score": 3,
+    "fit_reason": "Useful search inside the NLE, no sequencing intelligence."
+  },
+  {
+    "name": "DaVinci Resolve 20/21 (IntelliScript, IntelliSearch, SlateID)",
+    "url": "https://www.blackmagicdesign.com/products/davinciresolve",
+    "type": "freemium",
+    "pricing_or_license": "Free; Studio $295 one-time. Resolve 21 final June 2026.",
+    "category": "NLE with AI features (storian's target NLE)",
+    "what_it_does": "IntelliScript (20): matches transcribed audio to a script and auto-builds a timeline of best takes; IntelliSearch (21): per-frame AI analysis to search people/objects, dialog, metadata within the project; AI SlateID, Multicam SmartSwitch, smart bins on custom metadata.",
+    "inputs": "Native S-Log3/H.265/BRAW support; analysis per project; GPU heavy.",
+    "visual_understanding": {
+      "value": true,
+      "note": "IntelliSearch visual object/face search (21)."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "IntelliScript assembles from script by dialogue only."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Native; imports FCPXML, EDL, OTIO, AAF. Note: Resolve 21.1 restricts Python external scripting to Studio.",
+    "agent_friendly": "Medium: Python/Lua scripting API (Studio for external scripting from 21.1); community MCP servers.",
+    "limitations": "Script matching is dialogue-only; no B-roll story logic or shot grammar; IntelliSearch is project-scoped.",
+    "fit_score": 4,
+    "fit_reason": "The destination NLE; its AI is dialogue/search-centric and leaves the B-roll story gap open."
+  },
+  {
+    "name": "Final Cut Pro 12 (Creator Studio)",
+    "url": "https://www.apple.com/final-cut-pro/",
+    "type": "paid",
+    "pricing_or_license": "$299.99 one-time or Apple Creator Studio subscription.",
+    "category": "NLE with AI search",
+    "what_it_does": "Transcript Search and Discover Visual Search (natural language objects/actions, Apple silicon), Beat Detection.",
+    "inputs": "Native pro codecs; on-device.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Visual search of objects/actions."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Native; FCPXML.",
+    "agent_friendly": "Low: FCPXML round trip only, no scripting API.",
+    "limitations": "Search only; Mac only.",
+    "fit_score": 2,
+    "fit_reason": "Search features only; FCPXML is the relevant artifact."
+  },
+  {
+    "name": "Twelve Labs (Marengo, Pegasus, Jockey, MCP)",
+    "url": "https://www.twelvelabs.io/",
+    "type": "freemium",
+    "pricing_or_license": "Free (3 GB storage); Plus $29/mo (50 GB); Pro $99/mo (200 GB); Enterprise custom; usage-based workload; Jockey in research preview.",
+    "category": "Video understanding API / agent",
+    "what_it_does": "Marengo multimodal embeddings & search, Pegasus video-to-text (summaries, chapters, Q&A), Jockey agent for corpus-level tasks (timestamped cuts, highlight reels); official MCP server and Claude Code plugin.",
+    "inputs": "Cloud upload; 4K H.265 log masters would need proxies; storage caps make 'many GB' expensive.",
+    "visual_understanding": {
+      "value": true,
+      "note": "State-of-the-art commercial video embeddings and description."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Jockey can arrange moments and render compilations (preview)."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "No reference-edit learning."
+    },
+    "nle_integration": "None direct (via Frame.io integration/partners).",
+    "agent_friendly": "Very: REST API, SDKs, MCP server, Claude Code plugin.",
+    "limitations": "Cloud cost/latency at scale; generic, not cinematography-tuned; no NLE output.",
+    "fit_score": 5,
+    "fit_reason": "Excellent building block for labeling/search via MCP; not a story editor itself."
+  },
+  {
+    "name": "Moments Lab (MXT-2, Discovery Agent)",
+    "url": "https://www.momentslab.com/",
+    "type": "paid",
+    "pricing_or_license": "Enterprise, demo-based.",
+    "category": "Media intelligence (broadcast/archive)",
+    "what_it_does": "MXT-2 multimodal indexing (scenes, people, places, actions, shot types per press), Discovery Agent chat search, browser clip editor, Premiere panel; agentic story/rough-cut direction announced 2025.",
+    "inputs": "Broadcast archives in cloud.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Scene/moment indexing incl. shot types (press)."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Clip/highlight discovery; story agents roadmap."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "Brand voice alignment for outputs, not edit style."
+    },
+    "nle_integration": "Premiere panel; MAM integrations.",
+    "agent_friendly": "Medium: API; no MCP.",
+    "limitations": "Enterprise broadcast; not creator-priced.",
+    "fit_score": 3,
+    "fit_reason": "Enterprise archive search, not cinematic assembly."
+  },
+  {
+    "name": "Strada",
+    "url": "https://strada.tech/",
+    "type": "freemium",
+    "pricing_or_license": "Review free; Basic $8/user/mo; Pro $24/user/mo (annual).",
+    "category": "Cloud workflow (formerly AI tagging)",
+    "what_it_does": "2024 beta pitched AI tagging of objects/locations/actions/emotions; the Oct 2026 site focuses on remote drive mounting, P2P transfer, RAW review, permissions - AI tagging no longer featured.",
+    "inputs": "Media stays on user drives; full-res RAW playback.",
+    "visual_understanding": {
+      "value": false,
+      "note": "AI tagging de-emphasized/possibly dropped from current product."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "NLEs work off mounted drives.",
+    "agent_friendly": "Low: no API mentioned.",
+    "limitations": "Pivoted away from AI tagging.",
+    "fit_score": 1,
+    "fit_reason": "Effectively a transfer/review tool now."
+  },
+  {
+    "name": "axle ai (Tags, MAM, FOCUS)",
+    "url": "https://www.axle.ai/",
+    "type": "paid",
+    "pricing_or_license": "Tags from $200/mo; Cloud $20/TB/mo; on-prem MAM from $2,995.",
+    "category": "Media asset management with AI tagging",
+    "what_it_does": "On-prem/local AI engines: scene understanding, vector search, faces, objects, logos, OCR, transcription; connects to NAS/SAN/cloud.",
+    "inputs": "Large on-prem libraries; codec-agnostic MAM.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Scene understanding and vector search."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Editor integrations listed for Avid, Premiere, Resolve.",
+    "agent_friendly": "Medium: API in Tags product.",
+    "limitations": "MAM orientation; no editing intelligence.",
+    "fit_score": 2,
+    "fit_reason": "Tagging infrastructure for facilities."
+  },
+  {
+    "name": "Peakto (CYME)",
+    "url": "https://cyme.io/",
+    "type": "paid",
+    "pricing_or_license": "Peakto / Peakto Pro license or subscription (pricing on site).",
+    "category": "Local media manager / pre-editing",
+    "what_it_does": "Local AI cataloging and natural-language search of photos+video across drives/NAS, spoken-content search, sub-clips, markers, bins export, BRAW, timecode/slate metadata, LUT support; Premiere plugin (beta, Adobe MAX 2025); larger-library version shown IBC 2026.",
+    "inputs": "Local multi-drive libraries; LUT support helps log footage previews; BRAW supported.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Local visual search/cataloging."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Pre-editing selects only."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Exports bins to Premiere, Resolve, FCP; Premiere plugin.",
+    "agent_friendly": "Low: no API/MCP found.",
+    "limitations": "No sequencing; Mac-centric; closed.",
+    "fit_score": 4,
+    "fit_reason": "Good local, log-aware selects tool, but no storytelling or agent access."
+  },
+  {
+    "name": "Kino AI",
+    "url": "https://www.kino.ai/",
+    "type": "paid",
+    "pricing_or_license": "Pilot program, custom pricing, 7-day trial (2026 review).",
+    "category": "Footage logging",
+    "what_it_does": "Local transcription, metadata generation, auto-tagging and natural-language search; exports organized bins.",
+    "inputs": "Local processing on editor's machine.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Auto-tagging of visuals (limited detail public)."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Bins to Premiere, Resolve, FCP with metadata.",
+    "agent_friendly": "Low.",
+    "limitations": "Logging only; small company, pilot status.",
+    "fit_score": 3,
+    "fit_reason": "Assistant-editor logging, no sequence logic."
+  },
+  {
+    "name": "Frame.io V4 (Media Intelligence search)",
+    "url": "https://frame.io/",
+    "type": "freemium",
+    "pricing_or_license": "Free tier; paid Pro/Team/Enterprise; semantic search on Team/Enterprise.",
+    "category": "Review/collab with AI search",
+    "what_it_does": "Natural-language search over comments, transcripts, metadata and visual content (same engine as Premiere); TwelveLabs integration for shot search and image-to-video matching.",
+    "inputs": "Cloud uploads (camera-to-cloud).",
+    "visual_understanding": {
+      "value": true,
+      "note": "Semantic visual search (beta tiers)."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Premiere/Resolve/FCP review integrations.",
+    "agent_friendly": "Medium: V4 API.",
+    "limitations": "Search/review only.",
+    "fit_score": 2,
+    "fit_reason": "Collaboration layer, not editing intelligence."
+  },
+  {
+    "name": "muse.ai",
+    "url": "https://muse.ai/",
+    "type": "freemium",
+    "pricing_or_license": "From ~$8/mo (Capterra).",
+    "category": "Video hosting with AI search",
+    "what_it_does": "Hosts videos and indexes speech, faces, objects, text for search.",
+    "inputs": "Uploaded finished videos.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Basic visual indexing."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "None.",
+    "agent_friendly": "Medium: API.",
+    "limitations": "Hosting product; not for raw footage editing.",
+    "fit_score": 1,
+    "fit_reason": "Search over hosted videos only."
+  },
+  {
+    "name": "Google Gemini API video understanding / AWS Rekognition Video",
+    "url": "https://ai.google.dev/gemini-api/docs/video-understanding",
+    "type": "paid",
+    "pricing_or_license": "Pay per token (Gemini; File API up to 20 GB per file on paid tier); Rekognition pay per minute.",
+    "category": "Cloud video-AI building blocks",
+    "what_it_does": "Gemini: describe, segment, timestamp (MM:SS) Q&A over long videos, 1 fps default sampling with custom fps; Rekognition: labels, faces, and segment detection (shot boundaries, technical cues like black frames/color bars).",
+    "inputs": "Uploads; proxies recommended; log footage should be LUT'd first.",
+    "visual_understanding": {
+      "value": true,
+      "note": "General-purpose VLM descriptions; not specialized for shot grammar."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None (raw capability)."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "Could be prompted with reference analyses."
+    },
+    "nle_integration": "None.",
+    "agent_friendly": "High: REST APIs/SDKs.",
+    "limitations": "Cost and upload of large 4K; generic cinematography accuracy (ShotBench shows <60% for frontier VLMs).",
+    "fit_score": 5,
+    "fit_reason": "Practical labeling engines for storian's pipeline, not competitors."
+  },
+  {
+    "name": "Video Jungle (video-editing-mcp)",
+    "url": "https://github.com/burningion/video-editing-mcp",
+    "type": "freemium",
+    "pricing_or_license": "Hosted service requires account + API key (pricing not stated); MCP repo public (no license stated), ~294 stars.",
+    "category": "Hosted video-understanding + MCP editing",
+    "what_it_does": "Upload/analyze videos (audio+visual), embedding/keyword search with timestamps, generate edits from one or many videos via LLM chat, export OpenTimelineIO project to DaVinci Resolve Studio.",
+    "inputs": "URL/uploads to hosted service; macOS Photos search opt-in.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Hosted audio+visual analysis."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "LLM-generated edits from search results."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "OTIO export to Resolve Studio.",
+    "agent_friendly": "High: MCP-native.",
+    "limitations": "Hosted dependency; immature; no cinematic craft.",
+    "fit_score": 4,
+    "fit_reason": "Early proof of 'MCP + visual search + OTIO to Resolve' loop."
+  },
+  {
+    "name": "Boords / Katalist (AI storyboard SaaS)",
+    "url": "https://boords.com/",
+    "type": "freemium",
+    "pricing_or_license": "Boords free (5 boards) then ~$26-75/mo; Katalist $19-39/mo Essential, $39 Pro, $99 Unlimited.",
+    "category": "Storyboard / pre-production",
+    "what_it_does": "Script-to-storyboard with AI images, frame notes, animatics, client review; Katalist generates consistent characters/scenes from scripts.",
+    "inputs": "Scripts and generated images, not footage.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Generates images, does not analyze footage."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Pre-production shot sequences."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "PDF/animatic export; no NLE timeline.",
+    "agent_friendly": "Low.",
+    "limitations": "Pre-production only.",
+    "fit_score": 2,
+    "fit_reason": "Reference for storyboard page layout, not a competitor."
+  },
+  {
+    "name": "StudioBinder",
+    "url": "https://www.studiobinder.com/",
+    "type": "freemium",
+    "pricing_or_license": "Free tier; paid from ~$29/mo (approx.).",
+    "category": "Shot list / storyboard / production management",
+    "what_it_does": "Shot lists with shot size, angle, movement, lens fields; storyboards; call sheets; script breakdowns. Large free educational library on shot grammar.",
+    "inputs": "Manual entry and uploaded frames.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Manual metadata."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Planning only."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "None.",
+    "agent_friendly": "Low.",
+    "limitations": "Manual; pre-production.",
+    "fit_score": 2,
+    "fit_reason": "Its shot-list taxonomy (size/angle/movement/lens) is a good label schema for storian."
+  },
+  {
+    "name": "LTX Studio",
+    "url": "https://ltx.studio/",
+    "type": "freemium",
+    "pricing_or_license": "Free 800 credits; Lite $15/mo; Standard $35/mo (storyboards); Pro $125/mo; Enterprise.",
+    "category": "AI storyboard / generative previs",
+    "what_it_does": "Script-to-shot-level storyboard (Jan 2026 Storyboard Builder), consistent elements, camera framing suggestions, pitch decks, generative video (LTX-2, Veo).",
+    "inputs": "Scripts/briefs; generative.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Generative, not analytic."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Scene/shot breakdown for previs."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "None.",
+    "agent_friendly": "Low-medium.",
+    "limitations": "Generative previs, not real footage.",
+    "fit_score": 2,
+    "fit_reason": "Previs, adjacent at best."
+  },
+  {
+    "name": "Storyboarder (Wonder Unit)",
+    "url": "https://wonderunit.com/storyboarder/",
+    "type": "open-source",
+    "pricing_or_license": "Free; source on GitHub (no SPDX license detected); last push Mar 2024 - effectively dormant.",
+    "category": "Storyboard drawing tool",
+    "what_it_does": "Fast stick-figure storyboarding, Shot Generator 3D posing, exports to Premiere/FCP XML and PDF.",
+    "inputs": "Drawings.",
+    "visual_understanding": {
+      "value": false,
+      "note": "None."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Manual boards."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "XML export of boards to Premiere/FCP.",
+    "agent_friendly": "Low.",
+    "limitations": "Dormant; manual.",
+    "fit_score": 1,
+    "fit_reason": "Dormant manual tool."
+  },
+  {
+    "name": "RoughCut Agent (mocchalera/video-os-v2)",
+    "url": "https://github.com/mocchalera/video-os-v2",
+    "type": "open-source",
+    "pricing_or_license": "MIT; ~5 stars; active Sep 2026.",
+    "category": "OSS agentic rough-cut pipeline",
+    "what_it_does": "Footage folder + short request -> intent, analysis, multimodal retrieval, rough/fine plans (selects_candidates.yaml, edit_blueprint.yaml beat structure), deterministic compile, render, QA loop (up to 3 iterations). Marlin-2B local VLM with 'progressive resolution' (contact sheet -> filmstrip -> precision), Qwen3-VL/CLAP/E5 embeddings in SQLite+FTS5 footage.db, transition skill cards + Rule of Six.",
+    "inputs": "Local footage folders; local model weights; long-event profile compresses ~2 h fixed-cam footage.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Local VLM scene/event/peak analysis + visual embeddings."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Beat-structured blueprint compiled into a timeline with visual-coherence ordering."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "Profiles/skill cards are hand-authored, no learning from references."
+    },
+    "nle_integration": "FCP7 XML round-trip for Premiere (UXP watcher, diff engine); OpenTimelineIO bridge for Resolve.",
+    "agent_friendly": "Very: shared Agent Skills for Claude Code/Codex, slash-command contracts, artifact-driven files.",
+    "limitations": "Tiny project; not focused on cinematic shot grammar or log; macOS Studio app; heavy local model setup.",
+    "fit_score": 7,
+    "fit_reason": "Architecturally the closest thing to storian (agent skills + footage DB + blueprint + OTIO/XML), but immature and not cinematic-craft focused."
+  },
+  {
+    "name": "OpenMontage",
+    "url": "https://github.com/calesthio/OpenMontage",
+    "type": "open-source",
+    "pricing_or_license": "AGPL-3.0; ~70k stars (as reported by GitHub API, Oct 2026); very active.",
+    "category": "OSS agentic video production system",
+    "what_it_does": "Turns an AI coding assistant into a production studio: 11-12 pipelines (incl. Documentary Montage, Hybrid, Cinematic, Clip Factory), 100+ tools, 700+ skill/knowledge files; scene detection, frame sampling, WhisperX, CLIP/BLIP-2 'Video Understand'; reference video analysis for pacing/scenes/keyframes/style; renders via Remotion/HyperFrames/FFmpeg with human approval checkpoints.",
+    "inputs": "User files probed (codec/res/duration) plus generated/stock assets.",
+    "visual_understanding": {
+      "value": true,
+      "note": "CLIP/BLIP-2 frame analysis + scene detection."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Documentary Montage pipeline cuts real footage into a sequence."
+    },
+    "style_learning": {
+      "value": true,
+      "note": "Analyzes reference videos for pacing, scenes, style (descriptive, not a trained model)."
+    },
+    "nle_integration": "None - renders final video only.",
+    "agent_friendly": "Very: configs for Claude Code, Cursor, Copilot, Windsurf, Codex; AGENT_GUIDE.md.",
+    "limitations": "AGPL; generation-heavy; no NLE export; not tuned for 4K log libraries or shot grammar.",
+    "fit_score": 5,
+    "fit_reason": "Proves the agent-first skills model at scale; weak on NLE handoff and pro cinematic logic."
+  },
+  {
+    "name": "video-use (browser-use)",
+    "url": "https://github.com/browser-use/video-use",
+    "type": "open-source",
+    "pricing_or_license": "MIT; ~29k stars; active Oct 2026. Needs ElevenLabs key.",
+    "category": "OSS agent skill for editing",
+    "what_it_does": "Claude Code/Codex skill: point at raw takes, chat, get final.mp4. Packs an ElevenLabs Scribe transcript (~12 KB) for the LLM; timeline_view tool renders filmstrip+waveform+word labels images for decisions; auto grade, fades, subtitles, overlays; self-review at cut boundaries; project.md memory.",
+    "inputs": "Raw takes in a folder; works for montage/travel per README but reasoning is transcript-led.",
+    "visual_understanding": {
+      "value": false,
+      "note": "LLM 'never watches the video'; only on-demand filmstrip images."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Builds an internal EDL and renders."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "None - MP4 only.",
+    "agent_friendly": "Very: installed as an agent skill.",
+    "limitations": "Transcript-centric; no labels/shot grammar; no XML/OTIO; cloud ASR.",
+    "fit_score": 5,
+    "fit_reason": "Same agent-first ethos; poor fit for wordless B-roll and NLE handoff."
+  },
+  {
+    "name": "FireRed-OpenStoryline",
+    "url": "https://github.com/FireRedTeam/FireRed-OpenStoryline",
+    "type": "open-source",
+    "pricing_or_license": "Apache-2.0; ~3.5k stars; active Oct 2026.",
+    "category": "OSS intention-driven editing agent",
+    "what_it_does": "LLM plans and runs tools: clip segmentation and content understanding of user media, emotion recognition, storyline + narration generation, beat-synced music, mood-matched VO/fonts, conversational reordering; save workflows as reusable Skills; MCP server + agent skills.",
+    "inputs": "User media for a theme + optional web-searched assets.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Clip segmentation and content understanding."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Generates a storyline and arranges clips with narration."
+    },
+    "style_learning": {
+      "value": true,
+      "note": "Few-shot copy-style transfer from reference text; reusable workflow Skills (not visual edit learning)."
+    },
+    "nle_integration": "None - rendered video.",
+    "agent_friendly": "High: MCP + skills for Claude Code/Codex/OpenClaw.",
+    "limitations": "Short-form/social aesthetic; no NLE export; no shot grammar.",
+    "fit_score": 5,
+    "fit_reason": "Storyline-from-footage agent with MCP, but social-video oriented and render-only."
+  },
+  {
+    "name": "Cut Agent (DRAFT12138/Video_Cut_Agent)",
+    "url": "https://github.com/DRAFT12138/Video_Cut_Agent",
+    "type": "open-source",
+    "pricing_or_license": "MIT; 1 star; Sep 2026.",
+    "category": "OSS rough-cut planner",
+    "what_it_does": "Folder of clips + script -> editable plan.json, readable rough-cut doc, local web workspace to review shots, adjust timeline, compare versions, numbered preview; shot detection + representative frames + optional VLM shot descriptions; coding agents write agent-decisions.json without separate model API.",
+    "inputs": "Local video/image folders.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Representative frames + VLM descriptions."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Script-guided rough-cut plan."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "No XML/EDL/OTIO; handoff ZIP + finishing guide.",
+    "agent_friendly": "Very: designed for Codex/Claude Code decision files and skill.",
+    "limitations": "Tiny, Linux/Windows; no NLE export.",
+    "fit_score": 5,
+    "fit_reason": "Very similar concept (agent decides, web review workspace) but embryonic."
+  },
+  {
+    "name": "Agentic Video Editor (poseljacob)",
+    "url": "https://github.com/poseljacob/agentic-video-editor",
+    "type": "open-source",
+    "pricing_or_license": "MIT; ~500 stars; Apr 2026.",
+    "category": "OSS multi-agent ad editor",
+    "what_it_does": "Footage folder + creative brief -> Gemini Director selects/orders shots, Trim Refiner tightens in/outs, FFmpeg Editor renders, Reviewer scores (adherence, pacing, visual quality, watchability) and loops.",
+    "inputs": "Footage folder; scene detection + transcription -> footage_index.json.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Gemini watches footage/renders."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Ad-structured EditPlan."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "Hand-written style YAML templates only."
+    },
+    "nle_integration": "None - MP4.",
+    "agent_friendly": "Medium: CLI + YAML pipelines.",
+    "limitations": "Ads only; Gemini-locked; no NLE output.",
+    "fit_score": 4,
+    "fit_reason": "Useful Director/Refiner/Reviewer loop pattern."
+  },
+  {
+    "name": "editstyle (formerly CutAI)",
+    "url": "https://github.com/mindsurf0176-ui/cutai",
+    "type": "open-source",
+    "pricing_or_license": "MIT; v0.2.0 Apr 2026 (alpha); repo renamed mindsurf0176/editstyle (~6 stars).",
+    "category": "OSS edit-style extraction",
+    "what_it_does": "Extracts 'Edit DNA' (pacing, transitions, visual tone, audio, subtitle defaults) from a reference video into portable YAML/EDITSTYLE.md; style-learn from multiple refs; apply to footage; presets (cinematic, vlog...); now positioned as portable styles for AI skills/MCP.",
+    "inputs": "Single videos; local FFmpeg.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Scene analysis for pacing/tone."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Applies plans to a single input video."
+    },
+    "style_learning": {
+      "value": true,
+      "note": "Explicit reference -> style file learning (coarse)."
+    },
+    "nle_integration": "None.",
+    "agent_friendly": "Medium-high: style files meant for skills/MCP.",
+    "limitations": "Alpha; coarse features; no shot-size/lens grammar.",
+    "fit_score": 4,
+    "fit_reason": "Closest OSS precedent for a portable 'style file' learned from references."
+  },
+  {
+    "name": "Doza Assist Core",
+    "url": "https://github.com/DozaVisuals/doza-assist",
+    "type": "open-source",
+    "pricing_or_license": "MIT core (CLA) + paid Mac app; ~55 stars.",
+    "category": "OSS interview story builder",
+    "what_it_does": "Local transcription (Parakeet/WhisperX), clip library, Story Builder with editorial notes; learns your style by importing your finished cuts into profiles (pacing, openings, structure, tone), with evolution snapshots and 'refine my style' notes.",
+    "inputs": "Interview footage; macOS.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Transcript only."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Narrative ordering of soundbites."
+    },
+    "style_learning": {
+      "value": true,
+      "note": "Style profile learned from your own finished cuts (transcript level)."
+    },
+    "nle_integration": "FCPXML 1.11, FCP7 XML for Premiere, CMX3600 EDL for Resolve.",
+    "agent_friendly": "Low: no MCP/API.",
+    "limitations": "No visuals; macOS only.",
+    "fit_score": 4,
+    "fit_reason": "Great 'learn from my cuts' + NLE export pattern, but transcript-only."
+  },
+  {
+    "name": "OpenChatCut",
+    "url": "https://github.com/0xsline/OpenChatCut",
+    "type": "open-source",
+    "pricing_or_license": "AGPL-3.0; ~2.6k stars; active Oct 2026.",
+    "category": "OSS conversational multitrack editor",
+    "what_it_does": "Local-first Electron/React/Remotion editor where an agent writes real tracks/clips/transitions/captions; 26 editor skills, local MCP endpoint, draft edit sessions with review/approve as one undo step; person segmentation for safe zones.",
+    "inputs": "Local media dir; folder import up to 100 files per call.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Segmentation/face-safe zones only; no scene semantics."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Agent executes edits; no autonomous story planning."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "FCPXML, MP4, SRT, project JSON.",
+    "agent_friendly": "Very: MCP + skills + draft-session approval model.",
+    "limitations": "Not a planner; early builds.",
+    "fit_score": 4,
+    "fit_reason": "Good reference for agent-safe edit sessions and FCPXML output."
+  },
+  {
+    "name": "video-db Director",
+    "url": "https://github.com/video-db/Director",
+    "type": "open-source",
+    "pricing_or_license": "MIT; ~1.6k stars; last push Jan 2026 (slowing). Requires VideoDB cloud.",
+    "category": "OSS video agent framework",
+    "what_it_does": "Reasoning engine orchestrating 20+ agents (search, summarize, clip, dub, generate) over VideoDB's video-as-data infra; chat UI.",
+    "inputs": "Uploads to VideoDB cloud.",
+    "visual_understanding": {
+      "value": true,
+      "note": "VideoDB scene indexing."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Compilation/clip agents."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "None.",
+    "agent_friendly": "High: agent framework, but its own UI/orchestrator rather than Claude Code-native.",
+    "limitations": "Cloud lock-in; not cinematic; slowing activity.",
+    "fit_score": 4,
+    "fit_reason": "Agent framework precedent, wrong substrate (cloud) and no NLE."
+  },
+  {
+    "name": "PySceneDetect",
+    "url": "https://github.com/Breakthrough/PySceneDetect",
+    "type": "open-source",
+    "pricing_or_license": "BSD-3-Clause; ~5.3k stars; active.",
+    "category": "OSS shot boundary detection",
+    "what_it_does": "Content/adaptive/threshold cut detection, scene lists, thumbnails, split; CLI + library.",
+    "inputs": "Any FFmpeg/OpenCV-decodable file; long clips fine (downscale).",
+    "visual_understanding": {
+      "value": true,
+      "note": "Low-level pixel/histogram, no semantics."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "EDL/CSV/OTIO-ish outputs via scripts.",
+    "agent_friendly": "High: CLI/library.",
+    "limitations": "Raw camera clips are mostly single takes - use for sub-shot segmentation and motion changes.",
+    "fit_score": 4,
+    "fit_reason": "Essential component for segmenting long takes."
+  },
+  {
+    "name": "auto-editor",
+    "url": "https://github.com/WyattBlue/auto-editor",
+    "type": "open-source",
+    "pricing_or_license": "Unlicense; ~5.6k stars; active.",
+    "category": "OSS automatic cutting",
+    "what_it_does": "Cuts dead space by audio loudness/motion thresholds; exports to Premiere/Resolve/FCP XML, Shotcut, Kdenlive.",
+    "inputs": "Any FFmpeg-readable media.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Motion threshold only."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Premiere XML, FCPXML, Resolve, Shotcut, Kdenlive.",
+    "agent_friendly": "High: CLI.",
+    "limitations": "Mechanical only.",
+    "fit_score": 3,
+    "fit_reason": "Useful reference for battle-tested multi-NLE XML exporters."
+  },
+  {
+    "name": "FunClip (Alibaba ModelScope)",
+    "url": "https://github.com/modelscope/FunClip",
+    "type": "open-source",
+    "pricing_or_license": "MIT; ~6.4k stars.",
+    "category": "OSS ASR-based clipping",
+    "what_it_does": "FunASR transcription, speaker ID, LLM-assisted clip selection, subtitles; Gradio UI.",
+    "inputs": "Spoken video.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Transcript only."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Clip extraction."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "SRT/clips.",
+    "agent_friendly": "Medium.",
+    "limitations": "Dialogue-only.",
+    "fit_score": 2,
+    "fit_reason": "Transcript clipping, not visual storytelling."
+  },
+  {
+    "name": "videogrep",
+    "url": "https://github.com/antiboredom/videogrep",
+    "type": "open-source",
+    "pricing_or_license": "Custom license (NOASSERTION, Anti-Capitalist style); last push Apr 2024.",
+    "category": "OSS transcript supercuts",
+    "what_it_does": "Search transcripts/subtitles and auto-make supercuts; Vosk transcription.",
+    "inputs": "Spoken video.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Transcript only."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Supercuts."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "MP4/EDL-ish.",
+    "agent_friendly": "Medium: CLI/library.",
+    "limitations": "Dormant; dialogue-only; license restricts commercial use.",
+    "fit_score": 2,
+    "fit_reason": "Classic, but irrelevant to visual sequencing."
+  },
+  {
+    "name": "MoneyPrinterTurbo / ShortGPT",
+    "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+    "type": "open-source",
+    "pricing_or_license": "MIT both; MoneyPrinterTurbo ~134k stars (active), ShortGPT ~8k (dormant since Feb 2025).",
+    "category": "OSS auto short-video generators",
+    "what_it_does": "Topic -> LLM script -> stock footage (Pexels) + TTS + subtitles -> short video.",
+    "inputs": "Stock footage, not user raw footage.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Keyword stock matching."
+    },
+    "story_assembly": {
+      "value": true,
+      "note": "Script-to-stock slideshow."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "None.",
+    "agent_friendly": "Medium: CLI/WebUI/API.",
+    "limitations": "Wrong problem (stock content farms).",
+    "fit_score": 1,
+    "fit_reason": "Popular but unrelated to raw-footage storytelling."
+  },
+  {
+    "name": "OpenTimelineIO (ASWF)",
+    "url": "https://github.com/AcademySoftwareFoundation/OpenTimelineIO",
+    "type": "open-source",
+    "pricing_or_license": "Apache-2.0; ~2k stars; active.",
+    "category": "OSS timeline interchange",
+    "what_it_does": "Editorial timeline data model + adapters (FCP7 XML, FCPXML via adapter plugins, CMX EDL, AAF, etc.); Resolve imports .otio natively.",
+    "inputs": "Timeline metadata only.",
+    "visual_understanding": {
+      "value": false,
+      "note": "N/A."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "N/A (data model)."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "N/A."
+    },
+    "nle_integration": "Resolve native OTIO import; adapters for Premiere/FCP/Avid.",
+    "agent_friendly": "High: Python API.",
+    "limitations": "Adapter quality varies (FCPXML is a plugin).",
+    "fit_score": 5,
+    "fit_reason": "Should be storian's internal sequence model and export path."
+  },
+  {
+    "name": "LosslessCut",
+    "url": "https://github.com/mifi/lossless-cut",
+    "type": "open-source",
+    "pricing_or_license": "GPL-2.0; ~45k stars; active.",
+    "category": "OSS lossless trimming",
+    "what_it_does": "Lossless cutting/merging, segment lists, keyframe navigation, export segments/EDL-like project files.",
+    "inputs": "Handles big H.265 files losslessly (keyframe-bound).",
+    "visual_understanding": {
+      "value": false,
+      "note": "None."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Segment exports (CSV/EDL-like).",
+    "agent_friendly": "Medium: CLI/HTTP API in recent versions.",
+    "limitations": "Manual tool.",
+    "fit_score": 2,
+    "fit_reason": "Possibly useful for lossless selects extraction, otherwise unrelated."
+  },
+  {
+    "name": "davinci-resolve-mcp (samuelgursky) + other Resolve MCPs",
+    "url": "https://github.com/samuelgursky/davinci-resolve-mcp",
+    "type": "open-source",
+    "pricing_or_license": "MIT; ~3.7k stars; active Oct 2026. Alternatives: lordhoell (MIT, 440+ tools), Tooflex (32 tools).",
+    "category": "OSS NLE bridge (MCP)",
+    "what_it_does": "MCP server for Resolve: 37 compound tools / 390 granular API tools; timelines, markers, metadata, media analysis writing source-time markers/keywords to clips, render queue, offline .drp tools.",
+    "inputs": "Whatever Resolve reads.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Optional media analysis helpers; no story judgment ('does not judge takes or cuts')."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "First-pass assembly helpers only."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Direct Resolve control. Caveat: Resolve 21.1 moved Python scripting to Studio; free-edition bridge works only on 21.0.x.",
+    "agent_friendly": "Very: MCP for Claude Code etc.",
+    "limitations": "Studio required for reliable external scripting; API cannot do every edit op.",
+    "fit_score": 5,
+    "fit_reason": "Ready-made last-mile for Resolve Studio users; pair with FCPXML/OTIO for free Resolve."
+  },
+  {
+    "name": "Premiere Pro MCP servers (leancoderkavy, hetpatel-11, ayushozha, prpr)",
+    "url": "https://github.com/leancoderkavy/premiere-pro-mcp",
+    "type": "open-source",
+    "pricing_or_license": "MIT (all three GitHub repos); 126-734 stars; active Oct 2026.",
+    "category": "OSS NLE bridge (MCP)",
+    "what_it_does": "CEP/UXP bridges exposing ~70-285 Premiere tools; ayushozha can parse a script, scan media, generate an EDL and assemble a timeline.",
+    "inputs": "Whatever Premiere reads.",
+    "visual_understanding": {
+      "value": false,
+      "note": "No."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "Basic script-to-EDL in ayushozha."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "Direct Premiere control.",
+    "agent_friendly": "Very: MCP.",
+    "limitations": "Bridge fragility (UXP limits), Premiere not storian's primary NLE.",
+    "fit_score": 3,
+    "fit_reason": "Optional secondary NLE target."
+  },
+  {
+    "name": "Transcript-driven A-roll agents (roughcut-ai-local-first-editor, claude-code-auto-video-edit)",
+    "url": "https://github.com/PaulBratslavsky/roughcut-ai-local-first-editor",
+    "type": "open-source",
+    "pricing_or_license": "GPL-3.0 (roughcut-ai, ~5 stars); MIT (DayadaUP/claude-code-auto-video-edit, ~122 stars).",
+    "category": "OSS talking-head rough-cut agents",
+    "what_it_does": "Local whisper transcription + LLM removes silences/fillers/bad takes; roughcut-ai exports to Premiere/FCP/Resolve with MCP surface; DayadaUP is a Claude Code /aroll command generating a Resolve Python script + SRT.",
+    "inputs": "Talking-head A-roll.",
+    "visual_understanding": {
+      "value": false,
+      "note": "Audio/transcript only."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "A-roll cleanup."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "None."
+    },
+    "nle_integration": "NLE XML export; Resolve scripting.",
+    "agent_friendly": "High: MCP / Claude Code slash command.",
+    "limitations": "No visual logic.",
+    "fit_score": 2,
+    "fit_reason": "Show the Claude Code + Resolve pattern, but only for A-roll."
+  },
+  {
+    "name": "ShotBench / ShotVL (research, Vchitect)",
+    "url": "https://vchitect.github.io/ShotBench-project/",
+    "type": "open-source",
+    "pricing_or_license": "Paper NeurIPS 2025; ShotVL-3B/7B weights on Hugging Face; code on GitHub (license not stated on page - check model cards).",
+    "category": "Research: cinematography-aware VLM",
+    "what_it_does": "Benchmark of 8 cinematography dimensions (shot size, framing, angle, lens size, lighting type/condition, composition, camera movement); frontier VLMs score <60%; ShotQA (~70k QA) trains ShotVL which beats GPT-4o on these.",
+    "inputs": "Images and short clips.",
+    "visual_understanding": {
+      "value": true,
+      "note": "Specialized shot-size/lens/movement understanding."
+    },
+    "story_assembly": {
+      "value": false,
+      "note": "None."
+    },
+    "style_learning": {
+      "value": false,
+      "note": "Could label reference films to derive style statistics."
+    },
+    "nle_integration": "None.",
+    "agent_friendly": "High: local model weights.",
+    "limitations": "Research quality; trained on film stills (not log); license unclear.",
+    "fit_score": 5,
+    "fit_reason": "Directly addresses storian's labeling gap (shot size, lens feel, camera movement)."
+  }
+]
