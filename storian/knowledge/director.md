@@ -138,3 +138,9 @@ the turn and the closer — don't spend them all in the first minute.
 - Then `storian previews` so the storyboard can play the animatic.
 - When the human asks for changes, edit the JSON surgically (swap a shot, retime, move a
   chapter) and re-run `check` + `previews`. Never regenerate the whole film for a local change.
+
+## 10. Reviewing coverage
+
+The same rules work in reverse: a scene that can't be cut by §4 and §5 is missing shots.
+After the sequence exists, review the footage as a director reviews dailies and tell the
+videographer what to go and get. See `knowledge/coverage.md`.

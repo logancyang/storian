@@ -157,7 +157,68 @@ details.vo p { font: italic 400 19px/1.55 var(--serif); margin: 10px 0 0; white-
 .empty { padding: 80px 0; font: 400 28px/1.3 var(--serif); color: var(--muted); }
 footer { border-top: 1.5px solid var(--ink); margin-top: 60px; padding: 18px 0 40px; font: 12px var(--mono); color: var(--muted); }
 
+
+/* coverage review */
+.cov { padding: 44px 0 40px; border-bottom: 1.5px solid var(--ink); }
+.cov-top { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; }
+.cov h2 { font: 400 clamp(36px, 4.4vw, 60px)/0.95 var(--serif); margin: 12px 0 14px; }
+.cov h2 em { color: var(--paper-2); font-style: italic; }
+.cov .sum { font: 400 18px/1.55 var(--serif); max-width: 860px; margin: 0; color: rgba(255,255,255,.86); }
+.cov-stats { display: flex; border: 1.5px solid var(--ink); }
+.cov-stats > div { padding: 12px 18px; border-right: 1px solid var(--ink-faint); min-width: 96px; }
+.cov-stats > div:last-child { border-right: 0; }
+.cov-stats .n { font: 400 30px/1 var(--serif); }
+.cov-stats .n.y { color: var(--paper-2); }
+.cov-stats .l { font: 11px var(--mono); color: var(--muted); letter-spacing: .08em; margin-top: 6px; text-transform: uppercase; }
+.covt-wrap { margin-top: 28px; overflow-x: auto; border: 1.5px solid var(--ink); }
+table.covt { width: 100%; border-collapse: collapse; min-width: 980px; }
+.covt th { font: 500 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 8px 4px; text-align: center; border-bottom: 1px solid var(--ink-faint); white-space: nowrap; }
+.covt th.grp { color: var(--ink); border-bottom: 1px solid var(--ink-faint); border-left: 1px solid var(--ink-faint); }
+.covt th.l, .covt td.l { text-align: left; padding-left: 14px; }
+.covt td { padding: 9px 4px; border-bottom: 1px solid var(--ink-faint); text-align: center; vertical-align: middle; }
+.covt td.g0 { border-left: 1px solid var(--ink-faint); }
+.covt tr.row { cursor: pointer; }
+.covt tr.row:hover td { background: rgba(87,101,255,.10); }
+.covt tr.row.open td { background: rgba(255,209,71,.06); }
+.covt .nm { font: 400 19px/1.15 var(--serif); }
+.covt .sub { font: 11px var(--mono); color: var(--muted); margin-top: 3px; }
+.cell { display: inline-flex; width: 26px; height: 22px; align-items: center; justify-content: center; font: 500 11px var(--mono); }
+.cell.have { background: var(--ink-soft); color: #fff; }
+.cell.gap { border: 1.5px solid var(--paper-2); color: var(--paper-2); font-size: 14px; }
+.cell.none { color: var(--ink-faint); }
+.pri { display: inline-block; font: 600 11px var(--mono); padding: 3px 7px; letter-spacing: .06em; }
+.pri.p1 { background: var(--paper-2); color: #000; }
+.pri.p2 { border: 1.5px solid var(--paper-2); color: var(--paper-2); }
+.pri.p3, .pri.ok { border: 1px solid var(--ink-faint); color: var(--muted); }
+.needchips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-start; }
+.needchips .chip { color: var(--paper-2); border-color: rgba(255,209,71,.5); }
+.imp { font: 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.imp.core { color: var(--paper-2); }
+tr.detail td { padding: 0; background: #060606; }
+.covd { display: grid; grid-template-columns: minmax(280px, 420px) 1fr; gap: 28px; padding: 20px 18px 26px; text-align: left; }
+.covd .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+.covd .thumbs div { position: relative; cursor: pointer; }
+.covd .thumbs img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+.covd .thumbs span { position: absolute; left: 4px; bottom: 4px; font: 10px var(--mono); background: rgba(0,0,0,.75); padding: 1px 5px; }
+.covd .verdict { font: italic 400 18px/1.45 var(--serif); margin: 0 0 14px; }
+.needs { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink-faint); }
+.needs li { display: grid; grid-template-columns: 22px 44px 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--ink-faint); align-items: start; }
+.needs li.got .what { text-decoration: line-through; color: var(--muted); }
+.needs input { accent-color: var(--paper-2); width: 16px; height: 16px; margin-top: 3px; }
+.needs .what { font-size: 15px; }
+.needs .spec { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.needs .wy { font-size: 13px; color: var(--muted); margin-top: 5px; }
+.chip.where { border-color: var(--ink-soft); color: #c9ceff; }
+.cov-more { margin-top: 14px; }
+.cov-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 32px; }
+.cov-cols h3 { font: 400 26px/1 var(--serif); margin: 10px 0 12px; }
+.film li { grid-template-columns: 44px 1fr; }
+.boardhead { padding: 36px 0 0; }
+.boardhead .statbar { margin-top: 14px; }
+
 @media (max-width: 820px) {
+  .cov-top, .cov-cols, .covd { grid-template-columns: 1fr; }
+  .cov-stats { flex-wrap: wrap; }
   .wrap { padding: 0 16px; }
   .tmm, .notes, .idea { grid-template-columns: 1fr; }
   .tmm > div, .tmm > div + div { padding: 16px 0; border-right: 0; border-bottom: 1px solid var(--ink-faint); }
@@ -255,7 +316,7 @@ function renderBoard() {
   const S = D.sequence;
   if (!S) {
     const st = D.story;
-    return `<div class="wrap empty">No sequence yet.<br><span class="lede">${st ? "Treatments are ready — pick one in the Treatments tab and tell your agent." : "Ask your agent to run the storian pipeline (storian status shows the next step)."}</span></div>`;
+    return `<div class="wrap empty">No sequence yet.<br><span class="lede">${st ? "Treatments are ready — pick one in the Treatments tab and tell your agent." : "Ask your agent to run the storian pipeline (storian status shows the next step)."}</span></div><div class="wrap">${renderCoverage()}</div>`;
   }
   const shots = allShots();
   const total = shots.reduce((a, s) => a + s.dur, 0);
@@ -277,6 +338,10 @@ function renderBoard() {
       <div><div class="micro">Music</div><p>${esc(S.music || "—")}</p></div>
       <div><div class="micro">Style &amp; pacing</div><p>${esc(S.style_notes || "—")}</p></div>
     </div>
+  </section>
+  ${renderCoverage()}
+  <section class="boardhead">
+    <div class="micro">Storyboard · ${S.acts.length} acts</div>
     <div class="statbar">
       <div><div class="n">${fmtLong(total)}</div><div class="l">runtime</div></div>
       <div><div class="n">${shots.length}</div><div class="l">shots</div></div>
@@ -301,6 +366,107 @@ function renderBoard() {
   }
   return html + `</div><footer><div class="wrap">storian · ${esc(D.config.footage_dir)}</div></footer>`;
 }
+
+/* ---------------- coverage review */
+const COLS = [["wide", "Wide"], ["medium", "Med"], ["close", "Close"], ["detail", "Detail"],
+  ["wide_lens", "Wide"], ["normal", "Norm"], ["tele", "Tele"], ["angle", "Angle"], ["moving", "Move"], ["people", "People"], ["in_out", "In/out"]];
+const GAP_COL = { "no-establishing": "wide", "no-wide": "wide", "no-medium": "medium", "no-close": "close", "no-detail": "detail",
+  "one-focal-tele": "wide_lens", "one-focal-wide": "tele", "no-tele": "tele", "flat-angle": "angle", "no-movement": "moving",
+  "no-people": "people", "no-in-out": "in_out", "thin": "*", "unusable": "*" };
+const SIZE_COL = { EWS: "wide", WS: "wide", MWS: "medium", MS: "medium", MCU: "close", CU: "close", ECU: "detail", insert: "detail" };
+const FOCAL_COL = { "ultra-wide": "wide_lens", wide: "wide_lens", normal: "normal", tele: "tele" };
+let COV_ALL = false, COV_OPEN = new Set();
+const gotKey = (sc, i) => `storian:got:${D.config.name}:${sc}:${i}`;
+const isGot = k => { try { return localStorage.getItem(k) === "1"; } catch (e) { return false; } };
+function toggleGot(k, el) { try { el.checked ? localStorage.setItem(k, "1") : localStorage.removeItem(k); } catch (e) {} el.closest("li").classList.toggle("got", el.checked); event.stopPropagation(); }
+
+function sceneNeeds(sc) {  // the agent's shot list, or the rule-based gaps when the agent hasn't reviewed it
+  if (sc.needs.length || sc.reviewed) return sc.needs;
+  return sc.gaps.map(g => ({ shot: g.need, why: g.why, priority: g.severity === 3 ? 1 : g.severity === 2 ? 2 : 3, auto: true }));
+}
+function sceneFlags(sc) {
+  const f = new Set(sc.reviewed ? [] : sc.gaps.map(g => GAP_COL[g.code]).filter(Boolean));
+  for (const n of sc.needs) {
+    if (SIZE_COL[n.size]) f.add(SIZE_COL[n.size]);
+    if (FOCAL_COL[n.focal] && n.focal !== "normal") f.add(FOCAL_COL[n.focal]);
+    if (n.angle && n.angle !== "eye") f.add("angle");
+    if (n.move && !["static", "handheld-still"].includes(n.move)) f.add("moving");
+  }
+  return f;
+}
+function scenePri(sc) {
+  const ns = sceneNeeds(sc);
+  return ns.length ? Math.min(...ns.map(n => n.priority || 3)) : 9;
+}
+function needChip(n) {
+  const t = n.auto ? n.shot.split(/[:(,]/)[0].replace(/^(an?|one|the) /, "") : [n.size, n.focal !== "normal" && n.focal, n.move && !["static", "handheld-still"].includes(n.move) && n.move].filter(Boolean).join(" · ");
+  return `<span class="chip">${esc(t.length > 34 ? t.slice(0, 32) + "…" : t)}</span>`;
+}
+function renderCoverage() {
+  const C = D.coverage;
+  if (!C || !C.scenes.length) return "";
+  const scenes = C.scenes.map(sc => ({ ...sc, pri: scenePri(sc), flags: sceneFlags(sc) }));
+  const rank = sc => sc.pri * 100 - sc.score - (sc.importance === "core" ? 5 : 0);
+  const need = scenes.filter(sc => sc.pri < 9 && (sc.reviewed || (sc.importance !== "minor" && sc.score >= 3))).sort((a, b) => rank(a) - rank(b));
+  const shown = COV_ALL ? [...scenes].sort((a, b) => rank(a) - rank(b)) : need.filter(sc => sc.pri <= 2);
+  const nShots = need.reduce((a, sc) => a + sceneNeeds(sc).length, 0) + C.pickups.length;
+  const p1 = need.reduce((a, sc) => a + sceneNeeds(sc).filter(n => n.priority === 1).length, 0) + C.pickups.filter(n => n.priority === 1).length;
+  const auto = !C.reviewed;
+  const summary = C.summary || `${need.length} of ${scenes.length} scenes are missing coverage a director would expect. ${auto ? "These are rule-based gaps; ask your agent for a director's review (storian knowledge coverage) to turn them into a concrete shot list." : ""}`;
+  const head = `<tr><th class="l" rowspan="2">Pri</th><th class="l" rowspan="2">Scene</th><th class="grp" colspan="4">Shot size</th><th class="grp" colspan="3">Focal feel</th><th class="grp" colspan="4">Grammar</th><th class="grp l" rowspan="2">Needs</th></tr>
+    <tr>${COLS.map(([k, l], i) => `<th class="${[0, 4, 7].includes(i) ? "grp" : ""}">${l}</th>`).join("")}</tr>`;
+  const rows = shown.map(sc => {
+    const ns = sceneNeeds(sc), open = COV_OPEN.has(sc.id);
+    const cells = COLS.map(([k], i) => {
+      const v = sc.counts[k] || 0, cls = v ? "have" : sc.flags.has(k) || sc.flags.has("*") ? "gap" : "none";
+      return `<td class="${[0, 4, 7].includes(i) ? "g0" : ""}"><span class="cell ${cls}" title="${k}: ${v} usable">${v || (cls === "gap" ? "+" : "·")}</span></td>`;
+    }).join("");
+    const pri = sc.pri < 9 ? `<span class="pri p${sc.pri}">P${sc.pri}</span>` : `<span class="pri ok">ok</span>`;
+    return `<tr class="row ${open ? "open" : ""}" onclick="toggleScene('${sc.id}')"><td class="l">${pri}</td>
+      <td class="l"><div class="nm">${esc(sc.name)}</div><div class="sub"><span class="imp ${sc.importance}">${sc.importance}</span> · ${sc.id} · ${sc.n} clips${sc.used.length ? ` · ${sc.used.length} in cut` : ""}${(sc.time_of_day || []).length ? " · " + esc(sc.time_of_day.join("/")) : ""}</div></td>
+      ${cells}<td class="l"><div class="needchips">${ns.slice(0, 3).map(needChip).join("")}${ns.length > 3 ? `<span class="chip">+${ns.length - 3}</span>` : ""}${ns.length ? "" : '<span class="chip">covered</span>'}</div></td></tr>
+      ${open ? `<tr class="detail"><td colspan="${COLS.length + 3}">${sceneDetail(sc, ns)}</td></tr>` : ""}`;
+  }).join("");
+  const film = C.film.map(g => `<li><span class="pri p${g.severity === 3 ? 1 : g.severity === 2 ? 2 : 3}">P${g.severity === 3 ? 1 : g.severity === 2 ? 2 : 3}</span><div><div class="what">${esc(g.need)}</div>${g.why ? `<div class="wy">${esc(g.why)}</div>` : ""}</div></li>`).join("");
+  return `<section class="cov" id="coverage">
+    <div class="cov-top"><div>
+      <div class="micro">Coverage review · ${auto ? "rule-based" : "director's notes"}</div>
+      <h2>What to shoot <em>next</em></h2>
+      <p class="sum">${esc(summary)}</p></div>
+      <div class="cov-stats">
+        <div><div class="n y">${need.length}</div><div class="l">scenes need shots</div></div>
+        <div><div class="n">${nShots}</div><div class="l">shots on list</div></div>
+        <div><div class="n y">${p1}</div><div class="l">priority 1</div></div>
+        <div><div class="n">${C.pickups.length}</div><div class="l">pickups anywhere</div></div>
+      </div></div>
+    <div class="covt-wrap"><table class="covt">${head}${rows}</table></div>
+    <div class="cov-more"><button class="btn ghost" onclick="COV_ALL=!COV_ALL;rerender()">${COV_ALL ? "Show only priority 1–2" : `Show all ${scenes.length} scenes (${scenes.length - shown.length} more)`}</button>
+      <span class="mono" style="font-size:11px;color:var(--muted);margin-left:14px"><span class="cell have">3</span> usable clips &nbsp; <span class="cell gap">+</span> gap to shoot &nbsp; click a scene for its shot list</span></div>
+    <div class="cov-cols">
+      <div><div class="micro">Across the film</div><h3>Film-level gaps</h3><ul class="needs film">${film || "<li><span></span><div>none</div></li>"}</ul></div>
+      <div><div class="micro">Shoot these anywhere</div><h3>Pickups</h3><ul class="needs">${C.pickups.map((n, i) => needLi(n, gotKey("pickups", i))).join("") || `<li><span></span><span></span><div class="wy">No pickups listed yet.</div></li>`}</ul></div>
+    </div>
+    ${C.errors.length ? `<ul class="issues">${C.errors.map(e => `<li class="err">${esc(e)}</li>`).join("")}</ul>` : ""}
+  </section>`;
+}
+function needLi(n, key) {
+  const got = !n.auto && isGot(key);
+  const spec = [n.size, n.focal, n.angle && n.angle !== "eye" && n.angle, n.move, n.secs && n.secs + "s"].filter(Boolean);
+  return `<li class="${got ? "got" : ""}">${n.auto ? "<span></span>" : `<input type="checkbox" ${got ? "checked" : ""} onclick="toggleGot('${key}', this)" title="got it">`}
+    <span class="pri p${n.priority || 3}">P${n.priority || 3}</span>
+    <div><div class="what">${esc(n.shot)}</div>
+    ${spec.length || n.where ? `<div class="spec">${spec.map(x => `<span class="chip k">${esc(x)}</span>`).join("")}${n.where ? `<span class="chip where">${esc(n.where)}</span>` : ""}</div>` : ""}
+    ${n.why ? `<div class="wy">${esc(n.why)}</div>` : ""}</div></li>`;
+}
+function sceneDetail(sc, ns) {
+  return `<div class="covd"><div><div class="thumbs">${sc.thumbs.map(t => `<div onclick="event.stopPropagation();openClip('${t.clip}')"><img loading="lazy" src="${frameUrl(t.clip, t.t)}"><span>${esc(t.clip)} · ${esc(t.size || "")}</span></div>`).join("")}</div>
+      <div class="sub mono" style="margin-top:8px;font-size:11px;color:var(--muted)">${sc.usable}/${sc.n} usable · ${sc.usable_s}s of good moments${sc.used.length ? " · in cut: " + esc(sc.used.join(" ")) : ""}</div></div>
+    <div>${sc.verdict ? `<p class="verdict">${esc(sc.verdict)}</p>` : ""}
+      <div class="micro" style="margin-bottom:8px">${ns.length ? (sc.reviewed ? "Shot list" : "Rule-based gaps") : "Covered · nothing to shoot"}</div>
+      <ul class="needs">${ns.map((n, i) => needLi(n, gotKey(sc.id, i))).join("")}</ul></div></div>`;
+}
+function toggleScene(id) { COV_OPEN.has(id) ? COV_OPEN.delete(id) : COV_OPEN.add(id); rerender(); }
+function rerender() { const y = scrollY; render(); scrollTo(0, y); }
 
 function shotCard(s) {
   const L = D.labels[s.clip] || {};

@@ -30,7 +30,13 @@ Run every command from this repo with `uv run storian -p <project> <command>` (o
    if the footage only supports less.
 8. **Check**: `storian check`. Fix every error. Fix warnings, or justify them in the shot's `why`.
 9. **Previews**: `storian previews` renders only the chosen ranges, so the animatic plays.
-10. **Review**: `storian serve` (http://localhost:7878). The page live-reloads when you edit
+10. **Coverage review**: read `storian knowledge coverage`, run `storian coverage --scaffold`
+    (auto scenes) and `storian coverage` (per-scene counts and rule-based gaps). Look at the
+    sheets of the flagged scenes, then fill in `coverage.json` as the director: fix the scene
+    grouping, write a verdict per scene, and list the concrete shots to go and get (`needs`), the
+    `pickups` that can be shot anywhere, and the film-level gaps. The storyboard shows this as
+    "What to shoot next", above the sequence.
+11. **Review**: `storian serve` (http://localhost:7878). The page live-reloads when you edit
     JSON. Leave it running and give the human the URL.
 
 ## Changing things on request
@@ -53,6 +59,7 @@ Run every command from this repo with `uv run storian -p <project> <command>` (o
 | `labels/<clip>.json` | **you** | shot grammar, mood, quality, moments |
 | `story.json` | **you** | treatments + the human's choice |
 | `sequence.json` | **you** | the storyboard |
+| `coverage.json` | **you** | scenes, the director's verdicts, the shots to go and get |
 | `previews/*.mp4` | previews | H.264 previews of chosen ranges |
 
 ## Code

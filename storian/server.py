@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlparse
 
 from .check import check_sequence
+from .coverage import analyze as analyze_coverage
 from .project import Project, read_json
 
 WEB = Path(__file__).parent / "web"
@@ -35,11 +36,12 @@ def project_payload(p: Project) -> dict:
         "sequence": read_json(p.sequence_path) if p.sequence_path.exists() else None,
         "check": check_sequence(p) if p.sequence_path.exists() else None,
         "previews": previews,
+        "coverage": analyze_coverage(p) if p.labels_dir.exists() else None,
     }
 
 
 def version(p: Project) -> float:
-    paths = [p.story_path, p.sequence_path, p.clips_path, p.labels_dir, p.previews_dir]
+    paths = [p.story_path, p.sequence_path, p.coverage_path, p.clips_path, p.labels_dir, p.previews_dir]
     paths += list(p.labels_dir.glob("*.json")) if p.labels_dir.exists() else []
     return max((x.stat().st_mtime for x in paths if x.exists()), default=0)
 

@@ -20,6 +20,8 @@ class Project:
     @property
     def sequence_path(self): return self.root / "sequence.json"
     @property
+    def coverage_path(self): return self.root / "coverage.json"
+    @property
     def lut_path(self): return self.root / "slog3_to_709.cube"
 
     # dirs

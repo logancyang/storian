@@ -12,6 +12,11 @@ optional script or a paragraph of ideas. The agent:
 4. directs a sequence with craft encoded in [`knowledge/director.md`](storian/knowledge/director.md): perspective changes, cuts on action and motion, pacing curves, VO vs B-roll sections, motif and bookends
 5. serves a **storyboard on localhost**: theme, mood and idea at the top, then every shot with frames, clip name, labels, in/out timecodes, VO line and a director's note, plus a playable animatic
 
+6. reviews coverage like a director on the dailies: which scenes lack close-ups, a tele
+   perspective, an establishing wide, a human reaction, an entry or exit, or an action covered
+   from two sizes. It turns those gaps into a **shot list for the videographer** (what, lens,
+   angle, move, how long, and why), shown at the top of the storyboard
+
 Then you say things like *"act 3 drags"* or *"swap s047 for something with more motion"*, and
 the agent edits the plan. The page updates live.
 
@@ -42,6 +47,7 @@ macOS uses VideoToolbox hardware decode and falls back to software elsewhere.
 | `digest` | one line per clip with every labeled moment |
 | `check` | validate `sequence.json` and lint it against editing rules |
 | `previews` | render H.264 previews of only the chosen ranges |
+| `coverage` | scenes, coverage counts and gaps; `--scaffold` starts `coverage.json` |
 | `serve` | storyboard + animatic at http://localhost:7878 |
 | `status` | pipeline state and next step |
 | `knowledge` | print the director playbook and schemas |
@@ -49,7 +55,8 @@ macOS uses VideoToolbox hardware decode and falls back to software elsewhere.
 ## Design
 
 See [`docs/design.html`](docs/design.html) for the market survey (54 products) and the full
-design. Roadmap: reference-film style learning → OTIO/FCPXML export to DaVinci Resolve → local
+design, and [`docs/mobile.md`](docs/mobile.md) for Storian Cloud: the paid mobile and sync plan.
+Roadmap: reference-film style learning → OTIO/FCPXML export to DaVinci Resolve → local
 VLM first-pass labeling → music beat / VO timing.
 
 ## License

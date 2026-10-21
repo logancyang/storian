@@ -60,3 +60,37 @@ def test_check_accepts_motivated_cut(tmp_path):
     r = check_sequence(p)
     assert r["errors"] == [] and r["warnings"] == []
     assert r["stats"]["shots"] == 2
+
+
+def test_auto_scenes_split_on_time_and_place():
+    from storian.coverage import auto_scenes
+    clips = [{"id": "A", "duration": 10, "recorded_at": "2025:11:13 10:00:00"},
+             {"id": "B", "duration": 10, "recorded_at": "2025:11:13 10:02:00"},   # same place, 2 min later
+             {"id": "C", "duration": 10, "recorded_at": "2025:11:13 10:10:00"},   # new place after 8 min
+             {"id": "D", "duration": 10, "recorded_at": "2025:11:13 12:00:00"}]   # back after 2 h
+    labels = {"A": {"location": "Star Ferry pier, Tsim Sha Tsui"}, "B": {"location": "Star Ferry deck"},
+              "C": {"location": "Dim sum restaurant"}, "D": {"location": "Dim sum restaurant"}}
+    assert [s["clips"] for s in auto_scenes(clips, labels)] == [["A", "B"], ["C", "D"]]
+
+
+def test_scene_gaps_flags_missing_coverage():
+    from storian.coverage import scene_gaps
+    wides = [{"shot_size": "WS", "focal_feel": "wide", "angle": "eye", "camera_move": "static",
+              "quality": 4, "story_role": ["establishing"]}] * 4
+    gaps = scene_gaps(wides)
+    assert {"no-close", "no-detail", "no-people", "one-focal-wide", "flat-angle", "no-movement"} <= set(gaps)
+    assert scene_gaps(wides[:2]) == ["thin"]
+    assert scene_gaps([{**wides[0], "quality": 2}] * 4) == ["unusable"]
+
+
+def test_coverage_review_overrides_scenes(tmp_path):
+    from storian.coverage import analyze
+    p = make_project(tmp_path, [{"id": "s1", "clip": "A", "in": 1, "out": 4}])
+    write_json(p.coverage_path, {"summary": "x", "scenes": [
+        {"id": "sc01", "name": "Pier", "clips": ["A", "B"], "verdict": "v",
+         "needs": [{"shot": "CU hands", "size": "CU", "priority": 1}]},
+        {"id": "sc02", "name": "Ghost", "clips": ["Z"]}]})
+    r = analyze(p)
+    assert r["reviewed"] and r["scenes"][0]["name"] == "Pier" and r["scenes"][0]["needs"][0]["shot"] == "CU hands"
+    assert r["scenes"][0]["used"] == ["s1"]
+    assert any("unknown clip Z" in e for e in r["errors"])

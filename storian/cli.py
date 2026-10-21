@@ -11,6 +11,7 @@ from pathlib import Path
 
 from . import media
 from .check import check_sequence
+from .coverage import analyze as analyze_coverage, auto_scenes
 from .project import Project, read_json, write_json
 
 KNOWLEDGE = Path(__file__).parent / "knowledge"
@@ -198,6 +199,39 @@ def cmd_previews(args):
     print(json.dumps({"rendered": len(jobs)}))
 
 
+def cmd_coverage(args):
+    """Director's coverage review: per-scene shot grammar counts and the gaps to shoot."""
+    p = resolve_project(args)
+    if args.scaffold:
+        if p.coverage_path.exists() and not args.force:
+            sys.exit(f"{p.coverage_path} exists (use --force to overwrite)")
+        labels = p.labels()
+        scenes = auto_scenes([c for c in p.clips() if c["id"] in labels], labels)
+        write_json(p.coverage_path, {"summary": "", "scenes": [{**s, "verdict": "", "needs": []} for s in scenes],
+                                     "pickups": [], "film": []})
+        print(json.dumps({"wrote": str(p.coverage_path), "scenes": len(scenes)}))
+        return
+    report = analyze_coverage(p)
+    if args.json:
+        print(json.dumps(report, indent=2, ensure_ascii=False))
+        return
+    print("# scene | importance | clips (usable, shots used) | gap score | name || "
+          "counts per column || rule gaps")
+    for s in sorted(report["scenes"], key=lambda s: -s["score"]):
+        counts = " ".join(f"{k}={v}" for k, v in s["counts"].items())
+        print(f"{s['id']} | {s['importance']} | {s['n']} ({s['usable']}, {len(s['used'])}) | {s['score']} | "
+              f"{s['name']} [{s['clips'][0]}..{s['clips'][-1]}] || {counts} || "
+              f"{', '.join(g['code'] for g in s['gaps']) or '-'}{' | needs: ' + str(len(s['needs'])) if s['needs'] else ''}")
+    for g in report["film"]:
+        print(f"FILM sev{g['severity']}: {g['need']} ({g['why']})" if g["why"] else f"FILM: {g['need']}")
+    for e in report["errors"]:
+        print(f"ERROR {e}")
+    if report["unassigned"]:
+        print(f"UNASSIGNED {len(report['unassigned'])} labeled clips: {' '.join(report['unassigned'][:30])}")
+    if not report["reviewed"]:
+        print("next: storian coverage --scaffold, then write verdicts + needs (storian knowledge coverage)")
+
+
 def cmd_status(args):
     """Where the pipeline is and what the agent should do next."""
     p = resolve_project(args)
@@ -214,6 +248,7 @@ def cmd_status(args):
         ("sequence", p.sequence_path.exists(), "write sequence.json (read knowledge/director.md first)"),
         ("check", p.sequence_path.exists() and not check_sequence(p)["errors"], "storian check"),
         ("previews", p.previews_dir.exists() and any(p.previews_dir.iterdir()), "storian previews"),
+        ("coverage", p.coverage_path.exists(), "storian coverage, then write coverage.json (storian knowledge coverage)"),
     ]
     nxt = next((cmd for name, ok, cmd in steps if not ok), "storian serve  (and iterate with the human)")
     print(json.dumps({"project": str(p.root), "clips": len(clips), "framed": framed, "labeled": len(labels),
@@ -226,7 +261,7 @@ def cmd_serve(args):
 
 
 def cmd_knowledge(args):
-    names = [args.name] if args.name else ["director", "label_schema", "sequence_schema"]
+    names = [args.name] if args.name else ["director", "label_schema", "sequence_schema", "coverage"]
     for n in names:
         print((KNOWLEDGE / f"{n}.md").read_text())
 
@@ -273,6 +308,12 @@ def main(argv=None):
     s.add_argument("--force", action="store_true")
     s.set_defaults(fn=cmd_previews)
 
+    s = sub.add_parser("coverage", help="director's coverage review: which scenes need which shots")
+    s.add_argument("--scaffold", action="store_true", help="write coverage.json with the auto scenes to fill in")
+    s.add_argument("--force", action="store_true")
+    s.add_argument("--json", action="store_true")
+    s.set_defaults(fn=cmd_coverage)
+
     sub.add_parser("status", help="pipeline state and next step").set_defaults(fn=cmd_status)
 
     s = sub.add_parser("serve", help="storyboard on localhost")
@@ -281,7 +322,7 @@ def main(argv=None):
     s.set_defaults(fn=cmd_serve)
 
     s = sub.add_parser("knowledge", help="print the director playbook and schemas")
-    s.add_argument("name", nargs="?", choices=["director", "label_schema", "sequence_schema"])
+    s.add_argument("name", nargs="?", choices=["director", "label_schema", "sequence_schema", "coverage"])
     s.set_defaults(fn=cmd_knowledge)
 
     args = ap.parse_args(argv)
