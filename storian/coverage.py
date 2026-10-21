@@ -8,6 +8,7 @@ The numbers and rule-based gaps here are facts the agent starts from. The agent'
 import re
 from collections import Counter
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from .media import parse_tc
 from .project import Project, read_json
@@ -63,6 +64,33 @@ RULES = {
     "no-hero": (1, "one hero frame: best light, strongest composition, clean motion",
                 "nothing here rates a 5: the scene has coverage but no image to open or close it on"),
 }
+
+# who has to be in front of the camera for each rule's fix: "none" (place, objects, light),
+# "unrecognizable" (a figure nobody can identify: silhouette, far away, from behind), "talent"
+SUBJECT = {"thin": "talent", "unusable": "talent", "no-close": "talent", "no-medium": "talent",
+           "no-people": "talent", "no-action-pair": "talent", "no-in-out": "unrecognizable"}
+
+
+def local_time(c, tz: str | None):
+    """Record time as a timezone-aware datetime in the shoot's local zone (camera clocks often
+    keep the home timezone; the offset they store makes the conversion exact)."""
+    try:
+        t = datetime.strptime((c.get("recorded_at") or "")[:25].replace("Z", "+00:00"), "%Y:%m:%d %H:%M:%S%z")
+    except ValueError:
+        return None
+    return t.astimezone(ZoneInfo(tz)) if tz else t
+
+
+def scene_when(clips: list, lbs: list, tz: str | None) -> dict:
+    """When the scene was shot and what the light was, so a reshoot can match it."""
+    times = sorted(t for t in (local_time(c, tz) for c in clips) if t)
+    if not times:
+        return {}
+    light = Counter(lb.get("light") for lb in lbs if lb.get("light")).most_common(1)
+    return {"date": times[0].strftime("%a %d %b %Y"), "start": times[0].strftime("%H:%M"),
+            "end": times[-1].strftime("%H:%M"), "tz": times[0].tzname() or "",
+            "time_of_day": sorted({lb.get("time_of_day") for lb in lbs if lb.get("time_of_day")}),
+            "light": light[0][0] if light else ""}
 
 
 def _time(c):
@@ -218,6 +246,8 @@ def analyze(p: Project) -> dict:
     unassigned = [c for c in labels if c not in assigned] if defined else []
     weight = {"core": 1.0, "support": 0.6, "minor": 0.25}
     rev = {r.get("id"): r for r in review.get("scenes", [])}
+    clip_map = {c["id"]: c for c in clips}
+    tz = p.config.get("timezone")
 
     out = []
     for s in scenes:
@@ -247,7 +277,10 @@ def analyze(p: Project) -> dict:
             "n": len(lbs), "usable": len(good), "usable_s": round(secs), "used": shots_used,
             "time_of_day": sorted({lb.get("time_of_day") for lb in lbs if lb.get("time_of_day")}),
             "counts": {k: counts[k] for k in COLUMNS},
-            "gaps": [{"code": g, "severity": RULES[g][0], "need": RULES[g][1], "why": RULES[g][2]} for g in gaps],
+            "gaps": [{"code": g, "severity": RULES[g][0], "need": RULES[g][1], "why": RULES[g][2],
+                      "subject": SUBJECT.get(g, "none")} for g in gaps],
+            "when": scene_when([clip_map[x] for x in s["clips"] if x in clip_map], lbs, tz),
+            "wardrobe": r.get("wardrobe", ""),
             "score": score, "thumbs": thumbs[:6],
             "reviewed": bool(r),
             "verdict": r.get("verdict", ""),

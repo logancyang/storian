@@ -55,7 +55,41 @@ for that the footage doesn't have:
 - **Transitions between chapters**: graphic-match pairs, whip pans, objects crossing the lens.
   These rarely happen by accident.
 
-## 3. How to write a need
+## 3. Continuity: reshooting days later
+
+A reshoot can rarely recreate a scene exactly. Light can be matched; the subject's outfit, hair and
+mood usually can't. If the outfit changes between two shots of one sequence, viewers notice: it
+reads as a different day. So plan every need around who has to be in front of the camera,
+and default to shots nobody has to be in:
+
+1. **No model (`subject: "none"`) first.** Most coverage gaps are about the place, not the
+   person: establishing wides, tele compression of crowds and streets, inserts of objects and
+   textures, signage, water, light, an empty bench, a vehicle pulling away, POV moves. These
+   cut into the original sequence invisibly if the light matches. Aim for most of the list.
+2. **Match the light by time and weather.** Go back at the same local time
+   (`storian coverage` shows each scene's shoot time and light). Match the weather too: hard
+   sun won't cut into an overcast scene. Match the sun's height rather than the clock: weeks
+   later, the same clock time has a different sun, so shift the time until the shadows match.
+   Shoot the same side of the street, facing the same way.
+3. **If a figure is needed, make it unrecognizable (`subject: "unrecognizable"`).** A
+   silhouette against bright windows; someone far away on a long lens, where only the colour of
+   their clothes reads; seen from behind at a distance; an out-of-focus foreground shape. A
+   stand-in of similar build in the same colours works for these. Match colour, not the exact
+   garment: at 5% of the frame a similar blue shirt reads the same.
+4. **If it truly needs the model (`subject: "talent"`)**, the options are:
+   - Same outfit: note the wardrobe and plan a day when they can wear it again.
+   - Hands only: bare forearms or a neutral sleeve.
+   - **Make it a new scene.** Don't intercut it with the original. Write it as a later beat
+     (a return visit, a different day) and let the edit say so with time or place cues. A new
+     outfit is fine in a new scene.
+   Always give a talent need a `fallback`: the best version of the shot without the model.
+5. **Prevent it next time.** Shoot the scene's coverage before leaving the location (the shot
+   list in shoot mode), photograph each day's outfit, and pack one hero outfit for repeat days.
+
+For each scene, write its `wardrobe` from the labels ("her: blue denim shirt, beige cap"), so
+anyone planning a talent reshoot knows what has to match.
+
+## 4. How to write a need
 
 Every need is one shot a videographer could execute without asking a question:
 
@@ -65,6 +99,8 @@ Every need is one shot a videographer could execute without asking a question:
   owner's actual lenses, which are listed in `clips.json`. Example: "tele means your 18-135 at
   100–135 mm; the 17-40 can't compress."
 - `secs`: how long to roll. Default ≥10 s with 3 s handles. For actions, two takes.
+- `subject`: `none`, `unrecognizable` or `talent` (§3). `fallback` (talent only): the version
+  of the shot without the model.
 - `where`: `on-location` (must go back) or `anywhere` (a pickup shot at home or any city:
   hands, coffee, a notebook, packing, a phone map, window light, room tone).
   Mark pickups honestly. They are the cheapest gaps to close, and they belong in `pickups`.
@@ -76,7 +112,7 @@ Don't list a gap the story doesn't need. A two-clip transit scene that only serv
 needs nothing. A minor scene the film doesn't use is either dropped or flagged "worth a full
 sequence if you go back", not given ten needs.
 
-## 4. `coverage.json`
+## 5. `coverage.json`
 
 ```json
 {
@@ -87,17 +123,19 @@ sequence if you go back", not given ten needs.
       "name": "Harbour railing, late morning",
       "clips": ["C5447", "C5448"],
       "importance": "core",
+      "wardrobe": "him: light jacket, black backpack",
       "verdict": "Seven mediums of the skyline from the same railing. Lovely light, but nothing to cut to: no wide, no person, no detail.",
       "needs": [
         {"shot": "Tele CU of her hands on the railing, skyline soft behind", "size": "CU", "focal": "tele",
-         "angle": "eye", "move": "static", "secs": 10, "where": "on-location", "priority": 1,
-         "why": "gives the arrival a human beat and a close to cut against the wide skyline"}
+         "angle": "eye", "move": "static", "secs": 10, "where": "on-location", "priority": 1, "subject": "talent",
+         "why": "gives the arrival a human beat and a close to cut against the wide skyline",
+         "fallback": "tele CU of the turquoise railing pattern with the skyline soft behind, same light"}
       ]
     }
   ],
   "pickups": [
     {"shot": "ECU of a hand turning a page in a notebook, window light", "size": "ECU", "focal": "normal",
-     "angle": "high", "move": "static", "secs": 12, "where": "anywhere", "priority": 2,
+     "angle": "high", "move": "static", "secs": 12, "where": "anywhere", "priority": 2, "subject": "none",
      "why": "a recurring 'writing it down' insert gives the VO a home and bridges chapters"}
   ],
   "film": ["Film-level gaps in one sentence each, e.g. 'No golden-hour light in the whole library: the warm end of the palette is missing.'"]
@@ -107,11 +145,13 @@ sequence if you go back", not given ten needs.
 - `scenes`: start from `storian coverage --scaffold`, which writes the auto scenes. You may
   rename, merge or split them by editing `clips`. Every clip belongs to at most one scene.
   Keep ids stable once the human has seen them.
+- Set the shoot's timezone with `storian init … --timezone Asia/Hong_Kong` (stored in
+  `project.json`) so scene times are local, not the camera's home clock.
 - Scenes you list with `needs: []` are reviewed as covered. Write them a verdict anyway.
 - `importance`: `core` | `support` | `minor`. It overrides the automatic guess.
 - The storyboard shows this file at the top, as "What to shoot next", above the sequence.
 
-## 5. After new footage arrives
+## 6. After new footage arrives
 
 Re-run `scan`, `frames`, label the new clips, then `storian coverage`. Remove the needs the
 new clips satisfy, and mention which clip satisfied each one in the scene's verdict. Then re-cut the

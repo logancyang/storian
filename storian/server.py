@@ -13,10 +13,11 @@ from urllib.parse import unquote, urlparse
 
 from .check import check_sequence
 from .coverage import analyze as analyze_coverage
+from . import music
 from .project import Project, read_json
 
 WEB = Path(__file__).parent / "web"
-MEDIA_DIRS = ("frames", "sheets", "previews")
+MEDIA_DIRS = ("frames", "sheets", "previews", "music")
 
 
 def project_payload(p: Project) -> dict:
@@ -37,11 +38,19 @@ def project_payload(p: Project) -> dict:
         "check": check_sequence(p) if p.sequence_path.exists() else None,
         "previews": previews,
         "coverage": analyze_coverage(p) if p.labels_dir.exists() else None,
+        "music": music_payload(p),
     }
 
 
+def music_payload(p: Project):
+    if not p.music_path.exists():
+        return None
+    data = music.load(p)
+    return {**data, "cue_seconds": music.cue_lengths(p, data), "errors": music.check(p, data)}
+
+
 def version(p: Project) -> float:
-    paths = [p.story_path, p.sequence_path, p.coverage_path, p.clips_path, p.labels_dir, p.previews_dir]
+    paths = [p.story_path, p.sequence_path, p.coverage_path, p.music_path, p.clips_path, p.labels_dir, p.previews_dir]
     paths += list(p.labels_dir.glob("*.json")) if p.labels_dir.exists() else []
     return max((x.stat().st_mtime for x in paths if x.exists()), default=0)
 

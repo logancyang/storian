@@ -265,7 +265,7 @@ The user's agent and API key do the work; we pay only for storage and bandwidth.
 
 | Phase | Scope | Exit criteria | Plan |
 |---|---|---|---|
-| **0 · Mobile-ready (1 week)** | Fix the phone layout of every tab; installable web app. `storian serve --lan` with a token and a QR code for same-Wi-Fi use. Ticks stay in local storage. | The shot list and animatic are good to use on a phone on the same Wi-Fi. | Free |
+| **0 · Mobile-ready (done)** | Phone layout for every tab with a bottom tab bar and a phone-first Shot list tab; installable web app that works offline. `storian publish` deploys a static snapshot to the user's own Cloudflare account (Workers static assets behind a one-time key). Ticks stay in local storage. | The shot list and animatic are good to use on a phone on a trip. | Free (self-hosted) |
 | **1 · Sync MVP (4–6 weeks)** | `login`, `sync` (only new files, `--dry-run`), `inbox`; hosted viewer; QR pairing; offline shot list with synced ticks; comments; Stripe; one share link per project. | People sync and open the project on a phone within a day of signing up; shoot mode is used on a real shoot. | **Pro** |
 | **2 · Agent from the phone (4 weeks)** | `sync --watch` running the user's agent; request states and replies; chat panel; voice notes; push notifications; viewer comments on share links; "what changed" view. | A comment made on the phone becomes a re-cut on the phone without the user touching the laptop. | **Pro** |
 | **3 · Laptop-off** | Optional proxy upload; a cloud agent that re-cuts and renders previews from proxies; native wrappers if needed; team workspaces. | A re-cut finishes while the laptop is closed. | **Studio** |

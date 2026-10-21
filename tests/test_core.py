@@ -94,3 +94,51 @@ def test_coverage_review_overrides_scenes(tmp_path):
     assert r["reviewed"] and r["scenes"][0]["name"] == "Pier" and r["scenes"][0]["needs"][0]["shot"] == "CU hands"
     assert r["scenes"][0]["used"] == ["s1"]
     assert any("unknown clip Z" in e for e in r["errors"])
+
+
+def test_estimate_bpm_on_a_click_track():
+    from storian.music import SR, estimate_bpm
+    y = np.zeros(SR * 30, np.float32)
+    rng = np.random.default_rng(0)
+    step = SR * 60 / 96
+    for k in range(int(len(y) / step) - 1):
+        i = int(k * step)
+        y[i:i + 400] += np.hanning(400) * rng.normal(0, 1, 400)
+    assert abs(estimate_bpm(y) - 96) < 1.5
+
+
+def test_music_check_flags_unknown_tracks(tmp_path):
+    from storian.music import check, load
+    p = make_project(tmp_path, [{"id": "s1", "clip": "A", "in": 1, "out": 4}])
+    write_json(p.music_path, {"tracks": [{"id": "t1"}], "cues": [
+        {"id": "m1", "acts": [0], "candidates": [{"track": "t1"}, {"track": "t9"}], "chosen": "t1"},
+        {"id": "m2", "acts": [3], "candidates": []}]})
+    errs = check(p, load(p))
+    assert any("unknown track t9" in e for e in errs) and any("m2: act index" in e for e in errs)
+
+
+def test_scene_when_uses_shoot_timezone():
+    from storian.coverage import scene_when
+    w = scene_when([{"recorded_at": "2025:11:13 15:17:19-08:00"}], [{"time_of_day": "dawn"}], "Asia/Hong_Kong")
+    assert (w["date"], w["start"], w["tz"]) == ("Fri 14 Nov 2025", "07:17", "HKT")
+
+
+def test_publish_snapshot_holds_only_what_the_page_shows(tmp_path):
+    from storian.publish import build, frame_name, worker_name
+    assert frame_name([0.083, 1.084, 2.085], 1.5) == "t00001.084.jpg"  # same pick as frameUrl() in the page
+    assert frame_name([0.083, 1.084, 2.085], 0.0) == "t00000.083.jpg"
+    p = Project(tmp_path)
+    write_json(p.config_path, {"name": "2026 Lisbon!", "footage_dir": str(tmp_path)})
+    write_json(p.clips_path, [{"id": "C1", "duration": 9.0}])
+    (p.frames_dir / "C1").mkdir(parents=True)
+    ts = [0.5, 2.5, 4.5, 6.5, 8.5]
+    for t in ts:
+        (p.frames_dir / "C1" / f"t{t:09.3f}.jpg").write_bytes(b"jpg")
+    write_json(p.frames_dir / "C1" / "index.json", {"clip": "C1", "frames": [{"t": t} for t in ts]})
+    write_json(p.sequence_path, {"acts": [{"title": "a", "shots": [{"id": "s1", "clip": "C1", "in": 2.0, "out": 4.0}]}]})
+    info = build(p, tmp_path / ".publish")
+    pub = tmp_path / ".publish" / "public"
+    frames = sorted(x.name for x in (pub / "media" / "frames" / "C1").iterdir())
+    assert frames == ["t00002.500.jpg"]  # thumbnails of s1 only, not all five keyframes
+    assert (pub / "api" / "project.json").exists() and (pub / "sw.js").read_text().count(info["published"]) == 1
+    assert worker_name(p) == "storian-2026-lisbon"

@@ -15,7 +15,13 @@ optional script or a paragraph of ideas. The agent:
 6. reviews coverage like a director on the dailies: which scenes lack close-ups, a tele
    perspective, an establishing wide, a human reaction, an entry or exit, or an action covered
    from two sizes. It turns those gaps into a **shot list for the videographer** (what, lens,
-   angle, move, how long, and why), shown at the top of the storyboard
+   angle, move, how long, and why), shown at the top of the storyboard. The list is built for
+   reshoots without the original outfit: each shot says whether the model is needed, with a
+   no-model fallback, plus the scene's original light and wardrobe
+7. scores the film: takes your reference tracks, writes a cue sheet per act, finds three
+   different candidates per cue (Epidemic Sound or Artlist through their MCP servers, or free
+   Creative Commons music built in), checks licences for monetised YouTube, and plays it all in a
+   Music tab and under the animatic
 
 Then you say things like *"act 3 drags"* or *"swap s047 for something with more motion"*, and
 the agent edits the plan. The page updates live.
@@ -48,9 +54,20 @@ macOS uses VideoToolbox hardware decode and falls back to software elsewhere.
 | `check` | validate `sequence.json` and lint it against editing rules |
 | `previews` | render H.264 previews of only the chosen ranges |
 | `coverage` | scenes, coverage counts and gaps; `--scaffold` starts `coverage.json` |
+| `music` | `add` a reference, `search` free CC music, `fetch` previews, `analyze` tempo and energy |
 | `serve` | storyboard + animatic at http://localhost:7878 |
+| `publish` | private copy on Cloudflare for your phone: shot list, storyboard, music, offline (`--new-key`, `--dry-run`) |
 | `status` | pipeline state and next step |
 | `knowledge` | print the director playbook and schemas |
+
+## On your phone
+
+`storian publish` puts a private copy of the storyboard on your own Cloudflare account (free
+plan) so you can use it on a shoot: the shot list with tick boxes, the storyboard, the animatic
+and the music. It's a static snapshot behind a key you enter once per device, and it keeps
+working offline once opened. The footage stays on the laptop; only the frames, contact sheets and
+previews the page shows are uploaded (about 350 MB for the HK test project). Publish again after
+each session. It needs Node 22+ and `npx wrangler login` once.
 
 ## Design
 

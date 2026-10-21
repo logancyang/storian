@@ -12,6 +12,7 @@ from pathlib import Path
 from . import media
 from .check import check_sequence
 from .coverage import analyze as analyze_coverage, auto_scenes
+from . import music
 from .project import Project, read_json, write_json
 
 KNOWLEDGE = Path(__file__).parent / "knowledge"
@@ -46,6 +47,8 @@ def cmd_init(args):
         "target_minutes": args.target_minutes or cfg.get("target_minutes", 15),
         "created": cfg.get("created") or datetime.now().isoformat(timespec="seconds"),
     })
+    if args.timezone:
+        cfg["timezone"] = args.timezone
     if args.brief:
         cfg["brief"] = Path(args.brief).read_text() if Path(args.brief).is_file() else args.brief
     write_json(p.config_path, cfg)
@@ -232,6 +235,55 @@ def cmd_coverage(args):
         print("next: storian coverage --scaffold, then write verdicts + needs (storian knowledge coverage)")
 
 
+def cmd_music(args):
+    """Reference tracks, candidate search, and a summary of cues and picks."""
+    p = resolve_project(args)
+    if args.action == "add":
+        ref = music.add_reference(p, args.target, args.title or "", args.notes or "")
+        print(json.dumps({k: v for k, v in ref.items() if k != "analysis"} |
+                         {"analysis": {k: v for k, v in ref.get("analysis", {}).items() if k not in ("energy", "peaks")}}))
+        return
+    if args.action == "analyze":  # measure local references and every candidate track
+        data = music.load(p)
+        refs = [r for r in data["references"] if r.get("file")]
+        for r in refs:
+            r["analysis"] = music.analyze(p.music_dir / r["file"])
+        n = music.analyze_tracks(p, data, force=args.force)
+        write_json(p.music_path, data)
+        print(json.dumps({"references": len(refs), "tracks": n}))
+        return
+    if args.action == "fetch":
+        data = music.load(p)
+        done = music.fetch_tracks(p, data, everything=args.all)
+        write_json(p.music_path, data)
+        size = sum(f.stat().st_size for f in (p.music_dir / "previews").glob("*")) if (p.music_dir / "previews").exists() else 0
+        print(json.dumps({"fetched": len(done), "cached_mb": round(size / 1e6, 1)}))
+        return
+    if args.action == "search":
+        try:
+            found = music.search(args.target, args.provider, limit=args.limit, commercial=not args.any_license,
+                                 vocals=args.vocals)
+        except OSError as e:
+            sys.exit(f"{args.provider} search failed ({e}); try again, or --provider "
+                     f"{'openverse' if args.provider == 'ccmixter' else 'ccmixter'}")
+        for t in found:
+            print(json.dumps({k: t[k] for k in ("id", "title", "artist", "duration", "bpm", "license", "youtube_ok", "tags", "url")}))
+        if args.save:
+            print(json.dumps({"saved": music.save_tracks(p, found)}), file=sys.stderr)
+        return
+    data = music.load(p)
+    lengths = music.cue_lengths(p, data)
+    tracks = {t["id"]: t for t in data["tracks"]}
+    print(json.dumps({
+        "references": [f"{r['id']}: {r.get('title')} ({(r.get('analysis') or {}).get('bpm') or '?'} bpm)" for r in data["references"]],
+        "cues": [f"{c['id']} acts {c.get('acts')} {lengths.get(c['id'], '?')}s: {c.get('title', '')} -> "
+                 f"{tracks.get(c.get('chosen'), {}).get('title', 'no pick')} ({len(c.get('candidates', []))} candidates)"
+                 for c in data["cues"]],
+        "tracks": len(data["tracks"]),
+        "errors": music.check(p, data),
+    }, indent=2, ensure_ascii=False))
+
+
 def cmd_status(args):
     """Where the pipeline is and what the agent should do next."""
     p = resolve_project(args)
@@ -248,6 +300,7 @@ def cmd_status(args):
         ("sequence", p.sequence_path.exists(), "write sequence.json (read knowledge/director.md first)"),
         ("check", p.sequence_path.exists() and not check_sequence(p)["errors"], "storian check"),
         ("previews", p.previews_dir.exists() and any(p.previews_dir.iterdir()), "storian previews"),
+        ("music", p.music_path.exists() and bool(music.load(p)["cues"]), "write music.json cues + candidates (storian knowledge music)"),
         ("coverage", p.coverage_path.exists(), "storian coverage, then write coverage.json (storian knowledge coverage)"),
     ]
     nxt = next((cmd for name, ok, cmd in steps if not ok), "storian serve  (and iterate with the human)")
@@ -260,8 +313,22 @@ def cmd_serve(args):
     serve(resolve_project(args), args.port, args.open)
 
 
+def cmd_publish(args):
+    from .publish import publish
+    r = publish(resolve_project(args), new_key=args.new_key, dry_run=args.dry_run)
+    if args.dry_run or not r.get("url"):
+        return print(json.dumps(r, indent=2))
+    print(f"""
+Published {r['files']} files ({r['mb']} MB) at {r['published']}.
+  storyboard: {r['url']}
+  key:        {r['key']}
+On the phone, open this link once (AirDrop or message it to yourself; it signs the device in):
+  {r['login']}
+Then Share → Add to Home Screen. Run `storian publish` again after each session.""")
+
+
 def cmd_knowledge(args):
-    names = [args.name] if args.name else ["director", "label_schema", "sequence_schema", "coverage"]
+    names = [args.name] if args.name else ["director", "label_schema", "sequence_schema", "coverage", "music"]
     for n in names:
         print((KNOWLEDGE / f"{n}.md").read_text())
 
@@ -280,6 +347,7 @@ def main(argv=None):
     s.add_argument("footage")
     s.add_argument("--target-minutes", type=float)
     s.add_argument("--brief", help="script / idea text, or a path to a text file")
+    s.add_argument("--timezone", help="where it was shot, IANA name (e.g. Asia/Hong_Kong), for local shoot times")
     s.set_defaults(fn=cmd_init)
 
     for name, fn, help_ in (("scan", cmd_scan, "probe every clip (ffprobe + camera metadata)"),
@@ -314,6 +382,21 @@ def main(argv=None):
     s.add_argument("--json", action="store_true")
     s.set_defaults(fn=cmd_coverage)
 
+    s = sub.add_parser("music", help="reference tracks, music search, cues and picks")
+    s.add_argument("action", nargs="?", choices=["status", "add", "analyze", "search", "fetch"], default="status")
+    s.add_argument("target", nargs="?", help="add: audio file or URL; search: query text")
+    s.add_argument("--title")
+    s.add_argument("--notes", help="add: what the human likes about this reference")
+    s.add_argument("--limit", type=int, default=10)
+    s.add_argument("--save", action="store_true", help="search: add results to music.json tracks")
+    s.add_argument("--force", action="store_true", help="analyze: re-measure tracks already measured")
+    s.add_argument("--all", action="store_true", help="fetch: every track, not only the shortlisted candidates")
+    s.add_argument("--any-license", action="store_true", help="search: include non-commercial licences")
+    s.add_argument("--vocals", action="store_true", help="search: don't restrict to instrumentals")
+    s.add_argument("--provider", choices=["ccmixter", "openverse"], default="ccmixter",
+                   help="search: free CC catalog (paid catalogs go through their MCP servers)")
+    s.set_defaults(fn=cmd_music)
+
     sub.add_parser("status", help="pipeline state and next step").set_defaults(fn=cmd_status)
 
     s = sub.add_parser("serve", help="storyboard on localhost")
@@ -321,8 +404,13 @@ def main(argv=None):
     s.add_argument("--open", action="store_true")
     s.set_defaults(fn=cmd_serve)
 
+    s = sub.add_parser("publish", help="private copy of the storyboard on Cloudflare, for the phone")
+    s.add_argument("--new-key", action="store_true", help="replace the key; every device signs in again")
+    s.add_argument("--dry-run", action="store_true", help="build the snapshot in .publish/ without deploying")
+    s.set_defaults(fn=cmd_publish)
+
     s = sub.add_parser("knowledge", help="print the director playbook and schemas")
-    s.add_argument("name", nargs="?", choices=["director", "label_schema", "sequence_schema", "coverage"])
+    s.add_argument("name", nargs="?", choices=["director", "label_schema", "sequence_schema", "coverage", "music"])
     s.set_defaults(fn=cmd_knowledge)
 
     args = ap.parse_args(argv)

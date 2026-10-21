@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon-180.png">
 <title>Storian Storyboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
@@ -40,6 +45,7 @@ header.top .wrap { display: flex; align-items: center; gap: 24px; height: 56px; 
 nav { display: flex; gap: 4px; margin-left: 8px; }
 nav button { background: none; border: 0; color: var(--muted); font: 600 12px var(--sans); letter-spacing: .14em; text-transform: uppercase; padding: 8px 12px; cursor: pointer; border-bottom: 2px solid transparent; }
 nav button.on { color: var(--ink); border-color: var(--paper-2); }
+nav .sm { display: none; }
 .spacer { flex: 1; }
 .live { font: 12px var(--mono); color: var(--muted); display: flex; align-items: center; gap: 8px; }
 .live i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-soft); display: inline-block; }
@@ -83,7 +89,7 @@ details.vo { margin: 14px 0 0 144px; border-left: 2px solid var(--paper-2); padd
 details.vo summary { cursor: pointer; font: 600 11px var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--paper-2); }
 details.vo p { font: italic 400 19px/1.55 var(--serif); margin: 10px 0 0; white-space: pre-wrap; max-width: 900px; }
 
-.shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 22px; }
+.shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 18px; margin-top: 22px; }
 .shot { background: var(--card); border: 1px solid var(--ink-faint); cursor: pointer; display: flex; flex-direction: column; transition: border-color .15s; }
 .shot:hover, .shot.sel { border-color: var(--paper-2); }
 .thumb { position: relative; aspect-ratio: 16/9; background: #111; overflow: hidden; }
@@ -142,10 +148,10 @@ details.vo p { font: italic 400 19px/1.55 var(--serif); margin: 10px 0 0; white-
 .toolbar { display: flex; gap: 12px; align-items: center; padding: 28px 0 18px; flex-wrap: wrap; }
 .toolbar input, .toolbar select { background: #000; color: var(--ink); border: 1.5px solid var(--ink); font: 14px var(--mono); padding: 10px 12px; }
 .toolbar input { flex: 1; min-width: 220px; }
-.lib { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 18px; padding-bottom: 60px; }
+.lib { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr)); gap: 18px; padding-bottom: 60px; }
 .lib .shot img.sh { width: 100%; display: block; }
 .used { color: var(--paper-2); }
-.treat { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 18px; padding: 24px 0 60px; }
+.treat { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: 18px; padding: 24px 0 60px; }
 .treat > div { border: 1.5px solid var(--ink-faint); padding: 24px; background: var(--card); }
 .treat > div.chosen { border-color: var(--paper-2); }
 .treat h3 { font: 400 36px/1 var(--serif); margin: 10px 0; }
@@ -209,24 +215,143 @@ tr.detail td { padding: 0; background: #060606; }
 .needs .spec { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 .needs .wy { font-size: 13px; color: var(--muted); margin-top: 5px; }
 .chip.where { border-color: var(--ink-soft); color: #c9ceff; }
-.cov-more { margin-top: 14px; }
+.subj { font: 10px var(--mono); padding: 2px 6px; letter-spacing: .06em; text-transform: uppercase; }
+.subj.none { background: var(--ink-soft); color: #fff; }
+.subj.unrecognizable { border: 1px solid var(--ink-soft); color: #c9ceff; }
+.subj.talent { border: 1px solid var(--paper-2); color: var(--paper-2); }
+.fallback { font-size: 13px; margin-top: 6px; padding-left: 10px; border-left: 2px solid var(--ink-soft); color: #c9ceff; }
+.match { font: 12px/1.6 var(--mono); color: var(--muted); margin-top: 10px; }
+.match b { color: var(--ink); font-weight: 500; }
+.cov-more { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .cov-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 32px; }
 .cov-cols h3 { font: 400 26px/1 var(--serif); margin: 10px 0 12px; }
 .film li { grid-template-columns: 44px 1fr; }
 .boardhead { padding: 36px 0 0; }
 .boardhead .statbar { margin-top: 14px; }
 
+/* music */
+.cues { display: flex; flex-direction: column; gap: 18px; margin: 18px 0 40px; }
+.cue { border: 1.5px solid var(--ink-faint); background: var(--card); }
+.cue-head { display: grid; grid-template-columns: 70px 1fr auto; gap: 18px; padding: 18px 20px 14px; border-bottom: 1px solid var(--ink-faint); align-items: end; }
+.cue-head .num { font: 400 44px/0.8 var(--serif); color: var(--paper-2); }
+.cue-head h3 { font: 400 30px/1 var(--serif); margin: 0 0 6px; }
+.cue-head .range { font: 12px var(--mono); color: var(--muted); text-align: right; line-height: 1.7; }
+.cue-body { padding: 12px 20px 16px; }
+.trk { display: grid; grid-template-columns: 44px minmax(0, 1fr) 160px; gap: 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--ink-faint); }
+.trk:last-child { border-bottom: 0; }
+.trk .t { font: 400 19px/1.2 var(--serif); }
+.trk .a { font: 12px var(--mono); color: var(--muted); margin-top: 3px; }
+.trk .wy { font-size: 13px; color: var(--muted); margin-top: 5px; }
+.trk.chosen .t::before { content: "● "; color: var(--paper-2); font-size: 14px; vertical-align: 2px; }
+.pbtn { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--ink); background: none; color: var(--ink); cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; }
+.pbtn.on { background: var(--paper-2); border-color: var(--paper-2); color: #000; }
+.pbtn:disabled { opacity: .3; cursor: default; }
+svg.wave { width: 100%; height: 34px; display: block; cursor: pointer; }
+svg.wave path { fill: var(--ink-faint); }
+svg.wave path.prog { fill: var(--paper-2); }
+.lic { font: 10px var(--mono); padding: 2px 6px; letter-spacing: .06em; text-transform: uppercase; }
+.lic.ok { border: 1px solid var(--ink-soft); color: #c9ceff; }
+.lic.no { border: 1px solid #ff7b7b; color: #ff7b7b; }
+.refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 18px; margin: 18px 0 40px; }
+.ref { border: 1.5px solid var(--ink-faint); background: var(--card); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.ref h3 { font: 400 24px/1.1 var(--serif); margin: 0; }
+.credits { font: 12px/1.7 var(--mono); color: var(--muted); border: 1px solid var(--ink-faint); padding: 14px 16px; white-space: pre-wrap; margin: 10px 0 60px; }
+.section-h { font: 400 34px/1 var(--serif); margin: 44px 0 4px; }
+/* player bar */
+.player { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: rgba(0,0,0,.94); border-top: 1.5px solid var(--ink); backdrop-filter: blur(8px); display: none; }
+.player.show { display: block; }
+.player .wrap { display: grid; grid-template-columns: 44px minmax(0, 260px) 1fr auto auto; gap: 16px; align-items: center; height: 68px; }
+.player .t { font: 400 17px/1.15 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player .a { font: 11px var(--mono); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player input[type=range] { width: 100%; accent-color: var(--paper-2); }
+.player .tm { font: 12px var(--mono); color: var(--muted); }
+body.playing-bar { padding-bottom: 68px; }
+.animatic .score { position: absolute; top: 44px; right: 24px; font: 12px var(--mono); background: none; border: 1px solid var(--ink-faint); color: var(--muted); padding: 5px 9px; cursor: pointer; }
+.animatic .score.on { color: var(--paper-2); border-color: var(--paper-2); }
+.animatic .aclose { position: absolute; top: calc(10px + env(safe-area-inset-top)); left: 12px; z-index: 2; width: 40px; height: 40px; background: rgba(0,0,0,.6); border: 1px solid var(--ink-faint); color: var(--ink); font-size: 16px; cursor: pointer; }
+.animatic .hud { left: 64px; }
+.drow { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+/* shot list */
+details.note summary { cursor: pointer; list-style: none; color: var(--paper-2); padding: 4px 0; }
+details.note summary::-webkit-details-marker { display: none; }
+.prog { height: 6px; background: var(--ink-faint); margin-top: 18px; }
+.prog i { display: block; height: 100%; background: var(--paper-2); }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 4px; }
+.toggle { background: none; border: 1.5px solid var(--ink-faint); color: var(--muted); font: 600 12px var(--sans); letter-spacing: .08em; text-transform: uppercase; padding: 11px 14px; cursor: pointer; }
+.toggle.on { border-color: var(--paper-2); color: var(--paper-2); }
+.scns { display: flex; flex-direction: column; gap: 12px; margin: 16px 0 40px; }
+details.scn { border: 1.5px solid var(--ink-faint); background: var(--card); }
+details.scn[open] { border-color: var(--ink); }
+details.scn > summary { list-style: none; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 16px; cursor: pointer; }
+details.scn > summary::-webkit-details-marker { display: none; }
+.scn .nm { font: 400 21px/1.15 var(--serif); }
+.scn .sub { font: 11px var(--mono); color: var(--muted); margin-top: 4px; }
+.scn .cnt { font: 11px var(--mono); color: var(--muted); text-align: right; white-space: nowrap; }
+.scn .cnt b { display: block; color: var(--ink); font: 400 22px/1 var(--serif); margin-bottom: 2px; }
+.scn.done .nm { color: var(--muted); text-decoration: line-through; }
+.scn .covd { padding-top: 4px; }
+
+@media (hover: none) { .shot:hover { border-color: var(--ink-faint); } }
 @media (max-width: 820px) {
-  .cov-top, .cov-cols, .covd { grid-template-columns: 1fr; }
-  .cov-stats { flex-wrap: wrap; }
+  * { -webkit-tap-highlight-color: transparent; }
+  body { -webkit-text-size-adjust: 100%; padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
   .wrap { padding: 0 16px; }
+  header.top { padding-top: env(safe-area-inset-top); backdrop-filter: none; background: #000; }  /* a backdrop-filter would trap the fixed tab bar inside the header */
+  header.top .wrap { height: 48px; gap: 12px; }
+  nav { position: fixed; left: 0; right: 0; bottom: 0; margin: 0; z-index: 25; display: grid; grid-template-columns: repeat(6, 1fr); gap: 0;
+    background: rgba(0,0,0,.94); backdrop-filter: blur(8px); border-top: 1.5px solid var(--ink); padding-bottom: env(safe-area-inset-bottom); }
+  nav button { height: 56px; padding: 0; font-size: 10px; letter-spacing: .06em; border-bottom: 0; border-top: 2px solid transparent; }
+  nav button.on { border-top-color: var(--paper-2); }
+  nav .lg { display: none; } nav .sm { display: inline; }
+  .live:not(.hosted) span { display: none; }
+  .live span { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .player { bottom: calc(56px + env(safe-area-inset-bottom)); }
+  .player .wrap { grid-template-columns: 44px minmax(0, 1fr) auto; height: 64px; }
+  .player .wrap > :nth-child(3), .player .wrap > :nth-child(4) { display: none; }
+  body.playing-bar { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
+  .drawer .in { padding: calc(14px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom)); }
+  .drawer h3 { font-size: 28px; }
+  .kv { grid-template-columns: 88px minmax(0, 1fr); gap: 6px 12px; }
+  .hero { padding: 28px 0 24px; }
+  .hero .logline { margin-bottom: 24px; }
   .tmm, .notes, .idea { grid-template-columns: 1fr; }
   .tmm > div, .tmm > div + div { padding: 16px 0; border-right: 0; border-bottom: 1px solid var(--ink-faint); }
-  .act-head { grid-template-columns: 1fr; }
+  .idea { gap: 10px; padding: 20px 0; }
+  .statbar > div { flex: 1 1 33%; padding: 12px 14px; }
+  .statbar .n { font-size: 24px; }
+  .statbar .play { flex-basis: 100%; padding: 0; border-top: 1px solid var(--ink-faint); }
+  .statbar .play .btn { width: 100%; }
+  .timeline a { padding: 0 4px; font-size: 10px; }
+  .act { padding-top: 36px; }
+  .act-head { grid-template-columns: 1fr; gap: 8px; }
+  .act-num { font-size: 52px; }
+  .act-head h2 { font-size: 30px; }
+  .act-head .range { text-align: left; }
   details.vo { margin-left: 0; }
-  nav button { padding: 8px 6px; letter-spacing: .08em; }
-  .live span { display: none; }
+  .page-title { font-size: 40px; margin-top: 28px; }
+  .section-h { font-size: 28px; }
+  .cov { padding: 32px 0 28px; }
+  .cov-top, .cov-cols, .covd { grid-template-columns: 1fr; }
+  .cov-stats { flex-wrap: wrap; }
+  .cov-stats > div { flex: 1 1 33%; min-width: 0; padding: 10px 12px; }
+  .cov .desk, .cov .cov-cols { display: none; }
+  .cov-more .btn { flex: 1 1 100%; }
+  .covd { gap: 16px; padding: 0 14px 16px; }
+  .needs li { grid-template-columns: 30px 40px minmax(0, 1fr); padding: 12px 0; }
+  .needs input { width: 22px; height: 22px; margin-top: 0; }
+  details.scn > summary { padding: 14px; gap: 12px; }
+  .filters .toggle { flex: 1 1 auto; }
+  .trk { grid-template-columns: 44px minmax(0, 1fr); }
+  .trk svg.wave { grid-column: 2; }
+  .cue-head { grid-template-columns: 1fr; gap: 6px; }
+  .cue-head .range { text-align: left; }
   .lib { grid-template-columns: 1fr; }
+  .toolbar input { min-width: 0; flex-basis: 100%; }
+  .toolbar select { flex: 1 1 0; min-width: 0; }
+  .animatic .keys { display: none; }
+  .animatic #hudR { display: none; }
+  .animatic .sub { bottom: 24px; font-size: 19px; padding: 0 6%; }
 }
 </style>
 </head>
@@ -234,9 +359,11 @@ tr.detail td { padding: 0; background: #060606; }
 <header class="top"><div class="wrap">
   <div class="brand">STORIAN<b>.</b></div>
   <nav id="nav">
-    <button data-tab="board" class="on">Storyboard</button>
-    <button data-tab="treat">Treatments</button>
+    <button data-tab="board" class="on"><span class="lg">Storyboard</span><span class="sm">Board</span></button>
+    <button data-tab="shoot"><span class="lg">Shot list</span><span class="sm">Shoot</span></button>
+    <button data-tab="music">Music</button>
     <button data-tab="lib">Library</button>
+    <button data-tab="treat"><span class="lg">Treatments</span><span class="sm">Ideas</span></button>
     <button data-tab="checks">Checks</button>
   </nav>
   <div class="spacer"></div>
@@ -245,19 +372,32 @@ tr.detail td { padding: 0; background: #060606; }
 
 <main id="app"><div class="wrap empty">Loading…</div></main>
 
+<div class="player" id="player"><div class="wrap">
+  <button class="pbtn" id="pPlay" onclick="togglePlay()">▶</button>
+  <div><div class="t" id="pTitle"></div><div class="a" id="pArtist"></div></div>
+  <input type="range" id="pSeek" min="0" max="1000" value="0" oninput="AUDIO.duration && (AUDIO.currentTime = this.value / 1000 * AUDIO.duration)">
+  <span class="tm" id="pTime">0:00</span>
+  <button class="btn ghost" style="padding:8px 12px" onclick="stopPlay()">✕</button>
+</div></div>
+
 <aside class="drawer" id="drawer"><div class="in" id="drawerIn"></div></aside>
 
 <div class="animatic" id="anim">
-  <div class="stage" id="stage">
+  <div class="stage" id="stage" onclick="tapStage(event)">
+    <video id="animV" playsinline style="display:none"></video><img id="animI" alt="" style="display:none">
+    <button class="aclose" onclick="event.stopPropagation();closeAnim()" title="close">✕</button>
     <div class="hud"><span id="hudL"></span><span id="hudR"></span></div>
     <div class="sub" id="sub"></div>
+    <button class="score" id="scoreBtn" onclick="event.stopPropagation();toggleScore()"></button>
   </div>
   <div class="bar"><i id="bar"></i></div>
-  <div class="keys">space pause · ← → shot · esc close</div>
+  <div class="keys">space pause · ← → shot · esc close · tap the edges to skip</div>
 </div>
 
 <script>
-let D = null, TAB = location.hash.slice(1) || "board", VERSION = 0;
+const TABS = ["board", "shoot", "music", "lib", "treat", "checks"];
+let D = null, TAB = TABS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "board", VERSION = 0;
+const HOVER = matchMedia("(hover: hover)").matches;
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const num = v => typeof v === "number" ? v : String(v).split(":").reduce((a, p) => a * 60 + parseFloat(p), 0);
@@ -288,6 +428,15 @@ function allShots() {
 async function load() {
   D = await (await fetch("/api/project")).json();
   render();
+  liveLabel();
+}
+// hosted (storian publish): a snapshot that changes only when the laptop publishes again
+function liveLabel(offline) {
+  if (!D.hosted) return;
+  $("#live").classList.add("hosted");
+  const h = (Date.now() - Date.parse(D.hosted.published)) / 3.6e6;
+  const ago = h < 1 ? `${Math.max(1, Math.round(h * 60))} min ago` : h < 48 ? `${Math.round(h)} h ago` : `${Math.round(h / 24)} days ago`;
+  $("#live span").textContent = offline ? `offline · saved copy from ${ago}` : `published ${ago}`;
 }
 async function poll() {
   try {
@@ -297,8 +446,9 @@ async function poll() {
       $("#live").classList.add("flash"); setTimeout(() => $("#live").classList.remove("flash"), 1200);
     }
     VERSION = v;
-  } catch (e) {}
-  setTimeout(poll, 2000);
+    liveLabel();
+  } catch (e) { D && liveLabel(true); }
+  setTimeout(poll, D?.hosted ? 60000 : 2000);
 }
 
 function render() {
@@ -307,8 +457,11 @@ function render() {
   if (TAB === "treat") app.innerHTML = renderTreatments();
   else if (TAB === "lib") { app.innerHTML = renderLibraryShell(); renderLibrary(); }
   else if (TAB === "checks") app.innerHTML = renderChecks();
+  else if (TAB === "music") app.innerHTML = renderMusic();
+  else if (TAB === "shoot") app.innerHTML = renderShoot();
   else app.innerHTML = renderBoard();
   bindShots();
+  syncPlayButtons();
 }
 
 /* ---------------- storyboard */
@@ -335,7 +488,7 @@ function renderBoard() {
     </div>
     <div class="idea"><div class="micro">Central idea</div><p>${esc(S.central_idea)}</p></div>
     <div class="notes">
-      <div><div class="micro">Music</div><p>${esc(S.music || "—")}</p></div>
+      <div><div class="micro">Music · <a href="#music" style="color:var(--paper-2)">listen →</a></div><p>${esc(S.music || "—")}</p></div>
       <div><div class="micro">Style &amp; pacing</div><p>${esc(S.style_notes || "—")}</p></div>
     </div>
   </section>
@@ -375,15 +528,23 @@ const GAP_COL = { "no-establishing": "wide", "no-wide": "wide", "no-medium": "me
   "no-people": "people", "no-in-out": "in_out", "thin": "*", "unusable": "*" };
 const SIZE_COL = { EWS: "wide", WS: "wide", MWS: "medium", MS: "medium", MCU: "close", CU: "close", ECU: "detail", insert: "detail" };
 const FOCAL_COL = { "ultra-wide": "wide_lens", wide: "wide_lens", normal: "normal", tele: "tele" };
-let COV_ALL = false, COV_OPEN = new Set();
-const gotKey = (sc, i) => `storian:got:${D.config.name}:${sc}:${i}`;
+let COV_ALL = false, COV_SOLO = false, COV_OPEN = new Set();
+const SUBJ_LABEL = { none: "no model", unrecognizable: "anyone, unrecognizable", talent: "needs the model" };
+const solo = n => n.subject !== "talent" || !!n.fallback;
+const hashStr = s => { let h = 5381; for (const c of String(s)) h = (h * 33 ^ c.charCodeAt(0)) >>> 0; return h.toString(36); };
+const gotKey = (sc, n) => `storian:got:${D.config.name}:${sc}:${hashStr(n.shot)}`;
 const isGot = k => { try { return localStorage.getItem(k) === "1"; } catch (e) { return false; } };
-function toggleGot(k, el) { try { el.checked ? localStorage.setItem(k, "1") : localStorage.removeItem(k); } catch (e) {} el.closest("li").classList.toggle("got", el.checked); event.stopPropagation(); }
+function toggleGot(k, el) {
+  try { el.checked ? localStorage.setItem(k, "1") : localStorage.removeItem(k); } catch (e) {}
+  el.closest("li").classList.toggle("got", el.checked); event.stopPropagation();
+  if (TAB === "shoot") rerender();
+}
 
 function sceneNeeds(sc) {  // the agent's shot list, or the rule-based gaps when the agent hasn't reviewed it
   if (sc.needs.length || sc.reviewed) return sc.needs;
-  return sc.gaps.map(g => ({ shot: g.need, why: g.why, priority: g.severity === 3 ? 1 : g.severity === 2 ? 2 : 3, auto: true }));
+  return sc.gaps.map(g => ({ shot: g.need, why: g.why, priority: g.severity === 3 ? 1 : g.severity === 2 ? 2 : 3, subject: g.subject, auto: true }));
 }
+function shownNeeds(sc) { const ns = sceneNeeds(sc); return COV_SOLO ? ns.filter(solo) : ns; }
 function sceneFlags(sc) {
   const f = new Set(sc.reviewed ? [] : sc.gaps.map(g => GAP_COL[g.code]).filter(Boolean));
   for (const n of sc.needs) {
@@ -395,28 +556,33 @@ function sceneFlags(sc) {
   return f;
 }
 function scenePri(sc) {
-  const ns = sceneNeeds(sc);
+  const ns = shownNeeds(sc);
   return ns.length ? Math.min(...ns.map(n => n.priority || 3)) : 9;
 }
 function needChip(n) {
   const t = n.auto ? n.shot.split(/[:(,]/)[0].replace(/^(an?|one|the) /, "") : [n.size, n.focal !== "normal" && n.focal, n.move && !["static", "handheld-still"].includes(n.move) && n.move].filter(Boolean).join(" · ");
   return `<span class="chip">${esc(t.length > 34 ? t.slice(0, 32) + "…" : t)}</span>`;
 }
+const covRank = sc => sc.pri * 100 - sc.score - (sc.importance === "core" ? 5 : 0);
+function covScenes() {
+  const scenes = D.coverage.scenes.map(sc => ({ ...sc, pri: scenePri(sc), flags: sceneFlags(sc) }));
+  const need = scenes.filter(sc => sc.pri < 9 && (sc.reviewed || (sc.importance !== "minor" && sc.score >= 3))).sort((a, b) => covRank(a) - covRank(b));
+  return { scenes, need };
+}
 function renderCoverage() {
   const C = D.coverage;
   if (!C || !C.scenes.length) return "";
-  const scenes = C.scenes.map(sc => ({ ...sc, pri: scenePri(sc), flags: sceneFlags(sc) }));
-  const rank = sc => sc.pri * 100 - sc.score - (sc.importance === "core" ? 5 : 0);
-  const need = scenes.filter(sc => sc.pri < 9 && (sc.reviewed || (sc.importance !== "minor" && sc.score >= 3))).sort((a, b) => rank(a) - rank(b));
+  const { scenes, need } = covScenes(), rank = covRank;
   const shown = COV_ALL ? [...scenes].sort((a, b) => rank(a) - rank(b)) : need.filter(sc => sc.pri <= 2);
   const nShots = need.reduce((a, sc) => a + sceneNeeds(sc).length, 0) + C.pickups.length;
+  const nSolo = scenes.reduce((a, sc) => a + sceneNeeds(sc).filter(n => n.subject && n.subject !== "talent").length, 0) + C.pickups.filter(n => n.subject !== "talent").length;
   const p1 = need.reduce((a, sc) => a + sceneNeeds(sc).filter(n => n.priority === 1).length, 0) + C.pickups.filter(n => n.priority === 1).length;
   const auto = !C.reviewed;
   const summary = C.summary || `${need.length} of ${scenes.length} scenes are missing coverage a director would expect. ${auto ? "These are rule-based gaps; ask your agent for a director's review (storian knowledge coverage) to turn them into a concrete shot list." : ""}`;
   const head = `<tr><th class="l" rowspan="2">Pri</th><th class="l" rowspan="2">Scene</th><th class="grp" colspan="4">Shot size</th><th class="grp" colspan="3">Focal feel</th><th class="grp" colspan="4">Grammar</th><th class="grp l" rowspan="2">Needs</th></tr>
     <tr>${COLS.map(([k, l], i) => `<th class="${[0, 4, 7].includes(i) ? "grp" : ""}">${l}</th>`).join("")}</tr>`;
   const rows = shown.map(sc => {
-    const ns = sceneNeeds(sc), open = COV_OPEN.has(sc.id);
+    const ns = shownNeeds(sc), open = COV_OPEN.has(sc.id);
     const cells = COLS.map(([k], i) => {
       const v = sc.counts[k] || 0, cls = v ? "have" : sc.flags.has(k) || sc.flags.has("*") ? "gap" : "none";
       return `<td class="${[0, 4, 7].includes(i) ? "g0" : ""}"><span class="cell ${cls}" title="${k}: ${v} usable">${v || (cls === "gap" ? "+" : "·")}</span></td>`;
@@ -437,14 +603,15 @@ function renderCoverage() {
         <div><div class="n y">${need.length}</div><div class="l">scenes need shots</div></div>
         <div><div class="n">${nShots}</div><div class="l">shots on list</div></div>
         <div><div class="n y">${p1}</div><div class="l">priority 1</div></div>
+        <div><div class="n">${nSolo}</div><div class="l">no model needed</div></div>
         <div><div class="n">${C.pickups.length}</div><div class="l">pickups anywhere</div></div>
       </div></div>
-    <div class="covt-wrap"><table class="covt">${head}${rows}</table></div>
-    <div class="cov-more"><button class="btn ghost" onclick="COV_ALL=!COV_ALL;rerender()">${COV_ALL ? "Show only priority 1–2" : `Show all ${scenes.length} scenes (${scenes.length - shown.length} more)`}</button>
-      <span class="mono" style="font-size:11px;color:var(--muted);margin-left:14px"><span class="cell have">3</span> usable clips &nbsp; <span class="cell gap">+</span> gap to shoot &nbsp; click a scene for its shot list</span></div>
+    <div class="covt-wrap desk"><table class="covt">${head}${rows}</table></div>
+    <div class="cov-more"><button class="btn" onclick="go('shoot')">Open the shot list →</button><button class="btn ${COV_SOLO ? "" : "ghost"} desk" onclick="COV_SOLO=!COV_SOLO;rerender()">${COV_SOLO ? "✓ " : ""}Only shots I can get without the model</button><button class="btn ghost desk" onclick="COV_ALL=!COV_ALL;rerender()">${COV_ALL ? "Show only priority 1–2" : `Show all ${scenes.length} scenes (${scenes.length - shown.length} more)`}</button>
+      <span class="mono desk" style="font-size:11px;color:var(--muted);margin-left:14px"><span class="cell have">3</span> usable clips &nbsp; <span class="cell gap">+</span> gap to shoot &nbsp; click a scene for its shot list</span></div>
     <div class="cov-cols">
       <div><div class="micro">Across the film</div><h3>Film-level gaps</h3><ul class="needs film">${film || "<li><span></span><div>none</div></li>"}</ul></div>
-      <div><div class="micro">Shoot these anywhere</div><h3>Pickups</h3><ul class="needs">${C.pickups.map((n, i) => needLi(n, gotKey("pickups", i))).join("") || `<li><span></span><span></span><div class="wy">No pickups listed yet.</div></li>`}</ul></div>
+      <div><div class="micro">Shoot these anywhere</div><h3>Pickups</h3><ul class="needs">${C.pickups.filter(n => !COV_SOLO || solo(n)).map(n => needLi(n, gotKey("pickups", n))).join("") || `<li><span></span><span></span><div class="wy">No pickups listed yet.</div></li>`}</ul></div>
     </div>
     ${C.errors.length ? `<ul class="issues">${C.errors.map(e => `<li class="err">${esc(e)}</li>`).join("")}</ul>` : ""}
   </section>`;
@@ -455,16 +622,52 @@ function needLi(n, key) {
   return `<li class="${got ? "got" : ""}">${n.auto ? "<span></span>" : `<input type="checkbox" ${got ? "checked" : ""} onclick="toggleGot('${key}', this)" title="got it">`}
     <span class="pri p${n.priority || 3}">P${n.priority || 3}</span>
     <div><div class="what">${esc(n.shot)}</div>
-    ${spec.length || n.where ? `<div class="spec">${spec.map(x => `<span class="chip k">${esc(x)}</span>`).join("")}${n.where ? `<span class="chip where">${esc(n.where)}</span>` : ""}</div>` : ""}
-    ${n.why ? `<div class="wy">${esc(n.why)}</div>` : ""}</div></li>`;
+    <div class="spec">${n.subject ? `<span class="subj ${esc(n.subject)}">${esc(SUBJ_LABEL[n.subject] || n.subject)}</span>` : ""}${spec.map(x => `<span class="chip k">${esc(x)}</span>`).join("")}${n.where ? `<span class="chip where">${esc(n.where)}</span>` : ""}</div>
+    ${n.why ? `<div class="wy">${esc(n.why)}</div>` : ""}
+    ${n.fallback ? `<div class="fallback"><b>Without the model:</b> ${esc(n.fallback)}</div>` : ""}</div></li>`;
 }
 function sceneDetail(sc, ns) {
   return `<div class="covd"><div><div class="thumbs">${sc.thumbs.map(t => `<div onclick="event.stopPropagation();openClip('${t.clip}')"><img loading="lazy" src="${frameUrl(t.clip, t.t)}"><span>${esc(t.clip)} · ${esc(t.size || "")}</span></div>`).join("")}</div>
-      <div class="sub mono" style="margin-top:8px;font-size:11px;color:var(--muted)">${sc.usable}/${sc.n} usable · ${sc.usable_s}s of good moments${sc.used.length ? " · in cut: " + esc(sc.used.join(" ")) : ""}</div></div>
+      <div class="sub mono" style="margin-top:8px;font-size:11px;color:var(--muted)">${sc.usable}/${sc.n} usable · ${sc.usable_s}s of good moments${sc.used.length ? " · in cut: " + esc(sc.used.join(" ")) : ""}</div>
+      ${sc.when?.start ? `<div class="match"><b>Match the light</b> · shot ${esc(sc.when.date)}, ${esc(sc.when.start)}–${esc(sc.when.end)} ${esc(sc.when.tz)} · ${esc((sc.when.time_of_day || []).join(", "))}${sc.when.light ? `<br>${esc(sc.when.light)}` : ""}</div>` : ""}
+      ${sc.wardrobe ? `<div class="match"><b>Wardrobe</b> · ${esc(sc.wardrobe)}</div>` : ""}</div>
     <div>${sc.verdict ? `<p class="verdict">${esc(sc.verdict)}</p>` : ""}
       <div class="micro" style="margin-bottom:8px">${ns.length ? (sc.reviewed ? "Shot list" : "Rule-based gaps") : "Covered · nothing to shoot"}</div>
-      <ul class="needs">${ns.map((n, i) => needLi(n, gotKey(sc.id, i))).join("")}</ul></div></div>`;
+      <ul class="needs">${ns.map(n => needLi(n, gotKey(sc.id, n))).join("")}</ul></div></div>`;
 }
+/* ---------------- shot list (phone-first view of the coverage review) */
+let SHOOT_HIDE = false;
+function renderShoot() {
+  const C = D.coverage;
+  if (!C || !C.scenes.length) return `<div class="wrap empty">No shot list yet.<br><span class="lede">Ask your agent for a coverage review (storian knowledge coverage).</span></div>`;
+  const { scenes } = covScenes();
+  const list = scenes.filter(sc => shownNeeds(sc).length && (sc.reviewed || sc.importance !== "minor")).sort((a, b) => covRank(a) - covRank(b));
+  const picks = C.pickups.filter(n => !COV_SOLO || solo(n));
+  let all = 0, got = 0;
+  const card = (id, title, sub, ns, body, pri) => {
+    const g = ns.filter(n => isGot(gotKey(id, n))).length; all += ns.length; got += g;
+    const open = COV_OPEN.has(id);
+    return `<details class="scn ${g === ns.length ? "done" : ""}" ${open ? "open" : ""} ontoggle="this.open ? COV_OPEN.add('${id}') : COV_OPEN.delete('${id}')">
+      <summary><span class="pri p${pri}">P${pri}</span><div><div class="nm">${esc(title)}</div><div class="sub">${sub}</div></div><div class="cnt"><b>${g}/${ns.length}</b>got</div></summary>
+      ${body(SHOOT_HIDE ? ns.filter(n => !isGot(gotKey(id, n))) : ns)}</details>`;
+  };
+  const cards = list.map(sc => {
+    const ns = shownNeeds(sc), w = sc.when;
+    const sub = [`<span class="imp ${sc.importance}">${sc.importance}</span>`, `${ns.length} shot${ns.length > 1 ? "s" : ""}`, w?.start && `${esc(w.date)} ${esc(w.start)}`, (w?.time_of_day || sc.time_of_day || []).slice(0, 1).map(esc)[0]].filter(Boolean).join(" · ");
+    return card(sc.id, sc.name, sub, ns, x => sceneDetail(sc, x), sc.pri);
+  }).filter((_, i) => !SHOOT_HIDE || shownNeeds(list[i]).some(n => !isGot(gotKey(list[i].id, n))));
+  const pick = picks.length ? card("pickups", "Pickups · anywhere", "no location needed: home, hotel, any city", picks,
+    x => `<div class="covd"><ul class="needs">${x.map(n => needLi(n, gotKey("pickups", n))).join("")}</ul></div>`, Math.min(...picks.map(n => n.priority || 3))) : "";
+  const film = C.film.map(g => `<li><span class="pri p${g.severity === 3 ? 1 : g.severity === 2 ? 2 : 3}">P${g.severity === 3 ? 1 : g.severity === 2 ? 2 : 3}</span><div><div class="what">${esc(g.need)}</div>${g.why ? `<div class="wy">${esc(g.why)}</div>` : ""}</div></li>`).join("");
+  return `<div class="wrap"><h1 class="page-title">Shot list</h1>
+    ${C.summary ? `<details class="note"><summary class="micro">Director's note ▾</summary><p class="lede">${esc(C.summary)}</p></details>` : ""}
+    <div class="prog"><i style="width:${all ? 100 * got / all : 0}%"></i></div>
+    <div class="micro" style="margin-top:8px">${got} of ${all} shots got · ${list.length} scenes${picks.length ? " + pickups" : ""}</div>
+    <div class="filters"><button class="toggle ${COV_SOLO ? "on" : ""}" onclick="COV_SOLO=!COV_SOLO;rerender()">${COV_SOLO ? "✓ " : ""}Without the model</button><button class="toggle ${SHOOT_HIDE ? "on" : ""}" onclick="SHOOT_HIDE=!SHOOT_HIDE;rerender()">${SHOOT_HIDE ? "✓ " : ""}Hide what I got</button></div>
+    <div class="scns">${cards.join("")}${pick}</div>
+    ${film ? `<h2 class="section-h">Across the film</h2><ul class="needs film" style="margin-bottom:40px">${film}</ul>` : ""}</div>`;
+}
+
 function toggleScene(id) { COV_OPEN.has(id) ? COV_OPEN.delete(id) : COV_OPEN.add(id); rerender(); }
 function rerender() { const y = scrollY; render(); scrollTo(0, y); }
 
@@ -493,7 +696,7 @@ function bindShots() {
   document.querySelectorAll(".shot[data-idx]").forEach(el => {
     const th = $(".thumb", el);
     el.addEventListener("click", () => openShot(+el.dataset.idx));
-    if (th?.dataset.pv) {
+    if (HOVER && th?.dataset.pv) {
       let v;
       el.addEventListener("mouseenter", () => {
         if (!v) { v = document.createElement("video"); v.src = th.dataset.pv; v.muted = true; v.loop = true; v.playsInline = true; th.insertBefore(v, th.children[1]); }
@@ -537,7 +740,7 @@ function openShot(i) {
     </dl>
     <div class="micro">Clip label</div>${labelKV(L)}${momentsHTML(L)}
     <img class="sheet" src="/media/sheets/${s.clip}.jpg">
-    <div style="display:flex;gap:10px;margin-top:18px"><button class="btn ghost" onclick="openShot(${Math.max(0, i - 1)})">← prev</button><button class="btn ghost" onclick="openShot(${Math.min(allShots().length - 1, i + 1)})">next →</button><button class="btn" onclick="closeDrawer();openAnim(${i})">▶ play from here</button></div>`;
+    <div class="drow"><button class="btn ghost" onclick="openShot(${Math.max(0, i - 1)})">← prev</button><button class="btn ghost" onclick="openShot(${Math.min(allShots().length - 1, i + 1)})">next →</button><button class="btn" onclick="closeDrawer();openAnim(${i})">▶ play from here</button></div>`;
   $("#drawer").classList.add("open"); $("#drawer").scrollTop = 0;
 }
 function openClip(id) {
@@ -553,21 +756,152 @@ function openClip(id) {
 }
 function closeDrawer() { $("#drawer").classList.remove("open"); $("#drawer video")?.pause(); }
 
+/* ---------------- music */
+const AUDIO = new Audio(); AUDIO.preload = "none";
+let NOW = null;  // {src, title, artist}
+const mclock = t => { t = Math.max(0, t || 0); return `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`; };
+function trackSrc(t) { if (t.file) return `/media/music/${t.file}`; return t.preview && !t.hotlink_blocked ? t.preview : null; }
+function playSrc(src, title, artist, start = 0) {
+  if (!src) return;
+  if (NOW && NOW.src === src) { togglePlay(); return; }
+  NOW = { src, title, artist }; AUDIO.src = src; AUDIO.currentTime = start;
+  AUDIO.play().catch(() => {});
+  $("#pTitle").textContent = title || ""; $("#pArtist").textContent = artist || "";
+  $("#player").classList.add("show"); document.body.classList.add("playing-bar");
+}
+function playTrack(id, start = 0) {
+  const M = D.music; const t = (M.tracks || []).find(x => x.id === id) || (M.references || []).find(x => x.id === id);
+  if (t) playSrc(trackSrc(t), t.title, [t.artist, t.source, t.license].filter(Boolean).join(" · "), start);
+}
+function togglePlay() { AUDIO.paused ? AUDIO.play().catch(() => {}) : AUDIO.pause(); }
+function stopPlay() { AUDIO.pause(); NOW = null; $("#player").classList.remove("show"); document.body.classList.remove("playing-bar"); syncPlayButtons(); }
+function syncPlayButtons() {
+  const on = NOW && !AUDIO.paused ? NOW.src : null;
+  $("#pPlay").textContent = AUDIO.paused ? "▶" : "❚❚";
+  document.querySelectorAll(".pbtn[data-src]").forEach(b => { const me = b.dataset.src === on; b.classList.toggle("on", me); b.textContent = me ? "❚❚" : "▶"; });
+}
+AUDIO.addEventListener("play", syncPlayButtons); AUDIO.addEventListener("pause", syncPlayButtons);
+AUDIO.addEventListener("timeupdate", () => {
+  const d = AUDIO.duration || 0, f = d ? AUDIO.currentTime / d : 0;
+  $("#pSeek").value = Math.round(f * 1000); $("#pTime").textContent = `${mclock(AUDIO.currentTime)} / ${mclock(d)}`;
+  document.querySelectorAll("svg.wave").forEach(w => { const pr = w.querySelector(".prog"); if (pr) pr.style.clipPath = w.dataset.src === NOW?.src ? `inset(0 ${100 - f * 100}% 0 0)` : "inset(0 100% 0 0)"; });
+});
+function wave(item) {
+  const a = item.analysis || {}, pk = a.peaks?.length ? a.peaks : null, src = trackSrc(item);
+  if (!pk) return a.energy?.length ? spark(a.energy) : "";
+  const n = pk.length, h = 34, w = 400;
+  const d = pk.map((v, i) => `M${(i * w / n).toFixed(1)} ${(h / 2 - v * h / 2).toFixed(1)}v${Math.max(1, v * h).toFixed(1)}h${(w / n * 0.6).toFixed(2)}v-${Math.max(1, v * h).toFixed(1)}z`).join("");
+  return `<svg class="wave" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" data-src="${esc(src)}" onclick="seekWave(event, this)"><path d="${d}"/><path class="prog" d="${d}" style="clip-path:inset(0 100% 0 0)"/></svg>`;
+}
+function spark(e) {
+  const w = 400, h = 34, pts = e.map((v, i) => `${(i / (e.length - 1) * w).toFixed(1)},${(h - v * (h - 2) - 1).toFixed(1)}`).join(" ");
+  return `<svg class="wave" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--ink-soft)" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>`;
+}
+function seekWave(e, el) {
+  if (el.dataset.src !== NOW?.src || !AUDIO.duration) return;
+  const r = el.getBoundingClientRect(); AUDIO.currentTime = (e.clientX - r.left) / r.width * AUDIO.duration;
+}
+function pbtn(item) { const src = trackSrc(item); return `<button class="pbtn" ${src ? `data-src="${esc(src)}"` : `disabled title="not cached yet: ask your agent to run storian music fetch"`} onclick="playTrack('${esc(item.id)}')">▶</button>`; }
+function trackMeta(t) {
+  const a = t.analysis || {};
+  return [t.artist, t.bpm || a.bpm ? `${Math.round(t.bpm || a.bpm)} bpm` : null, t.duration ? mclock(t.duration) : null, t.source].filter(Boolean).map(esc).join(" · ");
+}
+function licBadge(t) { return t.license ? `<span class="lic ${t.youtube_ok === false ? "no" : "ok"}" title="${t.youtube_ok === false ? "not safe for a monetised video" : "OK for a monetised video"}">${esc(t.license)}</span>` : ""; }
+
+function renderMusic() {
+  const M = D.music;
+  if (!M) return `<div class="wrap empty">No music yet.<br><span class="lede">Give your agent a few tracks you like (files or links), or ask it to find music for the cut (storian knowledge music).</span></div>`;
+  const tracks = Object.fromEntries((M.tracks || []).map(t => [t.id, t]));
+  const acts = D.sequence?.acts || [];
+  const shots = allShots();
+  const actStart = i => shots.find(s => s.ai === i)?.at || 0;
+  const usedIn = {}; (M.cues || []).forEach(c => (c.candidates || []).forEach(x => (usedIn[x.track] ||= []).push(c.id)));
+  const chosen = (M.cues || []).map(c => tracks[c.chosen]).filter(Boolean);
+  const refs = (M.references || []).map(r => `<div class="ref"><div class="micro">${esc(r.id)} · reference${r.file ? "" : " · link"}</div>
+      <h3>${esc(r.title)}</h3>${r.describe ? `<div class="why">${esc(r.describe)}</div>` : ""}
+      ${r.notes ? `<div class="voline" style="font-size:16px">“${esc(r.notes)}”</div>` : ""}
+      ${wave(r)}
+      <div style="display:flex;gap:12px;align-items:center">${r.file ? pbtn(r) : ""}${r.url ? `<a class="mono" style="font-size:12px" href="${esc(r.url)}" target="_blank" rel="noopener">open link ↗</a>` : ""}
+      <span class="mono" style="font-size:11px;color:var(--muted)">${[r.analysis?.bpm && r.analysis.bpm + " bpm", r.duration && mclock(r.duration), r.analysis?.brightness_hz && (r.analysis.brightness_hz < 1500 ? "dark/warm" : r.analysis.brightness_hz < 2600 ? "balanced" : "bright"), r.analysis?.dynamic_range_db && r.analysis.dynamic_range_db + " dB range"].filter(Boolean).join(" · ")}</span></div></div>`).join("");
+  const cues = (M.cues || []).map((c, ci) => {
+    const a0 = Math.min(...(c.acts || [0])), names = (c.acts || []).map(i => acts[i] ? `${String(i + 1).padStart(2, "0")} ${acts[i].title}` : `act ${i + 1}`);
+    const secs = M.cue_seconds?.[c.id] || 0;
+    const chips = [["mood", c.mood], ["tempo", c.tempo], ["energy", c.energy], ["sound", c.instruments]].filter(x => x[1]);
+    return `<section class="cue"><div class="cue-head"><div class="num">${String(ci + 1).padStart(2, "0")}</div>
+      <div><h3>${esc(c.title || names.join(", "))}</h3><div class="why">${esc(names.join(" · "))}${c.vo ? " · under VO" : ""}</div></div>
+      <div class="range">${fmtLong(actStart(a0))} · ${fmtLong(secs)} to cover${c.chosen && tracks[c.chosen] ? `<br>pick: ${esc(tracks[c.chosen].title)}` : "<br>no pick yet"}</div></div>
+      <div class="cue-body"><div class="chips" style="margin-bottom:6px">${chips.map(([k, v]) => `<span class="chip"><b style="color:var(--muted);font-weight:400">${k}</b> ${esc(v)}</span>`).join("")}</div>
+      ${(c.hit_points || []).length ? `<div class="why" style="margin:8px 0">Hits: ${c.hit_points.map(h => `<span class="mono" style="color:var(--paper-2)">${esc(h.shot)}</span> ${esc(h.what)}`).join(" · ")}</div>` : ""}
+      ${(c.candidates || []).map(x => { const t = tracks[x.track]; if (!t) return ""; return `<div class="trk ${c.chosen === t.id ? "chosen" : ""}">${pbtn(t)}
+        <div><div class="t">${esc(t.title)}</div><div class="a">${trackMeta(t)} ${licBadge(t)} ${t.url ? `<a href="${esc(t.url)}" target="_blank" rel="noopener">↗</a>` : ""}</div>${x.why ? `<div class="wy">${esc(x.why)}</div>` : ""}</div>
+        ${wave(t)}</div>`; }).join("") || `<div class="why">No candidates yet.</div>`}</div></section>`;
+  }).join("");
+  const lib = (M.tracks || []).map(t => `<div class="trk">${pbtn(t)}<div><div class="t">${esc(t.title)}</div><div class="a">${trackMeta(t)} ${licBadge(t)} ${usedIn[t.id] ? `· <span class="used">${usedIn[t.id].join(" ")}</span>` : ""} ${t.url ? `<a href="${esc(t.url)}" target="_blank" rel="noopener">↗</a>` : ""}</div>
+      <div class="chips" style="margin-top:6px">${(t.tags || []).slice(0, 8).map(x => `<span class="chip">${esc(x)}</span>`).join("")}</div></div>${wave(t)}</div>`).join("");
+  const credits = chosen.filter(t => t.attribution).map(t => t.attribution).join("\n");
+  return `<div class="wrap"><h1 class="page-title">Music</h1>
+    <p class="lede">${esc(M.direction || D.sequence?.music || "")}</p>
+    ${(M.cues || []).some(c => c.chosen && tracks[c.chosen] && trackSrc(tracks[c.chosen])) ? `<button class="btn" style="margin-top:14px" onclick="SCORE=true;openAnim(0)">▶ Play animatic with this music</button>` : ""}
+    ${(M.references || []).length ? `<h2 class="section-h">Your references</h2><p class="lede">The tracks you gave as the target sound.</p><div class="refs">${refs}</div>` : ""}
+    <h2 class="section-h">Cue sheet</h2><p class="lede">One piece of music per stretch of the film, with candidates to choose from. ● marks the current pick.</p>
+    <div class="cues">${cues || `<div class="why">No cues yet.</div>`}</div>
+    <h2 class="section-h">All tracks</h2><p class="lede">${(M.tracks || []).length} tracks. Licence badges show whether a track is safe in a monetised video.</p>
+    <div class="cue"><div class="cue-body">${lib}</div></div>
+    ${credits ? `<h2 class="section-h">Credits</h2><p class="lede">Paste into the YouTube description for the picked Creative Commons tracks.</p><div class="credits">${esc(credits)}</div>` : ""}
+    ${(M.errors || []).length ? `<ul class="issues">${M.errors.map(e => `<li class="err">${esc(e)}</li>`).join("")}</ul>` : ""}</div>`;
+}
+
+/* temp music under the animatic: each act plays its cue's chosen track */
+let SCORE = true, SCORE_CUE = null;
+function cueForAct(ai) {
+  return (D.music?.cues || []).find(c => (c.acts || []).includes(ai) && c.chosen && trackSrc((D.music.tracks || []).find(t => t.id === c.chosen) || {}));
+}
+function acts_scored() { return (D.sequence?.acts || []).some((_, i) => cueForAct(i)); }
+function toggleScore() { SCORE = !SCORE; SCORE_CUE = null; if (!SCORE) AUDIO.pause(); playAt(A.i); }
+function scoreAt(s) {
+  const btn = $("#scoreBtn"), has = acts_scored();
+  btn.style.display = has ? "" : "none"; btn.classList.toggle("on", SCORE); btn.textContent = SCORE ? "♪ temp music on" : "♪ temp music off";
+  if (!has || !SCORE) return false;
+  const cue = cueForAct(s.ai);
+  if (!cue) { AUDIO.pause(); SCORE_CUE = null; return false; }
+  const first = A.shots.find(x => (cue.acts || []).includes(x.ai)), want = (cue.start || 0) + s.at - first.at;
+  const t = D.music.tracks.find(x => x.id === cue.chosen), src = trackSrc(t);
+  if (SCORE_CUE !== cue.id || NOW?.src !== src) {
+    SCORE_CUE = cue.id; NOW = { src, title: t.title, artist: t.artist }; AUDIO.src = src;
+    AUDIO.addEventListener("loadedmetadata", () => { AUDIO.currentTime = want; }, { once: true });
+  } else if (Math.abs(AUDIO.currentTime - want) > 1.5) AUDIO.currentTime = want;
+  AUDIO.play().catch(() => {});
+  return true;
+}
+
 /* ---------------- animatic */
 let A = { i: 0, timer: null, paused: false, shots: [], sub: "" };
 function openAnim(i) { A.shots = allShots(); $("#anim").classList.add("open"); playAt(i); }
-function closeAnim() { clearTimeout(A.timer); $("#stage").querySelectorAll("video,img").forEach(e => e.remove()); $("#anim").classList.remove("open"); }
+function closeAnim() {
+  clearTimeout(A.timer); if (SCORE_CUE) { AUDIO.pause(); SCORE_CUE = null; }
+  const v = $("#animV"); v.pause(); v.removeAttribute("src"); v.style.display = $("#animI").style.display = "none";
+  $("#anim").classList.remove("open");
+}
+function tapStage(e) {
+  const x = e.clientX / innerWidth;
+  x < 0.3 ? playAt(A.i - 1) : x > 0.7 ? playAt(A.i + 1) : togglePause();
+}
 function playAt(i) {
   clearTimeout(A.timer);
   if (i >= A.shots.length) return closeAnim();
   A.i = Math.max(0, i); A.paused = false;
-  const s = A.shots[A.i], st = $("#stage"), total = A.shots.at(-1).at + A.shots.at(-1).dur;
-  st.querySelectorAll("video,img").forEach(e => e.remove());
-  const pv = previewUrl(s);
-  let el;
-  if (pv) { el = document.createElement("video"); el.src = pv; el.autoplay = true; el.playsInline = true; el.onended = () => playAt(A.i + 1); }
-  else { el = document.createElement("img"); el.src = frameUrl(s.clip, num(s.in) + 0.3); A.timer = setTimeout(() => playAt(A.i + 1), s.dur * 1000); }
-  st.insertBefore(el, st.firstChild);
+  const s = A.shots[A.i], total = A.shots.at(-1).at + A.shots.at(-1).dur;
+  const pv = previewUrl(s), v = $("#animV"), img = $("#animI");
+  const scored = scoreAt(s);
+  if (pv) {
+    img.style.display = "none"; v.style.display = "";
+    v.muted = scored; v.src = pv; v.onended = () => playAt(A.i + 1);
+    v.play().catch(() => { v.muted = true; v.play().catch(() => {}); });
+  } else {
+    v.pause(); v.removeAttribute("src"); v.style.display = "none";
+    img.style.display = ""; img.src = frameUrl(s.clip, num(s.in) + 0.3);
+    A.timer = setTimeout(() => playAt(A.i + 1), s.dur * 1000);
+  }
   if (s.vo_line) A.sub = s.vo_line; else if (s.role !== "vo") A.sub = "";
   $("#sub").textContent = A.sub ? `“${A.sub}”` : "";
   $("#hudL").textContent = `${String(s.ai + 1).padStart(2, "0")} ${s.act.title}`;
@@ -577,8 +911,8 @@ function playAt(i) {
   if (nxt) { const pre = document.createElement("link"); pre.rel = "preload"; pre.as = "video"; pre.href = nxt; document.head.appendChild(pre); }
 }
 function togglePause() {
-  const v = $("#stage video");
-  if (v) { v.paused ? v.play() : v.pause(); }
+  const v = $("#animV");
+  if (v.getAttribute("src")) { v.paused ? v.play() : v.pause(); if (SCORE_CUE) v.paused ? AUDIO.pause() : AUDIO.play().catch(() => {}); }
   else if (A.timer) { clearTimeout(A.timer); A.timer = null; } else playAt(A.i + 1);
 }
 document.addEventListener("keydown", e => {
@@ -649,8 +983,24 @@ function renderChecks() {
     <h2 style="font:400 30px var(--serif)">Warnings (${c.warnings.length})</h2><ul class="issues">${c.warnings.map(e => `<li>${esc(e)}</li>`).join("") || "<li>none</li>"}</ul></div>`;
 }
 
-document.querySelectorAll("#nav button").forEach(b => b.addEventListener("click", () => { TAB = b.dataset.tab; location.hash = TAB; closeDrawer(); render(); scrollTo(0, 0); }));
-load().then(poll);
+function go(tab) { TAB = tab; if (location.hash.slice(1) !== tab) history.pushState(null, "", "#" + tab); closeDrawer(); render(); scrollTo(0, 0); }
+document.querySelectorAll("#nav button").forEach(b => b.addEventListener("click", () => go(b.dataset.tab)));
+addEventListener("hashchange", () => { const h = location.hash.slice(1); if (TABS.includes(h) && h !== TAB) go(h); });
+addEventListener("popstate", () => { const h = location.hash.slice(1) || "board"; if (TABS.includes(h) && h !== TAB) go(h); });
+// hosted: save every scene's frames up front, so the whole shot list works with no signal
+async function warmShotList() {
+  if (!("caches" in window) || !D.coverage) return;
+  const urls = [...new Set(D.coverage.scenes.flatMap(sc => sc.thumbs.map(t => frameUrl(t.clip, t.t))))].filter(Boolean);
+  try {
+    const c = await caches.open("storian-media-v1");
+    const have = new Set((await c.keys()).map(r => new URL(r.url).pathname));
+    for (const u of urls) if (!have.has(u)) await c.add(u).catch(() => {});
+  } catch (e) {}
+}
+load().then(() => {
+  if (D.hosted && "serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").then(warmShotList).catch(() => {});
+  poll();
+});
 </script>
 </body>
 </html>
