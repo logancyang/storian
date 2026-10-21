@@ -314,7 +314,10 @@ def cmd_serve(args):
 
 
 def cmd_publish(args):
-    from .publish import publish
+    from .publish import load_config, publish, worker_name
+    if args.link:
+        w = load_config().get("workers", {}).get(worker_name(resolve_project(args)))
+        return print(f"{w['url']}/login#k={w['key']}" if w and w.get("url") else "not published yet: run storian publish")
     r = publish(resolve_project(args), new_key=args.new_key, dry_run=args.dry_run)
     if args.dry_run or not r.get("url"):
         return print(json.dumps(r, indent=2))
@@ -407,6 +410,7 @@ def main(argv=None):
     s = sub.add_parser("publish", help="private copy of the storyboard on Cloudflare, for the phone")
     s.add_argument("--new-key", action="store_true", help="replace the key; every device signs in again")
     s.add_argument("--dry-run", action="store_true", help="build the snapshot in .publish/ without deploying")
+    s.add_argument("--link", action="store_true", help="print the sign-in link again (for a new device), no deploy")
     s.set_defaults(fn=cmd_publish)
 
     s = sub.add_parser("knowledge", help="print the director playbook and schemas")

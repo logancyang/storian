@@ -56,7 +56,7 @@ macOS uses VideoToolbox hardware decode and falls back to software elsewhere.
 | `coverage` | scenes, coverage counts and gaps; `--scaffold` starts `coverage.json` |
 | `music` | `add` a reference, `search` free CC music, `fetch` previews, `analyze` tempo and energy |
 | `serve` | storyboard + animatic at http://localhost:7878 |
-| `publish` | private copy on Cloudflare for your phone: shot list, storyboard, music, offline (`--new-key`, `--dry-run`) |
+| `publish` | private copy on Cloudflare for your phone: shot list, storyboard, music, offline (`--link` reprints the sign-in link, `--new-key`, `--dry-run`) |
 | `status` | pipeline state and next step |
 | `knowledge` | print the director playbook and schemas |
 
