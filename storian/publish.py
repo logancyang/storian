@@ -76,6 +76,8 @@ def media_files(p: Project, payload: dict) -> list[str]:
             t0, t1 = parse_tc(s["in"]), parse_tc(s["out"])
             for t in (t0 + 0.3, t0, (t0 + t1) / 2, t1 - 0.2):
                 frame(s["clip"], t)
+    for c, info in payload["clips"].items():  # the Library shows each clip's middle frame
+        frame(c, (info.get("duration") or 0) / 2)
     for sc in (payload["coverage"] or {}).get("scenes", []):
         for th in sc.get("thumbs", []):
             frame(th["clip"], th["t"])

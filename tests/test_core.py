@@ -139,7 +139,7 @@ def test_publish_snapshot_holds_only_what_the_page_shows(tmp_path):
     info = build(p, tmp_path / ".publish")
     pub = tmp_path / ".publish" / "public"
     frames = sorted(x.name for x in (pub / "media" / "frames" / "C1").iterdir())
-    assert frames == ["t00002.500.jpg"]  # thumbnails of s1 only, not all five keyframes
+    assert frames == ["t00002.500.jpg", "t00004.500.jpg"]  # s1's thumbnails and the Library's middle frame, not all five
     assert (pub / "api" / "project.json").exists() and (pub / "sw.js").read_text().count(info["published"]) == 1
     assert worker_name(p) == "storian-2026-lisbon"
 
