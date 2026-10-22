@@ -142,3 +142,19 @@ def test_publish_snapshot_holds_only_what_the_page_shows(tmp_path):
     assert frames == ["t00002.500.jpg"]  # thumbnails of s1 only, not all five keyframes
     assert (pub / "api" / "project.json").exists() and (pub / "sw.js").read_text().count(info["published"]) == 1
     assert worker_name(p) == "storian-2026-lisbon"
+
+
+def test_watcher_publishes_after_a_change_settles(tmp_path, monkeypatch):
+    import os, time
+    from storian import publish as pub
+    monkeypatch.setattr(pub, "CONFIG", tmp_path / "hosted.json")
+    p = Project(tmp_path / "proj")
+    write_json(p.config_path, {"name": "t", "footage_dir": str(tmp_path)})
+    old = time.time() - 600
+    os.utime(p.config_path, (old, old))
+    assert pub.due(p, settle=90)  # never published
+    pub.save_config({"workers": {pub.worker_name(p): {"version": old}}})
+    assert not pub.due(p, settle=90)  # nothing changed since
+    write_json(p.sequence_path, {"acts": []})
+    assert not pub.due(p, settle=90)  # changed, but the agent may still be writing
+    assert pub.due(p, settle=0)

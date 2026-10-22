@@ -50,7 +50,7 @@ def music_payload(p: Project):
 
 
 def version(p: Project) -> float:
-    paths = [p.story_path, p.sequence_path, p.coverage_path, p.music_path, p.clips_path, p.labels_dir, p.previews_dir]
+    paths = [p.config_path, p.story_path, p.sequence_path, p.coverage_path, p.music_path, p.clips_path, p.labels_dir, p.previews_dir, p.frames_dir]
     paths += list(p.labels_dir.glob("*.json")) if p.labels_dir.exists() else []
     return max((x.stat().st_mtime for x in paths if x.exists()), default=0)
 

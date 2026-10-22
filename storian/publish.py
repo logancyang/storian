@@ -2,25 +2,31 @@
 
 Builds a static snapshot (the page, the project data as JSON, and only the media the page
 shows), then deploys it as a Cloudflare Worker that asks for a key once per device.
-The laptop stays the only place where the agent works; publish again after each session.
+The laptop stays the only place where the agent works. Publish after each session, or let
+`storian publish --install` do it in the background whenever the project changes.
 """
 
+import fcntl
 import hashlib
 import json
 import os
+import plistlib
 import re
 import secrets
 import shutil
 import subprocess
+import sys
+import time
 from datetime import datetime
 from pathlib import Path
 
 from .media import parse_tc
 from .project import Project, read_json
-from .server import WEB, project_payload
+from .server import WEB, project_payload, version
 
 HOSTED = Path(__file__).parent / "hosted"
 CONFIG = Path.home() / ".config" / "storian" / "hosted.json"
+AGENTS = Path.home() / "Library" / "LaunchAgents"
 WRANGLER = ["npx", "--yes", "wrangler@4"]
 MAX_FILES = 20000  # Workers static assets, per deploy
 
@@ -166,14 +172,78 @@ def publish(p: Project, new_key: bool = False, dry_run: bool = False) -> dict:
         save_config(cfg)
     site = p.root / ".publish"
     site.mkdir(exist_ok=True)
-    info = build(p, site)
-    if info["files"] > MAX_FILES:
-        raise SystemExit(f"{info['files']} files is over Cloudflare's {MAX_FILES} per deploy")
-    write_config(p, site, w["key"])
-    info.update(worker=name, site=str(site))
-    if dry_run:
-        return info
-    url = deploy(site) or w.get("url")
-    w["url"] = url
+    with open(site / "lock", "w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)  # the background watcher and a manual publish share .publish/
+        v = version(p)  # read before building, so changes made during the deploy go out next time
+        info = build(p, site)
+        if info["files"] > MAX_FILES:
+            raise SystemExit(f"{info['files']} files is over Cloudflare's {MAX_FILES} per deploy")
+        write_config(p, site, w["key"])
+        info.update(worker=name, site=str(site))
+        if dry_run:
+            return info
+        url = deploy(site) or w.get("url")
+    cfg = load_config()  # reread: another project's publish may have saved meanwhile
+    cfg.setdefault("workers", {})[name] = {**w, "url": url, "version": v}
     save_config(cfg)
     return {**info, "url": url, "key": w["key"], "login": f"{url}/login#k={w['key']}" if url else None}
+
+
+def due(p: Project, settle: float) -> bool:
+    """The project changed since the last publish and has been quiet for `settle` seconds."""
+    v = version(p)
+    return v > load_config().get("workers", {}).get(worker_name(p), {}).get("version", 0) and time.time() - v >= settle
+
+
+def watch(p: Project, every: float = 30, settle: float = 90):
+    """Publish whenever the project changes. Waits for the agent to pause so a half-written
+    edit doesn't go out, and keeps retrying through network drops."""
+    print(f"{datetime.now():%F %T} watching {p.root}", flush=True)
+    while True:
+        if due(p, settle):
+            try:
+                r = publish(p)
+                print(f"{datetime.now():%F %T} published {r['files']} files ({r['mb']} MB)", flush=True)
+            except (Exception, SystemExit) as e:
+                print(f"{datetime.now():%F %T} publish failed ({e}), retrying in 5 minutes", flush=True)
+                time.sleep(300)
+        time.sleep(every)
+
+
+def agent_plist(p: Project) -> Path:
+    return AGENTS / f"com.storian.publish.{worker_name(p).removeprefix('storian-')}.plist"
+
+
+def install(p: Project) -> dict:
+    """Run `publish --watch` as a launchd agent: starts at login, restarts if it dies, and
+    runs outside any agent sandbox, so Codex or Claude never need network access to publish."""
+    plist, log = agent_plist(p), p.root / ".publish" / "watch.log"
+    log.parent.mkdir(exist_ok=True)
+    AGENTS.mkdir(parents=True, exist_ok=True)
+    plist.write_bytes(plistlib.dumps({
+        "Label": plist.stem,
+        "ProgramArguments": [str(Path(sys.executable).parent / "storian"), "-p", str(p.root.resolve()), "publish", "--watch"],
+        "EnvironmentVariables": {"PATH": node_env()["PATH"]},  # launchd's PATH has no node or npx
+        "RunAtLoad": True,
+        "KeepAlive": True,
+        "ProcessType": "Standard",  # unset means launchd throttles CPU and disk, which slowed a deploy from 1 to 4 minutes
+        "StandardOutPath": str(log),
+        "StandardErrorPath": str(log),
+    }))
+    uninstall(p, keep_file=True)
+    subprocess.run(["launchctl", "bootstrap", f"gui/{os.getuid()}", str(plist)], check=True)
+    return {"agent": plist.stem, "log": str(log)}
+
+
+def uninstall(p: Project, keep_file: bool = False) -> bool:
+    plist = agent_plist(p)
+    target = f"gui/{os.getuid()}/{plist.stem}"
+    subprocess.run(["launchctl", "bootout", target], capture_output=True)
+    for _ in range(100):  # bootout returns before the job is gone, and bootstrap fails until it is
+        if subprocess.run(["launchctl", "print", target], capture_output=True).returncode:
+            break
+        time.sleep(0.1)
+    if plist.exists() and not keep_file:
+        plist.unlink()
+        return True
+    return False

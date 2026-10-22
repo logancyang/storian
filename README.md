@@ -56,7 +56,7 @@ macOS uses VideoToolbox hardware decode and falls back to software elsewhere.
 | `coverage` | scenes, coverage counts and gaps; `--scaffold` starts `coverage.json` |
 | `music` | `add` a reference, `search` free CC music, `fetch` previews, `analyze` tempo and energy |
 | `serve` | storyboard + animatic at http://localhost:7878 |
-| `publish` | private copy on Cloudflare for your phone: shot list, storyboard, music, offline (`--link` reprints the sign-in link, `--new-key`, `--dry-run`) |
+| `publish` | private copy on Cloudflare for your phone: shot list, storyboard, music, offline (`--install` republishes in the background on every change, `--link` reprints the sign-in link, `--new-key`, `--dry-run`) |
 | `status` | pipeline state and next step |
 | `knowledge` | print the director playbook and schemas |
 
@@ -66,8 +66,14 @@ macOS uses VideoToolbox hardware decode and falls back to software elsewhere.
 plan) so you can use it on a shoot: the shot list with tick boxes, the storyboard, the animatic
 and the music. It's a static snapshot behind a key you enter once per device, and it keeps
 working offline once opened. The footage stays on the laptop; only the frames, contact sheets and
-previews the page shows are uploaded (about 350 MB for the HK test project). Publish again after
-each session. It needs Node 22+ and `npx wrangler login` once.
+previews the page shows are uploaded (about 350 MB for the HK test project). It needs Node 22+
+and `npx wrangler login` once.
+
+To keep the phone current while an agent works and you're away, run `storian publish --install`
+once per project. A macOS background job then republishes about two minutes after each change
+settles, survives restarts, and logs to `.publish/watch.log`. It runs outside the agent's
+sandbox, so Codex or Claude Code don't need network access. The laptop must stay awake and
+online. `storian publish --uninstall` stops it.
 
 ## Design
 

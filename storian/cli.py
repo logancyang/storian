@@ -314,7 +314,17 @@ def cmd_serve(args):
 
 
 def cmd_publish(args):
-    from .publish import load_config, publish, worker_name
+    from .publish import install, load_config, publish, uninstall, watch, worker_name
+    if args.watch:
+        return watch(resolve_project(args))
+    if args.install:
+        r = install(resolve_project(args))
+        return print(f"""Auto-publish is on ({r['agent']}). Whenever the project changes and then sits quiet
+for 90 seconds, it publishes in the background, including after restarts. The laptop has to
+stay awake and online. Log: {r['log']}
+Stop it with `storian publish --uninstall`.""")
+    if args.uninstall:
+        return print("auto-publish is off" if uninstall(resolve_project(args)) else "auto-publish wasn't on")
     if args.link:
         w = load_config().get("workers", {}).get(worker_name(resolve_project(args)))
         return print(f"{w['url']}/login#k={w['key']}" if w and w.get("url") else "not published yet: run storian publish")
@@ -411,6 +421,9 @@ def main(argv=None):
     s.add_argument("--new-key", action="store_true", help="replace the key; every device signs in again")
     s.add_argument("--dry-run", action="store_true", help="build the snapshot in .publish/ without deploying")
     s.add_argument("--link", action="store_true", help="print the sign-in link again (for a new device), no deploy")
+    s.add_argument("--watch", action="store_true", help="keep running; publish whenever the project changes")
+    s.add_argument("--install", action="store_true", help="run --watch in the background from now on (macOS launchd)")
+    s.add_argument("--uninstall", action="store_true", help="stop the background auto-publish")
     s.set_defaults(fn=cmd_publish)
 
     s = sub.add_parser("knowledge", help="print the director playbook and schemas")

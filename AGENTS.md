@@ -47,8 +47,11 @@ Run every command from this repo with `uv run storian -p <project> <command>` (o
     JSON. Leave it running and give the human the URL.
 13. **Phone** (when the human wants it on mobile or is travelling): `storian publish` deploys a
     private snapshot to their Cloudflare account and prints a sign-in link. Give them the link
-    (it carries the key, so don't paste it anywhere public). Re-run it after every change they
-    should see on the phone; it uploads only what changed. Ticks made on the phone stay on the phone.
+    (it carries the key, so don't paste it anywhere public). Ticks made on the phone stay on the phone.
+    If `~/Library/LaunchAgents/com.storian.publish.<name>.plist` exists, auto-publish is on and
+    every change you make reaches the phone by itself: don't publish yourself. Otherwise re-run
+    `storian publish` after every change they should see. If it fails because your sandbox has no
+    network, don't retry; tell the human to run `storian publish --install` once.
 
 ## Changing things on request
 
