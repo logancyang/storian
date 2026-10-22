@@ -38,8 +38,9 @@ cut it properly when it has:
 
 ## 2. What the story needs, beyond the checklist
 
-Read `story.json` (the chosen treatment) and `sequence.json`, then list what the *story* asks
-for that the footage doesn't have:
+Read `mood.json`, `story.json` (the chosen treatment) and `sequence.json`, then list what the
+*story* asks for that the footage doesn't have. Shoot every need in the mood's shot language
+(`mood.json:shots`, and nothing from `avoid`):
 
 - **Motif shots**: the motif needs to appear at the open, in the middle, and in its final form
   at the end. Count the motif's usable shots per act.

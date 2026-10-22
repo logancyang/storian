@@ -24,6 +24,8 @@ class Project:
     @property
     def music_path(self): return self.root / "music.json"
     @property
+    def mood_path(self): return self.root / "mood.json"
+    @property
     def lut_path(self): return self.root / "slog3_to_709.cube"
 
     # dirs

@@ -158,3 +158,17 @@ def test_watcher_publishes_after_a_change_settles(tmp_path, monkeypatch):
     write_json(p.sequence_path, {"acts": []})
     assert not pub.due(p, settle=90)  # changed, but the agent may still be writing
     assert pub.due(p, settle=0)
+
+
+def test_mood_check_and_payload(tmp_path):
+    from storian import mood
+    from storian.server import project_payload
+    p = Project(tmp_path)
+    write_json(p.config_path, {"name": "t", "footage_dir": str(tmp_path)})
+    assert project_payload(p)["mood"] is None  # the Plan tab asks for the mood first
+    write_json(p.mood_path, {"mood": "nostalgic", "places": [{"id": "street", "shots": [
+        {"name": "From above", "height": "high", "subject": "none"}, {"name": "", "height": "sideways"}]}]})
+    errors = mood.check(mood.load(p))
+    assert errors == ["mood.theme is required", "mood place street shot 2: name is required",
+                      "mood place street shot 2: height must be one of ['eye', 'high', 'low', 'overhead']"]
+    assert project_payload(p)["mood"]["errors"] == errors

@@ -12,7 +12,7 @@ from pathlib import Path
 from . import media
 from .check import check_sequence
 from .coverage import analyze as analyze_coverage, auto_scenes
-from . import music
+from . import mood, music
 from .project import Project, read_json, write_json
 
 KNOWLEDGE = Path(__file__).parent / "knowledge"
@@ -175,6 +175,8 @@ def cmd_digest(args):
 def cmd_check(args):
     p = resolve_project(args)
     report = check_sequence(p)
+    m = mood.load(p)
+    report["errors"] += mood.check(m) if m else ["mood.json missing: set the mood and theme with the human first (storian knowledge mood)"]
     print(json.dumps(report, indent=2))
     if report["errors"]:
         sys.exit(1)
@@ -292,6 +294,7 @@ def cmd_status(args):
     framed = len(list(p.frames_dir.glob("*/index.json"))) if p.frames_dir.exists() else 0
     story = read_json(p.story_path) if p.story_path.exists() else None
     steps = [
+        ("mood", p.mood_path.exists(), "ask the human for the film's mood and theme, then write mood.json (storian knowledge mood)"),
         ("scan", bool(clips), "storian scan"),
         ("frames", clips and framed >= len(clips), "storian frames"),
         ("label", clips and len(labels) >= len(clips), "storian label todo  (view each sheet, write labels/<clip>.json)"),
@@ -341,7 +344,7 @@ Then Share → Add to Home Screen. Run `storian publish` again after each sessio
 
 
 def cmd_knowledge(args):
-    names = [args.name] if args.name else ["director", "label_schema", "sequence_schema", "coverage", "music"]
+    names = [args.name] if args.name else ["mood", "director", "label_schema", "sequence_schema", "coverage", "music"]
     for n in names:
         print((KNOWLEDGE / f"{n}.md").read_text())
 
@@ -427,7 +430,7 @@ def main(argv=None):
     s.set_defaults(fn=cmd_publish)
 
     s = sub.add_parser("knowledge", help="print the director playbook and schemas")
-    s.add_argument("name", nargs="?", choices=["director", "label_schema", "sequence_schema", "coverage", "music"])
+    s.add_argument("name", nargs="?", choices=["mood", "director", "label_schema", "sequence_schema", "coverage", "music"])
     s.set_defaults(fn=cmd_knowledge)
 
     args = ap.parse_args(argv)

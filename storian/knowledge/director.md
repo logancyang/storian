@@ -19,7 +19,8 @@ Rules are defaults, not law; break one only on purpose and say why in the shot's
 4. **An arc even without plot.** Use *change*: from outsider to insider, day to night, noise to
    quiet, alone to together, curiosity to understanding. Order footage by the arc, not by the
    camera clock. Chronology is a fallback, never a default.
-5. **When there's no script**, propose 3 treatments with clearly different moods built only from
+5. **When there's no script**, propose 3 treatments inside the mood in `mood.json` (different
+   angles, arcs and structures, not different moods), built only from
    footage that exists (check the digest: a "foodie euphoria" treatment needs food shots). Each
    gets: title, logline, theme, mood, central idea, motif, arc (acts), music direction, and
    2–3 sample VO lines. Let the human pick. Then write the VO outline for the chosen one.

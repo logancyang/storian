@@ -18,8 +18,8 @@ Then describe each reference in catalog words, since that's how you'll search:
 - **Energy shape**: flat bed, slow build, build-and-release, a drop.
 - **Density and vocals**: sparse or busy, instrumental or wordless vocals or lyrics.
 
-With no references, derive the same description from `sequence.json` (music, mood, the acts)
-and say that you did.
+Start from the mood: `mood.json:music` is the brief, and every cue should fit it. With no
+references, derive the description from it and `sequence.json` (music, the acts) and say that you did.
 
 ## 2. Write a cue sheet
 

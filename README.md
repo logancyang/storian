@@ -6,19 +6,23 @@ Storian is an agent-first tool for cinematic travel and lifestyle films. Point y
 (Claude Code, Codex, …) at a folder of ungraded camera footage (S-Log3 4K H.265 is fine), with an
 optional script or a paragraph of ideas. The agent:
 
-1. ingests everything cheaply: keyframe-only hardware decode, a log → Rec.709 LUT, motion signals, contact sheets
-2. labels every clip like an assistant editor: shot size, focal feel, angle, movement, subject, action, mood, and the usable in/out **moments**
-3. proposes three treatments (theme, mood, central idea, motif) and lets you pick
-4. directs a sequence with craft encoded in [`knowledge/director.md`](storian/knowledge/director.md): perspective changes, cuts on action and motion, pacing curves, VO vs B-roll sections, motif and bookends
-5. serves a **storyboard on localhost**: theme, mood and idea at the top, then every shot with frames, clip name, labels, in/out timecodes, VO line and a director's note, plus a playable animatic
+1. asks for the film's **mood and theme first**, since they decide the music and every shot, and
+   turns them into a mood bible plus a **Plan tab** for shooting somewhere new: pick the kind of
+   place (street, market, viewpoint…) and get 8 shots in order, each with a pencil sketch of the
+   frame, the camera height and how long to hold
+2. ingests everything cheaply: keyframe-only hardware decode, a log → Rec.709 LUT, motion signals, contact sheets
+3. labels every clip like an assistant editor: shot size, focal feel, angle, movement, subject, action, mood, and the usable in/out **moments**
+4. proposes three treatments inside that mood (theme, central idea, motif) and lets you pick
+5. directs a sequence with craft encoded in [`knowledge/director.md`](storian/knowledge/director.md): perspective changes, cuts on action and motion, pacing curves, VO vs B-roll sections, motif and bookends
+6. serves a **storyboard on localhost**: theme, mood and idea at the top, then every shot with frames, clip name, labels, in/out timecodes, VO line and a director's note, plus a playable animatic
 
-6. reviews coverage like a director on the dailies: which scenes lack close-ups, a tele
+7. reviews coverage like a director on the dailies: which scenes lack close-ups, a tele
    perspective, an establishing wide, a human reaction, an entry or exit, or an action covered
    from two sizes. It turns those gaps into a **shot list for the videographer** (what, lens,
    angle, move, how long, and why), shown at the top of the storyboard. The list is built for
    reshoots without the original outfit: each shot says whether the model is needed, with a
    no-model fallback, plus the scene's original light and wardrobe
-7. scores the film: takes your reference tracks, writes a cue sheet per act, finds three
+8. scores the film: takes your reference tracks, writes a cue sheet per act, finds three
    different candidates per cue (Epidemic Sound or Artlist through their MCP servers, or free
    Creative Commons music built in), checks licences for monetised YouTube, and plays it all in a
    Music tab and under the animatic
