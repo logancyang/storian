@@ -199,6 +199,19 @@ footer { height: 60px; }
 ul.plain { list-style: none; margin: 8px 0 0; padding: 0; }
 ul.plain li { padding: 6px 0; font-size: 15px; }
 ol.arrive { margin: 10px 0 0; padding-left: 20px; }
+.spots, .beats { margin-top: 16px; }
+details.spot, details.beat { border-bottom: 1px solid var(--ink-faint); }
+details.spot > summary, details.beat > summary { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 0; cursor: pointer; }
+details.spot > summary::-webkit-details-marker, details.beat > summary::-webkit-details-marker { display: none; }
+.spot .nm, .beat .nm { font: 400 21px/1.2 var(--serif); }
+.spot .sub, .beat .sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
+.beat .cnt { font: 14px var(--mono); }
+.beat.done .cnt { color: var(--paper-2); }
+.spot p { margin: 0 0 10px; font-size: 15px; max-width: 760px; }
+.spot .scene b, .spot p b { color: var(--ink); font-weight: 500; }
+.spotlinks { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; padding-bottom: 10px; font-size: 14px; }
+.spotlinks .for { font: 12px var(--mono); color: var(--muted); }
+.spotlinks .textbtn { padding: 0; }
 ol.arrive li { padding: 5px 0; font-size: 15px; }
 .lightsel { margin-top: 14px; background: #000; color: var(--ink); border: 1px solid var(--ink-faint); font: 15px var(--sans); padding: 9px 12px; }
 .rcps { list-style: none; margin: 16px 0 0; padding: 0; }
@@ -354,7 +367,9 @@ function allShots() {
 }
 
 async function load() {
+  const first = !D;
   D = await (await fetch("/api/project")).json();
+  if (first && !location.hash && !D.sequence && D.mood) TAB = "plan";  // phase 1: nothing to storyboard yet
   render();
   liveLabel();
 }
@@ -398,7 +413,7 @@ function renderBoard() {
   const S = D.sequence;
   if (!S) {
     const st = D.story;
-    return `<div class="wrap empty">No sequence yet.<br><span class="lede">${st ? "Treatments are ready. Pick one in the Ideas tab and tell your agent." : "Ask your agent to run the storian pipeline (storian status shows the next step)."}</span>${shootLink()}</div>`;
+    return `<div class="wrap empty">No storyboard yet.<br><span class="lede">${st ? "Treatments are ready. Pick one in the Ideas tab and tell your agent." : "First the trip: where and how to shoot is in Plan, and the scene bank grows in Shot list. The storyboard comes once you have a script."}</span>${shootLink()}</div>`;
   }
   const shots = allShots();
   const total = shots.reduce((a, s) => a + s.dur, 0);
@@ -461,9 +476,26 @@ function shotLi(s, key, n) {
 /* ---------------- shot list: what the film still needs. Old scenes can't be finished (the light,
    weather and outfits won't match), so every shot here can be shot on any day, somewhere similar */
 let COV_SOLO = false, SHOOT_HIDE = false;
+const GRADE_RANK = { complete: 0, partial: 1, fragment: 2 };
+function renderBank() {  // complete scenes per mood beat: what the trip has banked so far
+  const beats = D.mood?.beats || [];
+  if (!beats.length) return "";
+  const scenes = D.coverage?.scenes || [];
+  const rows = beats.map(b => {
+    const sc = scenes.filter(x => x.beat === b.id).sort((a, c) => GRADE_RANK[a.grade] - GRADE_RANK[c.grade]);
+    const done = sc.filter(x => x.grade === "complete").length, part = sc.filter(x => x.grade === "partial").length, want = b.target || 3;
+    return `<details class="beat ${done >= want ? "done" : ""}"><summary><div><div class="nm">${esc(b.name)}</div>${b.what ? `<div class="sub">${esc(b.what)}</div>` : ""}</div>
+      <div class="cnt">${done}/${want}${part ? ` <span class="muted">+${part}</span>` : ""}</div></summary>
+      ${sc.length ? `<ul class="plain">${sc.map(x => `<li>${esc(x.name)} <span class="muted">· ${esc(x.grade)}</span></li>`).join("")}</ul>` : `<p class="muted" style="margin:0 0 14px">Nothing banked yet.</p>`}</details>`;
+  }).join("");
+  return `<h2 class="section-h" style="margin-top:36px">Scene bank</h2>
+    <p class="lede">Complete scenes per beat of the mood: one place and light, covered wide, medium and close around an action. +N are partial.</p>
+    <div class="beats">${rows}</div>`;
+}
 function renderShoot() {
   const C = D.coverage, shots = C?.shots || [];
-  if (!shots.length) return `<div class="wrap empty">No shot list yet.<br><span class="lede">Ask your agent for a coverage review (storian knowledge coverage).</span></div>`;
+  if (!shots.length) return `<div class="wrap"><h1 class="page-title">Shot list</h1>${renderBank()}
+    <p class="lede" style="margin-top:28px">${C ? "No shots to get yet. Your agent writes them from the gaps in the bank." : "After the first day's footage, your agent sorts it into scenes and writes what to get next."}</p><footer></footer></div>`;
   const all = shots.filter(s => !COV_SOLO || s.subject !== "talent" || s.fallback);
   const got = all.filter(s => isGot(gotKey("film", s))).length;
   const show = s => !SHOOT_HIDE || !isGot(gotKey("film", s));
@@ -473,6 +505,8 @@ function renderShoot() {
     <div class="prog"><i style="width:${all.length ? 100 * got / all.length : 0}%"></i></div>
     <div class="progl">${got} of ${all.length} got</div>
     <div class="filters"><button class="toggle ${COV_SOLO ? "on" : ""}" onclick="COV_SOLO=!COV_SOLO;rerender()">${COV_SOLO ? "✓ " : ""}Without the model</button><button class="toggle ${SHOOT_HIDE ? "on" : ""}" onclick="SHOOT_HIDE=!SHOOT_HIDE;rerender()">${SHOOT_HIDE ? "✓ " : ""}Hide what I got</button></div>
+    ${renderBank()}
+    <h2 class="section-h">To get next</h2>
     ${group("Must get", all.filter(s => (s.priority || 3) === 1 && show(s)), true)}
     ${group("When you can", all.filter(s => (s.priority || 3) > 1 && show(s)))}
     ${C.scenes.length ? `<section class="fold desk"><details><summary>Coverage matrix <span>usable clips per scene</span></summary>${renderMatrix(C.scenes)}</details></section>` : ""}
@@ -496,7 +530,26 @@ function renderMatrix(scenes) {
 }
 
 /* ---------------- plan: the mood, and what to shoot on arrival somewhere new */
-let PLAN_PLACE = null, PLAN_LIGHT = "";
+let PLAN_PLACE = null, PLAN_LIGHT = "", PLAN_CITY = null;
+const mapUrl = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+function goRecipe(id) { PLAN_PLACE = id; rerender(); document.getElementById("recipes")?.scrollIntoView(); }
+function renderSpots(M) {
+  const cities = M.cities || [];
+  if (!cities.length) return "";
+  const city = cities.find(c => c.name === PLAN_CITY) || cities[0];
+  const beat = id => (M.beats || []).find(b => b.id === id)?.name;
+  const place = id => (M.places || []).find(p => p.id === id);
+  return `<h2 class="section-h">Where to shoot</h2><p class="lede">Places and times where a whole scene in this mood is likely.</p>
+    <div class="filters">${cities.map(c => `<button class="toggle ${c === city ? "on" : ""}" onclick="PLAN_CITY='${esc(c.name)}';rerender()">${esc(c.name)}</button>`).join("")}</div>
+    ${city.note ? `<p class="lede" style="margin-top:16px">${esc(city.note)}</p>` : ""}
+    <div class="spots">${(city.spots || []).map(sp => `<details class="spot"><summary><div><div class="nm">${esc(sp.name)}</div><div class="sub">${esc([sp.area, sp.when].filter(Boolean).join(" · "))}</div></div></summary>
+      ${sp.scene ? `<p class="scene"><b>The scene</b> · ${esc(sp.scene)}</p>` : ""}
+      ${sp.why ? `<p class="muted">${esc(sp.why)}</p>` : ""}
+      ${sp.tip ? `<p class="muted"><b>Tip</b> · ${esc(sp.tip)}</p>` : ""}
+      <div class="spotlinks">${beat(sp.beat) ? `<span class="for">${esc(beat(sp.beat))}</span>` : ""}
+        <a href="${mapUrl(sp.map || `${sp.name} ${city.name}`)}" target="_blank" rel="noopener">Map ↗</a>
+        ${place(sp.place) ? `<button class="textbtn" onclick="goRecipe('${esc(sp.place)}')">${esc(place(sp.place).name)} shots →</button>` : ""}</div></details>`).join("")}</div>`;
+}
 function planReset(place) {
   for (const s of D.mood.places.find(x => x.id === place).shots) try { localStorage.removeItem(gotKey(place, s)); } catch (e) {}
   rerender();
@@ -523,7 +576,8 @@ function renderPlan() {
     ${M.shots?.length || M.music ? `<details class="more"><summary>How this mood looks and sounds</summary>
       <div class="moodcols">${list("Lean on", M.shots, true)}${list("Avoid", M.avoid)}</div>
       ${M.music ? `<div class="match" style="font-size:15px"><b>Music</b> · ${esc(M.music)}</div>` : ""}</details>` : ""}
-    ${places.length ? `<h2 class="section-h">New location</h2><p class="lede">Pick the kind of place and shoot down the list, top to bottom.</p>
+    ${renderSpots(M)}
+    ${places.length ? `<h2 class="section-h" id="recipes">New location</h2><p class="lede">Pick the kind of place and shoot down the list, top to bottom.</p>
       ${(M.arrive || []).length ? `<details class="more"><summary>The first 10 minutes anywhere</summary><ol class="arrive">${M.arrive.map(x => `<li>${esc(x)}</li>`).join("")}</ol></details>` : ""}
       <div class="filters">${places.map(x => `<button class="toggle ${x === pl ? "on" : ""}" onclick="PLAN_PLACE='${esc(x.id)}';rerender()">${esc(x.name)}</button>`).join("")}</div>${recipe}` : ""}
     ${(M.errors || []).length ? `<ul class="issues">${M.errors.map(e => `<li class="err">${esc(e)}</li>`).join("")}</ul>` : ""}

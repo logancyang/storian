@@ -23,6 +23,18 @@ the mood. Treatments become different angles on it, not different moods.
   "shots": ["long static holds: let people walk out of frame", "a small figure in a big wide frame", "..."],
   "avoid": ["whip pans and speed ramps", "..."],
   "music": "Slow felt piano or strings, 60–80 bpm, minor key, lots of space between notes.",
+  "beats": [
+    {"id": "arrive", "name": "Arriving", "what": "first light on a new place, the outsider's eye", "target": 3}
+  ],
+  "cities": [
+    {"name": "Kyoto", "note": "One line: what this city gives the film.",
+     "spots": [
+       {"name": "Fushimi Inari, upper gates", "area": "Fushimi", "when": "Dawn, before 7:00",
+        "scene": "The model climbs alone through the gates; wide from below, medium through the gates, hands on a gate, the empty path after.",
+        "why": "Repetition and an empty path read as memory.", "tip": "Crowds by 8:30. Small tripods only.",
+        "beat": "arrive", "place": "temple", "map": "Fushimi Inari Taisha"}
+     ]}
+  ],
   "light": [{"name": "Golden hour", "tip": "Shoot into the sun, the model as a silhouette."}],
   "arrive": ["Walk the place once with the camera in the bag: light, background, where people move.", "..."],
   "places": [
@@ -41,6 +53,14 @@ the mood. Treatments become different angles on it, not different moods.
   light, one wide that says where/who/when, cover one action at every size (远 全 中 近 特, cut
   全 中 特 中, each take continuing the last one's action), change the angle rather than the
   subject, and one move plus 30 s of sound before leaving.
+- `beats`: 4–6 stretches of feeling the film needs even without a script (for nostalgia:
+  arriving, the rush, quiet corners, looking back, leaving). `target` is how many complete
+  scenes the bank should hold for that beat (default 3). Scenes and spots point at a beat by id.
+- `cities`: for a trip, 6–8 `spots` per city where a whole scene in this mood is likely. `when`
+  is the best time of day (be specific: "blue hour, about 17:20 in November"). `scene` is the
+  scene to come home with: place, light and an action, covered at several sizes. `tip` covers
+  crowds and rules (filming bans, tripods, private lanes). `place` links to the matching recipe,
+  `map` is the search text for the map link. Check opening hours and rules on the web when you can.
 - `light`: one tip per light the human may meet (golden hour, blue hour, midday, night, overcast).
 - `places`: 6–8 kinds of place the trip will have (street, waterfront, market, temple, café,
   viewpoint, transit). Each gets 7–9 shots **in shooting order**: one wide establishing shot,

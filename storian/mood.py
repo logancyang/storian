@@ -26,4 +26,12 @@ def check(data: dict) -> list[str]:
                 errors.append(f"{at}: height must be one of {sorted(HEIGHTS)}")
             if s.get("subject") not in SUBJECTS | {None}:
                 errors.append(f"{at}: subject must be one of {sorted(SUBJECTS)}")
+    places, beats = {pl.get("id") for pl in data.get("places", [])}, {b.get("id") for b in data.get("beats", [])}
+    for city in data.get("cities", []):
+        for sp in city.get("spots", []):
+            at = f"mood spot {city.get('name')} / {sp.get('name')}"
+            if sp.get("place") and sp["place"] not in places:
+                errors.append(f"{at}: unknown place {sp['place']}")
+            if sp.get("beat") and sp["beat"] not in beats:
+                errors.append(f"{at}: unknown beat {sp['beat']}")
     return errors

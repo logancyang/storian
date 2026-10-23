@@ -172,3 +172,12 @@ def test_mood_check_and_payload(tmp_path):
     assert errors == ["mood.theme is required", "mood place street shot 2: name is required",
                       "mood place street shot 2: height must be one of ['eye', 'high', 'low', 'overhead']"]
     assert project_payload(p)["mood"]["errors"] == errors
+
+
+def test_scene_grade_needs_three_sizes():
+    from collections import Counter
+    from storian.coverage import grade
+    assert grade(Counter(wide=1, medium=2, detail=1), 4) == "complete"
+    assert grade(Counter(wide=1, medium=2, detail=1), 3) == "partial"  # every size, but too thin to carry a stretch
+    assert grade(Counter(wide=3, close=1), 4) == "partial"
+    assert grade(Counter(medium=5), 5) == "fragment"

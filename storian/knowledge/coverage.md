@@ -56,7 +56,21 @@ Read `mood.json`, `story.json` (the chosen treatment) and `sequence.json`, then 
 - **Transitions between chapters**: graphic-match pairs, whip pans, objects crossing the lens.
   These rarely happen by accident.
 
-## 3. Don't try to finish old scenes
+## 3. The scene bank
+
+During a trip there's no script yet, so the goal is a bank of complete scenes for each beat
+of the mood (`mood.json:beats`). Give every scene in `coverage.json` a `beat` and a `grade`:
+
+- `complete`: one place, one light, one outfit, covered wide, medium and something tight around
+  an action, and it fits the mood. It could carry a stretch of the film on its own.
+- `partial`: good material but a size or the action is missing.
+- `fragment`: a cutaway at best.
+
+`storian coverage` proposes a grade from the counts; override it with your judgement (a
+technically complete scene in the wrong mood is partial at best). The Shot list tab shows the
+bank per beat against each beat's target, then the next shots.
+
+## 4. Don't try to finish old scenes
 
 A scene can't be completed days later. The light, the weather and the outfits won't match, so
 a shot planned "for scene 12" almost never gets used. Plan **one shot list for the whole film**
@@ -76,7 +90,11 @@ Default to shots nobody recognisable has to be in. `subject: "none"` first, then
 
 Keep the list short: 15–25 shots, 5–8 of them priority 1. More is a sign of patching scenes.
 
-## 4. How to write a shot
+During a trip, the list targets the bank's gaps: beats short of complete scenes, and kinds
+of scene that are only partial so far. Point `for` at the beat ("Looking back · no complete
+scene yet") and tie shots to the next city's spots when they fit.
+
+## 5. How to write a shot
 
 Every shot is one thing a videographer can do without asking a question, in the same format as
 the Plan tab's recipes (see `storian knowledge mood`), plus where it goes and why:
@@ -92,7 +110,7 @@ the Plan tab's recipes (see `storian knowledge mood`), plus where it goes and wh
 - `fallback` (talent only): the best version without the model.
 - `sketch`: a few pencil lines of the frame (same format as mood.json).
 
-## 5. `coverage.json`
+## 6. `coverage.json`
 
 ```json
 {
@@ -100,6 +118,7 @@ the Plan tab's recipes (see `storian knowledge mood`), plus where it goes and wh
   "scenes": [
     {"id": "sc03", "name": "Harbour railing, late morning", "clips": ["C5447", "C5448"], "importance": "core",
      "wardrobe": "him: light jacket, black backpack",
+     "grade": "partial", "beat": "arrive",
      "verdict": "Seven mediums of the skyline from the same railing. Lovely light, nothing to cut to."}
   ],
   "shots": [
@@ -119,7 +138,8 @@ the Plan tab's recipes (see `storian knowledge mood`), plus where it goes and wh
 - `importance`: `core` | `support` | `minor`. It overrides the automatic guess.
 - Set the timezone with `storian init … --timezone Asia/Hong_Kong` so scene times are local.
 
-## 6. After new footage arrives
+## 7. After new footage arrives
 
-Re-run `scan`, `frames`, label the new clips, then `storian coverage`. Remove the shots the new
-clips satisfy and say which clip did it. Then re-cut the affected acts.
+Re-run `scan`, `frames`, label the new clips, then `storian coverage`. Put the new clips into
+scenes, grade them and give them beats. Remove the shots the new clips satisfy and say which
+clip did it, then write the next list. In phase 2, re-cut the affected acts.

@@ -36,8 +36,8 @@ def progress(i, n, label):
 
 def cmd_init(args):
     footage = Path(args.footage).expanduser().resolve()
-    if not footage.is_dir():
-        sys.exit(f"footage folder not found: {footage}")
+    if not footage.is_dir():  # fine before a trip: set the mood and plan now, scan once the cards are copied
+        print(f"note: {footage} doesn't exist yet; scan once the footage is there", file=sys.stderr)
     root = Path(args.project or f"./{footage.name}.storian").expanduser()
     p = Project(root)
     cfg = p.config if p.exists() else {}
@@ -293,20 +293,28 @@ def cmd_status(args):
     labels = p.labels()
     framed = len(list(p.frames_dir.glob("*/index.json"))) if p.frames_dir.exists() else 0
     story = read_json(p.story_path) if p.story_path.exists() else None
-    steps = [
-        ("mood", p.mood_path.exists(), "ask the human for the film's mood and theme, then write mood.json (storian knowledge mood)"),
-        ("scan", bool(clips), "storian scan"),
+    mood_ = mood.load(p) or {}
+    cov = read_json(p.coverage_path) if p.coverage_path.exists() else {}
+    steps = [  # phase 1, the trip: jobs 1-5 (see AGENTS.md)
+        ("mood", bool(mood_.get("mood") and mood_.get("beats")), "ask the human for the mood and theme, then write mood.json with beats (storian knowledge mood)"),
+        ("plan", bool(mood_.get("cities") or mood_.get("places")), "write mood.json cities/spots and place recipes for the trip (storian knowledge mood)"),
+        ("scan", bool(clips), "storian scan  (once footage is in the footage folder)"),
         ("frames", clips and framed >= len(clips), "storian frames"),
         ("label", clips and len(labels) >= len(clips), "storian label todo  (view each sheet, write labels/<clip>.json)"),
-        ("story", story is not None, "write story.json with 3 treatment options; ask the human to pick"),
-        ("chosen", bool(story and story.get("chosen") is not None), "record the human's pick in story.json:chosen"),
-        ("sequence", p.sequence_path.exists(), "write sequence.json (read knowledge/director.md first)"),
-        ("check", p.sequence_path.exists() and not check_sequence(p)["errors"], "storian check"),
-        ("previews", p.previews_dir.exists() and any(p.previews_dir.iterdir()), "storian previews"),
-        ("music", p.music_path.exists() and bool(music.load(p)["cues"]), "write music.json cues + candidates (storian knowledge music)"),
-        ("coverage", p.coverage_path.exists(), "storian coverage, then write coverage.json (storian knowledge coverage)"),
+        ("scenes", bool(cov.get("scenes")) and all(s.get("grade") and s.get("beat") for s in cov["scenes"]),
+         "storian coverage --scaffold, then give every scene a verdict, grade and beat (storian knowledge coverage)"),
+        ("shots", bool(cov.get("shots")), "write coverage.json shots that fill the scene bank's gaps"),
     ]
-    nxt = next((cmd for name, ok, cmd in steps if not ok), "storian serve  (and iterate with the human)")
+    if story or p.sequence_path.exists():  # phase 2 starts when the human has a script or asks for a storyboard
+        steps += [
+            ("sequence", p.sequence_path.exists(), "write sequence.json from whole scenes (read knowledge/director.md first)"),
+            ("check", p.sequence_path.exists() and not check_sequence(p)["errors"], "storian check"),
+            ("previews", p.previews_dir.exists() and any(p.previews_dir.iterdir()), "storian previews"),
+            ("music", p.music_path.exists() and bool(music.load(p)["cues"]), "write music.json cues + candidates (storian knowledge music)"),
+        ]
+    nxt = next((cmd for name, ok, cmd in steps if not ok),
+               "storian serve and iterate with the human" if story or p.sequence_path.exists()
+               else "phase 1 done: keep the bank and next shots current after each shoot day; phase 2 starts when the human has a script")
     print(json.dumps({"project": str(p.root), "clips": len(clips), "framed": framed, "labeled": len(labels),
                       "steps": {name: bool(ok) for name, ok, _ in steps}, "next": nxt}, indent=2))
 

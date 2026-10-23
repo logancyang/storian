@@ -230,6 +230,15 @@ def importance(n_clips: int, n_used: int) -> str:
     return "minor"
 
 
+def grade(counts: Counter, usable: int) -> str:
+    """complete: enough to cut as a scene on its own (wide, medium, something tight). partial: two of
+    those. fragment: a cutaway at best. The agent overrides this in coverage.json."""
+    sizes = sum(1 for k in ("wide", "medium") if counts[k]) + bool(counts["close"] or counts["detail"])
+    if sizes == 3 and usable >= 4:
+        return "complete"
+    return "partial" if sizes >= 2 and usable >= 2 else "fragment"
+
+
 def analyze(p: Project) -> dict:
     """Coverage facts per scene plus film-level gaps; merges the agent's coverage.json."""
     clips = p.clips()
@@ -284,6 +293,8 @@ def analyze(p: Project) -> dict:
             "score": score, "thumbs": thumbs[:6],
             "reviewed": bool(r),
             "verdict": r.get("verdict", ""),
+            "grade": r.get("grade") or grade(counts, len(good)),
+            "beat": r.get("beat", ""),
         })
     return {
         "summary": review.get("summary", ""),
