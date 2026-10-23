@@ -78,9 +78,6 @@ def media_files(p: Project, payload: dict) -> list[str]:
                 frame(s["clip"], t)
     for c, info in payload["clips"].items():  # the Library shows each clip's middle frame
         frame(c, (info.get("duration") or 0) / 2)
-    for sc in (payload["coverage"] or {}).get("scenes", []):
-        for th in sc.get("thumbs", []):
-            frame(th["clip"], th["t"])
     out.update(f"sheets/{c}.jpg" for c in payload["clips"])
     out.update(f"previews/{n}" for n in payload["previews"])
     m = payload["music"] or {}

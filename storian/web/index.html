@@ -156,30 +156,8 @@ details.note p { margin-top: 8px; }
 .toggle.on { border-color: var(--paper-2); color: var(--paper-2); }
 .group-h { font: 600 11px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 32px 0 4px; }
 .group-h.must { color: var(--paper-2); }
-.scns { display: flex; flex-direction: column; }
-details.scn { border-bottom: 1px solid var(--ink-faint); }
-details.scn > summary { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 16px 0; cursor: pointer; }
-details.scn > summary::-webkit-details-marker { display: none; }
-.scn .nm { font: 400 21px/1.2 var(--serif); }
-.scn .sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
-.scn .cnt { font: 13px var(--mono); color: var(--muted); white-space: nowrap; }
-.scn.done .nm { color: var(--muted); text-decoration: line-through; }
-.covd { display: grid; grid-template-columns: minmax(260px, 380px) 1fr; gap: 28px; padding: 4px 0 24px; text-align: left; }
-.covd .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
-.covd .thumbs img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; cursor: pointer; }
-.covd .verdict { font: italic 400 17px/1.5 var(--serif); margin: 0 0 12px; color: rgba(255,255,255,.86); }
 .match { font-size: 14px; color: var(--muted); margin-top: 10px; }
 .match b { color: var(--ink); font-weight: 500; }
-.needs { list-style: none; margin: 0; padding: 0; }
-.needs li { display: grid; grid-template-columns: 24px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--ink-faint); align-items: start; }
-.needs li.got .what { text-decoration: line-through; color: var(--muted); }
-.needs input { accent-color: var(--paper-2); width: 18px; height: 18px; margin: 2px 0 0; }
-.needs .what { font-size: 15px; }
-.needs .spec { font-size: 13px; color: #c9ceff; margin-top: 4px; }
-.needs .spec .talent { color: var(--paper-2); }
-.needs .wy { font-size: 13px; color: var(--muted); margin-top: 4px; }
-.fallback { font-size: 13px; margin-top: 6px; color: var(--muted); }
-.fallback b { color: var(--ink); font-weight: 500; }
 table.covt { width: 100%; border-collapse: collapse; margin-top: 16px; }
 .covt th { font: 500 11px var(--sans); color: var(--muted); padding: 8px 4px; text-align: center; border-bottom: 1px solid var(--ink-faint); white-space: nowrap; }
 .covt th.l, .covt td.l { text-align: left; }
@@ -220,10 +198,16 @@ footer { height: 60px; }
 .moodcols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 32px; }
 ul.plain { list-style: none; margin: 8px 0 0; padding: 0; }
 ul.plain li { padding: 6px 0; font-size: 15px; }
+ol.arrive { margin: 10px 0 0; padding-left: 20px; }
+ol.arrive li { padding: 5px 0; font-size: 15px; }
 .lightsel { margin-top: 14px; background: #000; color: var(--ink); border: 1px solid var(--ink-faint); font: 15px var(--sans); padding: 9px 12px; }
 .rcps { list-style: none; margin: 16px 0 0; padding: 0; }
 .rcp { display: grid; grid-template-columns: 240px minmax(0, 1fr) 28px; gap: 20px; align-items: start; padding: 16px 0; border-top: 1px solid var(--ink-faint); }
 .rcp .rn { font: 400 21px/1.2 var(--serif); }
+.rcp .for { font: 12px var(--mono); color: var(--muted); margin-bottom: 6px; }
+.rcp .wy { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.fallback { font-size: 13px; margin-top: 6px; color: var(--muted); }
+.fallback b { color: var(--ink); font-weight: 500; }
 .rcp .rn span { font: 13px var(--mono); color: var(--muted); margin-right: 8px; }
 .rcp .how { font-size: 15px; margin-top: 6px; }
 .rcp .spec { font-size: 13px; color: #c9ceff; margin-top: 6px; }
@@ -279,9 +263,6 @@ body.playing-bar { padding-bottom: 68px; }
   .voline { font-size: 15px; }
   .page-title { font-size: 38px; margin-top: 28px; }
   .section-h { font-size: 26px; margin-top: 40px; }
-  .covd { grid-template-columns: 1fr; gap: 14px; }
-  .needs input { width: 22px; height: 22px; margin-top: 0; }
-  .needs li { grid-template-columns: 30px minmax(0, 1fr); }
   .moodcols { grid-template-columns: 1fr; }
   .rcp { grid-template-columns: minmax(0, 1fr) 24px; gap: 12px; padding: 20px 0; }
   .rcp svg.sk { grid-column: 1 / -1; }
@@ -443,133 +424,81 @@ function renderBoard() {
   return html + `</div><footer></footer>`;
 }
 function shootLink() {
-  if (!D.coverage?.scenes.length) return "";
-  const { list, picks } = shootList();
-  const keys = [...list.flatMap(sc => shownNeeds(sc).map(n => gotKey(sc.id, n))), ...picks.map(n => gotKey("pickups", n))];
-  const left = keys.filter(k => !isGot(k)).length;
-  return `<a class="nextlink" href="#shoot"><b>Shot list</b><span>${left === keys.length ? `${left} shots to get` : `${left} of ${keys.length} still to get`} →</span></a>`;
+  const shots = D.coverage?.shots || [];
+  if (!shots.length) return "";
+  const left = shots.filter(s => !isGot(gotKey("film", s))).length;
+  return `<a class="nextlink" href="#shoot"><b>Shot list</b><span>${left === shots.length ? `${left} shots to get` : `${left} of ${shots.length} still to get`} →</span></a>`;
 }
 
-/* ---------------- coverage review */
+/* ---------------- shots to get: one list for the whole film (shot list) and one per kind of place (plan) */
+const SIZE_WORD = { EWS: "very wide", WS: "wide", MWS: "medium wide", MS: "medium", MCU: "medium close", CU: "close-up", ECU: "extreme close-up", insert: "insert" };
+const SUBJ_LABEL = { none: "no one in frame", unrecognizable: "stand-in is fine", talent: "needs the model" };
+const HEIGHT_WORD = { low: "from low", eye: "eye level", high: "from high", overhead: "overhead" };
+const hashStr = s => { let h = 5381; for (const c of String(s)) h = (h * 33 ^ c.charCodeAt(0)) >>> 0; return h.toString(36); };
+const gotKey = (list, s) => `storian:got:${D.config.name}:${list}:${hashStr(s.name)}`;
+const isGot = k => { try { return localStorage.getItem(k) === "1"; } catch (e) { return false; } };
+function toggleGot(k, el) {
+  try { el.checked ? localStorage.setItem(k, "1") : localStorage.removeItem(k); } catch (e) {}
+  rerender();
+}
+function sketch(s) {  // the agent's pencil lines; anything that could run script is dropped
+  const sk = s.sketch && !/<\s*script|\son\w+\s*=|javascript:/i.test(s.sketch) ? s.sketch : "";
+  return `<svg class="sk" viewBox="0 0 160 90" aria-hidden="true"><g class="ghost" transform="translate(.7 .5)">${sk}</g><g filter="url(#pencil)">${sk}</g></svg>`;
+}
+function shotLi(s, key, n) {
+  const on = isGot(key);
+  const spec = [HEIGHT_WORD[s.height], SIZE_WORD[s.size] || s.size, s.focal && s.focal !== "normal" && `${s.focal} lens`,
+    s.move && !["static", "handheld-still"].includes(s.move) && s.move, s.secs && `${s.secs} s`].filter(Boolean).map(esc);
+  if (s.subject) spec.push(`<span class="${esc(s.subject)}">${esc(SUBJ_LABEL[s.subject] || s.subject)}</span>`);
+  return `<li class="rcp ${on ? "got" : ""}">${sketch(s)}<div>${s.for ? `<div class="for">${esc(s.for)}</div>` : ""}
+    <div class="rn">${n ? `<span>${n}</span>` : ""}${esc(s.name)}</div>
+    ${s.how ? `<div class="how">${esc(s.how)}</div>` : ""}${spec.length ? `<div class="spec">${spec.join(" · ")}</div>` : ""}
+    ${s.why ? `<div class="wy">${esc(s.why)}</div>` : ""}
+    ${s.fallback ? `<div class="fallback"><b>Without the model:</b> ${esc(s.fallback)}</div>` : ""}</div>
+    <input type="checkbox" ${on ? "checked" : ""} onclick="toggleGot('${key}', this)" aria-label="got it"></li>`;
+}
+
+/* ---------------- shot list: what the film still needs. Old scenes can't be finished (the light,
+   weather and outfits won't match), so every shot here can be shot on any day, somewhere similar */
+let COV_SOLO = false, SHOOT_HIDE = false;
+function renderShoot() {
+  const C = D.coverage, shots = C?.shots || [];
+  if (!shots.length) return `<div class="wrap empty">No shot list yet.<br><span class="lede">Ask your agent for a coverage review (storian knowledge coverage).</span></div>`;
+  const all = shots.filter(s => !COV_SOLO || s.subject !== "talent" || s.fallback);
+  const got = all.filter(s => isGot(gotKey("film", s))).length;
+  const show = s => !SHOOT_HIDE || !isGot(gotKey("film", s));
+  const group = (title, xs, must) => xs.length ? `<div class="group-h ${must ? "must" : ""}">${title}</div><ol class="rcps">${xs.map(s => shotLi(s, gotKey("film", s))).join("")}</ol>` : "";
+  return `<div class="wrap"><h1 class="page-title">Shot list</h1>
+    ${C.summary ? `<details class="note"><summary>Director's note +</summary><p class="lede">${esc(C.summary)}</p></details>` : ""}
+    <div class="prog"><i style="width:${all.length ? 100 * got / all.length : 0}%"></i></div>
+    <div class="progl">${got} of ${all.length} got</div>
+    <div class="filters"><button class="toggle ${COV_SOLO ? "on" : ""}" onclick="COV_SOLO=!COV_SOLO;rerender()">${COV_SOLO ? "✓ " : ""}Without the model</button><button class="toggle ${SHOOT_HIDE ? "on" : ""}" onclick="SHOOT_HIDE=!SHOOT_HIDE;rerender()">${SHOOT_HIDE ? "✓ " : ""}Hide what I got</button></div>
+    ${group("Must get", all.filter(s => (s.priority || 3) === 1 && show(s)), true)}
+    ${group("When you can", all.filter(s => (s.priority || 3) > 1 && show(s)))}
+    ${C.scenes.length ? `<section class="fold desk"><details><summary>Coverage matrix <span>usable clips per scene</span></summary>${renderMatrix(C.scenes)}</details></section>` : ""}
+    <footer></footer></div>`;
+}
 const COLS = [["wide", "Wide"], ["medium", "Med"], ["close", "Close"], ["detail", "Detail"],
   ["wide_lens", "Wide lens"], ["normal", "Normal"], ["tele", "Tele"], ["angle", "Angle"], ["moving", "Moving"], ["people", "People"], ["in_out", "In/out"]];
 const GAP_COL = { "no-establishing": "wide", "no-wide": "wide", "no-medium": "medium", "no-close": "close", "no-detail": "detail",
   "one-focal-tele": "wide_lens", "one-focal-wide": "tele", "no-tele": "tele", "flat-angle": "angle", "no-movement": "moving",
   "no-people": "people", "no-in-out": "in_out", "thin": "*", "unusable": "*" };
-const SIZE_COL = { EWS: "wide", WS: "wide", MWS: "medium", MS: "medium", MCU: "close", CU: "close", ECU: "detail", insert: "detail" };
-const FOCAL_COL = { "ultra-wide": "wide_lens", wide: "wide_lens", normal: "normal", tele: "tele" };
-const SIZE_WORD = { EWS: "very wide", WS: "wide", MWS: "medium wide", MS: "medium", MCU: "medium close", CU: "close-up", ECU: "extreme close-up", insert: "insert" };
-let COV_SOLO = false, COV_OPEN = new Set();
-const SUBJ_LABEL = { none: "no one in frame", unrecognizable: "stand-in is fine", talent: "needs the model" };
-const solo = n => n.subject !== "talent" || !!n.fallback;
-const hashStr = s => { let h = 5381; for (const c of String(s)) h = (h * 33 ^ c.charCodeAt(0)) >>> 0; return h.toString(36); };
-const gotKey = (sc, n) => `storian:got:${D.config.name}:${sc}:${hashStr(n.shot)}`;
-const isGot = k => { try { return localStorage.getItem(k) === "1"; } catch (e) { return false; } };
-function toggleGot(k, el) {
-  try { el.checked ? localStorage.setItem(k, "1") : localStorage.removeItem(k); } catch (e) {}
-  el.closest("li").classList.toggle("got", el.checked); event.stopPropagation();
-  if (TAB === "shoot" || TAB === "plan") rerender();
-}
-
-function sceneNeeds(sc) {  // the agent's shot list, or the rule-based gaps when the agent hasn't reviewed it
-  if (sc.needs.length || sc.reviewed) return sc.needs;
-  return sc.gaps.map(g => ({ shot: g.need, why: g.why, priority: g.severity === 3 ? 1 : g.severity === 2 ? 2 : 3, subject: g.subject, auto: true }));
-}
-function shownNeeds(sc) { const ns = sceneNeeds(sc); return COV_SOLO ? ns.filter(solo) : ns; }
-function sceneFlags(sc) {
-  const f = new Set(sc.reviewed ? [] : sc.gaps.map(g => GAP_COL[g.code]).filter(Boolean));
-  for (const n of sc.needs) {
-    if (SIZE_COL[n.size]) f.add(SIZE_COL[n.size]);
-    if (FOCAL_COL[n.focal] && n.focal !== "normal") f.add(FOCAL_COL[n.focal]);
-    if (n.angle && n.angle !== "eye") f.add("angle");
-    if (n.move && !["static", "handheld-still"].includes(n.move)) f.add("moving");
-  }
-  return f;
-}
-function scenePri(sc) {
-  const ns = shownNeeds(sc);
-  return ns.length ? Math.min(...ns.map(n => n.priority || 3)) : 9;
-}
-const covRank = sc => sc.pri * 100 - sc.score - (sc.importance === "core" ? 5 : 0);
-function covScenes() {
-  return { scenes: D.coverage.scenes.map(sc => ({ ...sc, pri: scenePri(sc), flags: sceneFlags(sc) })) };
-}
-function shootList() {
-  const { scenes } = covScenes();
-  return { scenes, list: scenes.filter(sc => shownNeeds(sc).length && (sc.reviewed || sc.importance !== "minor")).sort((a, b) => covRank(a) - covRank(b)),
-           picks: D.coverage.pickups.filter(n => !COV_SOLO || solo(n)) };
-}
-function needLi(n, key) {
-  const got = !n.auto && isGot(key);
-  const spec = [SIZE_WORD[n.size] || n.size, n.focal && n.focal !== "normal" && `${n.focal} lens`, n.angle && n.angle !== "eye" && `${n.angle} angle`,
-    n.move && !["static", "handheld-still"].includes(n.move) && n.move, n.secs && `${n.secs} s`, n.where].filter(Boolean).map(esc);
-  if (n.subject) spec.unshift(`<span class="${esc(n.subject)}">${esc(SUBJ_LABEL[n.subject] || n.subject)}</span>`);
-  return `<li class="${got ? "got" : ""}">${n.auto ? "<span></span>" : `<input type="checkbox" ${got ? "checked" : ""} onclick="toggleGot('${key}', this)" aria-label="got it">`}
-    <div><div class="what">${esc(n.shot)}</div>
-    ${spec.length ? `<div class="spec">${spec.join(" · ")}</div>` : ""}
-    ${n.why ? `<div class="wy">${esc(n.why)}</div>` : ""}
-    ${n.fallback ? `<div class="fallback"><b>Without the model:</b> ${esc(n.fallback)}</div>` : ""}</div></li>`;
-}
-function sceneDetail(sc, ns) {
-  const w = sc.when;
-  return `<div class="covd"><div><div class="thumbs">${sc.thumbs.map(t => `<img loading="lazy" src="${frameUrl(t.clip, t.t)}" alt="" onclick="event.stopPropagation();openClip('${t.clip}')">`).join("")}</div>
-      ${w?.start ? `<div class="match"><b>Light</b> · ${esc(w.date)}, ${esc(w.start)}–${esc(w.end)}${w.light ? ` · ${esc(w.light)}` : ""}</div>` : ""}
-      ${sc.wardrobe ? `<div class="match"><b>Wardrobe</b> · ${esc(sc.wardrobe)}</div>` : ""}</div>
-    <div>${sc.verdict ? `<p class="verdict">${esc(sc.verdict)}</p>` : ""}
-      <ul class="needs">${ns.map(n => needLi(n, gotKey(sc.id, n))).join("")}</ul></div></div>`;
-}
-/* ---------------- shot list */
-let SHOOT_HIDE = false;
-function renderShoot() {
-  const C = D.coverage;
-  if (!C || !C.scenes.length) return `<div class="wrap empty">No shot list yet.<br><span class="lede">Ask your agent for a coverage review (storian knowledge coverage).</span></div>`;
-  const { scenes, list, picks } = shootList();
-  let all = 0, got = 0;
-  const card = (id, title, sub, ns, body) => {
-    const g = ns.filter(n => isGot(gotKey(id, n))).length; all += ns.length; got += g;
-    if (SHOOT_HIDE && g === ns.length) return "";
-    return `<details class="scn ${g === ns.length ? "done" : ""}" ${COV_OPEN.has(id) ? "open" : ""} ontoggle="this.open ? COV_OPEN.add('${id}') : COV_OPEN.delete('${id}')">
-      <summary><div><div class="nm">${esc(title)}</div><div class="sub">${sub}</div></div><div class="cnt">${g}/${ns.length}</div></summary>
-      ${body(SHOOT_HIDE ? ns.filter(n => !isGot(gotKey(id, n))) : ns)}</details>`;
-  };
-  const sceneCard = sc => {
-    const ns = shownNeeds(sc), w = sc.when;
-    const sub = [w?.start && `${esc(w.start)}`, (w?.time_of_day || sc.time_of_day || [])[0] && esc((w?.time_of_day || sc.time_of_day)[0])].filter(Boolean).join(", ");
-    return card(sc.id, sc.name, sub || `${ns.length} shots`, ns, x => sceneDetail(sc, x));
-  };
-  const pick = picks.length ? card("pickups", "Pickups, anywhere", "home, hotel, any city", picks,
-    x => `<div class="covd" style="grid-template-columns:1fr"><ul class="needs">${x.map(n => needLi(n, gotKey("pickups", n))).join("")}</ul></div>`) : "";
-  const must = list.filter(sc => sc.pri === 1).map(sceneCard).join(""), rest = list.filter(sc => sc.pri > 1).map(sceneCard).join("");
-  const film = C.film.map(g => `<li><span></span><div><div class="what">${esc(g.need)}</div>${g.why ? `<div class="wy">${esc(g.why)}</div>` : ""}</div></li>`).join("");
-  return `<div class="wrap"><h1 class="page-title">Shot list</h1>
-    ${C.summary ? `<details class="note"><summary>Director's note +</summary><p class="lede">${esc(C.summary)}</p></details>` : ""}
-    <div class="prog"><i style="width:${all ? 100 * got / all : 0}%"></i></div>
-    <div class="progl">${got} of ${all} got</div>
-    <div class="filters"><button class="toggle ${COV_SOLO ? "on" : ""}" onclick="COV_SOLO=!COV_SOLO;rerender()">${COV_SOLO ? "✓ " : ""}Without the model</button><button class="toggle ${SHOOT_HIDE ? "on" : ""}" onclick="SHOOT_HIDE=!SHOOT_HIDE;rerender()">${SHOOT_HIDE ? "✓ " : ""}Hide what I got</button></div>
-    ${must ? `<div class="group-h must">Must get</div><div class="scns">${must}</div>` : ""}
-    ${rest || pick ? `<div class="group-h">When you can</div><div class="scns">${rest}${pick}</div>` : ""}
-    ${film ? `<section class="fold"><details><summary>Across the film <span>${C.film.length}</span></summary><ul class="needs">${film}</ul></details></section>` : ""}
-    <section class="fold desk"><details><summary>Coverage matrix <span>usable clips per scene</span></summary>${renderMatrix(scenes)}</details></section>
-    <footer></footer></div>`;
-}
+const IMPORTANCE = { core: 0, support: 1, minor: 2 };
 function renderMatrix(scenes) {
-  const rows = [...scenes].sort((a, b) => covRank(a) - covRank(b)).map(sc => `<tr><td class="l"><div class="nm">${esc(sc.name)}</div></td>${COLS.map(([k]) => {
-    const v = sc.counts[k] || 0, cls = v ? "have" : sc.flags.has(k) || sc.flags.has("*") ? "gap" : "none";
-    return `<td><span class="cell ${cls}" title="${k}: ${v} usable">${v || (cls === "gap" ? "+" : "·")}</span></td>`; }).join("")}</tr>`).join("");
+  const rows = [...scenes].sort((a, b) => IMPORTANCE[a.importance] - IMPORTANCE[b.importance] || b.score - a.score).map(sc => {
+    const flags = new Set(sc.gaps.map(g => GAP_COL[g.code]));
+    return `<tr><td class="l"><div class="nm" title="${esc(sc.verdict)}">${esc(sc.name)}</div></td>${COLS.map(([k]) => {
+      const v = sc.counts[k] || 0, cls = v ? "have" : flags.has(k) || flags.has("*") ? "gap" : "none";
+      return `<td><span class="cell ${cls}" title="${k}: ${v} usable">${v || (cls === "gap" ? "+" : "·")}</span></td>`; }).join("")}</tr>`;
+  }).join("");
   return `<table class="covt"><tr><th class="l">Scene</th>${COLS.map(([, l]) => `<th>${l}</th>`).join("")}</tr>${rows}</table>
-    <p class="muted" style="font-size:13px">Numbers are usable clips. <span style="color:var(--paper-2)">+</span> is a gap to shoot.</p>`;
+    <p class="muted" style="font-size:13px">Numbers are usable clips. <span style="color:var(--paper-2)">+</span> is a gap the rules see.</p>`;
 }
 
 /* ---------------- plan: the mood, and what to shoot on arrival somewhere new */
-const HEIGHT_WORD = { low: "from low", eye: "eye level", high: "from high", overhead: "overhead" };
 let PLAN_PLACE = null, PLAN_LIGHT = "";
-const planKey = (place, s) => `storian:plan:${D.config.name}:${place}:${hashStr(s.name)}`;
-function sketch(s) {  // the agent's pencil lines; anything that could run script is dropped
-  const sk = s.sketch && !/<\s*script|\son\w+\s*=|javascript:/i.test(s.sketch) ? s.sketch : "";
-  return `<svg class="sk" viewBox="0 0 160 90" aria-hidden="true"><g class="ghost" transform="translate(.7 .5)">${sk}</g><g filter="url(#pencil)">${sk}</g></svg>`;
-}
 function planReset(place) {
-  for (const s of D.mood.places.find(x => x.id === place).shots) try { localStorage.removeItem(planKey(place, s)); } catch (e) {}
+  for (const s of D.mood.places.find(x => x.id === place).shots) try { localStorage.removeItem(gotKey(place, s)); } catch (e) {}
   rerender();
 }
 function renderPlan() {
@@ -580,19 +509,12 @@ function renderPlan() {
   const list = (title, xs, must) => xs?.length ? `<div><div class="group-h ${must ? "must" : ""}">${title}</div><ul class="plain">${xs.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : "";
   let recipe = "";
   if (pl) {
-    const shots = pl.shots || [], got = shots.filter(s => isGot(planKey(pl.id, s))).length;
+    const shots = pl.shots || [], got = shots.filter(s => isGot(gotKey(pl.id, s))).length;
     recipe = `${pl.intro ? `<p class="lede" style="margin-top:18px">${esc(pl.intro)}</p>` : ""}
       ${(M.light || []).length ? `<select class="lightsel" onchange="PLAN_LIGHT=this.value;rerender()"><option value="">Light: any</option>${M.light.map(l => `<option ${l.name === PLAN_LIGHT ? "selected" : ""}>${esc(l.name)}</option>`).join("")}</select>` : ""}
       ${light ? `<div class="match"><b>${esc(light.name)}</b> · ${esc(light.tip)}</div>` : ""}
       <div class="prog"><i style="width:${shots.length ? 100 * got / shots.length : 0}%"></i></div><div class="progl">${got} of ${shots.length} got</div>
-      <ol class="rcps">${shots.map((s, i) => {
-        const k = planKey(pl.id, s), on = isGot(k);
-        const spec = [HEIGHT_WORD[s.height], SIZE_WORD[s.size] || s.size, s.secs && `${s.secs} s`].filter(Boolean).map(esc);
-        if (s.subject) spec.push(`<span class="${esc(s.subject)}">${esc(SUBJ_LABEL[s.subject] || s.subject)}</span>`);
-        return `<li class="rcp ${on ? "got" : ""}">${sketch(s)}<div><div class="rn"><span>${i + 1}</span>${esc(s.name)}</div>
-          ${s.how ? `<div class="how">${esc(s.how)}</div>` : ""}${spec.length ? `<div class="spec">${spec.join(" · ")}</div>` : ""}</div>
-          <input type="checkbox" ${on ? "checked" : ""} onclick="toggleGot('${k}', this)" aria-label="got it"></li>`;
-      }).join("")}</ol>
+      <ol class="rcps">${shots.map((s, i) => shotLi(s, gotKey(pl.id, s), i + 1)).join("")}</ol>
       ${got ? `<button class="textbtn" onclick="planReset('${esc(pl.id)}')">Start over for the next ${esc(pl.name.toLowerCase())}</button>` : ""}`;
   }
   return `<div class="wrap"><h1 class="page-title">Plan</h1>
@@ -602,6 +524,7 @@ function renderPlan() {
       <div class="moodcols">${list("Lean on", M.shots, true)}${list("Avoid", M.avoid)}</div>
       ${M.music ? `<div class="match" style="font-size:15px"><b>Music</b> · ${esc(M.music)}</div>` : ""}</details>` : ""}
     ${places.length ? `<h2 class="section-h">New location</h2><p class="lede">Pick the kind of place and shoot down the list, top to bottom.</p>
+      ${(M.arrive || []).length ? `<details class="more"><summary>The first 10 minutes anywhere</summary><ol class="arrive">${M.arrive.map(x => `<li>${esc(x)}</li>`).join("")}</ol></details>` : ""}
       <div class="filters">${places.map(x => `<button class="toggle ${x === pl ? "on" : ""}" onclick="PLAN_PLACE='${esc(x.id)}';rerender()">${esc(x.name)}</button>`).join("")}</div>${recipe}` : ""}
     ${(M.errors || []).length ? `<ul class="issues">${M.errors.map(e => `<li class="err">${esc(e)}</li>`).join("")}</ul>` : ""}
     <footer></footer></div>`;
@@ -907,18 +830,8 @@ function go(tab) { TAB = tab; if (location.hash.slice(1) !== tab) history.pushSt
 document.querySelectorAll("#nav button").forEach(b => b.addEventListener("click", () => go(b.dataset.tab)));
 addEventListener("hashchange", () => { const h = location.hash.slice(1); if (TABS.includes(h) && h !== TAB) go(h); });
 addEventListener("popstate", () => { const h = location.hash.slice(1) || "board"; if (TABS.includes(h) && h !== TAB) go(h); });
-// hosted: save every scene's frames up front, so the whole shot list works with no signal
-async function warmShotList() {
-  if (!("caches" in window) || !D.coverage) return;
-  const urls = [...new Set(D.coverage.scenes.flatMap(sc => sc.thumbs.map(t => frameUrl(t.clip, t.t))))].filter(Boolean);
-  try {
-    const c = await caches.open("storian-media-v1");
-    const have = new Set((await c.keys()).map(r => new URL(r.url).pathname));
-    for (const u of urls) if (!have.has(u)) await c.add(u).catch(() => {});
-  } catch (e) {}
-}
 load().then(() => {
-  if (D.hosted && "serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").then(warmShotList).catch(() => {});
+  if (D.hosted && "serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
   poll();
 });
 </script>

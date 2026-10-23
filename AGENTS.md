@@ -42,12 +42,10 @@ Run every command from this repo with `uv run storian -p <project> <command>` (o
     a provisional pick. Then `storian music fetch` caches the shortlist as small previews so the
     Music tab and the animatic can play them. Say how much it downloads before running it.
 12. **Coverage review**: read `storian knowledge coverage`, run `storian coverage --scaffold`
-    (auto scenes) and `storian coverage` (per-scene counts and rule-based gaps). Look at the
-    sheets of the flagged scenes, then fill in `coverage.json` as the director: fix the scene
-    grouping, write a verdict and the wardrobe per scene, and list the concrete shots to go and
-    get (`needs`, each marked by who must be on camera, with a fallback when it needs the model),
-    the `pickups` that can be shot anywhere, and the film-level gaps. The storyboard shows this as
-    "What to shoot next", above the sequence.
+    (auto scenes) and `storian coverage` (per-scene counts and rule-based gaps). Old scenes
+    can't be finished later (light, weather and outfits won't match), so write one film-level
+    shot list in `coverage.json:shots`: a mix of shots gettable on any day, each saying where it
+    goes in the film, with a pencil sketch. Scenes get a verdict only. The Shot list tab shows it.
 13. **Review**: `storian serve` (http://localhost:7878). The page live-reloads when you edit
     JSON. Leave it running and give the human the URL.
 14. **Phone** (when the human wants it on mobile or is travelling): `storian publish` deploys a

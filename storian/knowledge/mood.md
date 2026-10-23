@@ -10,7 +10,7 @@ different mostly because of these choices.
 
 Ask the human for both in their own words. If they give one sentence ("nostalgia and
 reflection on life, a little melancholy"), keep their words as the mood and offer a theme.
-Everything after this step (treatments, sequence, music cues, coverage needs) works inside
+Everything after this step (treatments, sequence, music cues, coverage shot list) works inside
 the mood. Treatments become different angles on it, not different moods.
 
 ## mood.json
@@ -24,6 +24,7 @@ the mood. Treatments become different angles on it, not different moods.
   "avoid": ["whip pans and speed ramps", "..."],
   "music": "Slow felt piano or strings, 60–80 bpm, minor key, lots of space between notes.",
   "light": [{"name": "Golden hour", "tip": "Shoot into the sun, the model as a silhouette."}],
+  "arrive": ["Walk the place once with the camera in the bag: light, background, where people move.", "..."],
   "places": [
     {"id": "street", "name": "Street", "intro": "One line on how this mood plays in this kind of place.",
      "shots": [
@@ -36,11 +37,17 @@ the mood. Treatments become different angles on it, not different moods.
 ```
 
 - `shots` / `avoid`: 5–7 short lines each, concrete enough to act on at a location.
+- `arrive`: the first 10 minutes at any new place, 5–6 steps: look before shooting, choose the
+  light, one wide that says where/who/when, cover one action at every size (远 全 中 近 特, cut
+  全 中 特 中, each take continuing the last one's action), change the angle rather than the
+  subject, and one move plus 30 s of sound before leaving.
 - `light`: one tip per light the human may meet (golden hour, blue hour, midday, night, overcast).
 - `places`: 6–8 kinds of place the trip will have (street, waterfront, market, temple, café,
   viewpoint, transit). Each gets 7–9 shots **in shooting order**: one wide establishing shot,
   a medium, details, the person moving through (back to camera, over the shoulder, in and out
-  of frame), one moving shot, and one hero shot that carries the mood. Every shot follows the
+  of frame), one moving shot, and one hero shot that carries the mood. The second shot is
+  always "One action, four sizes": one action typical of the place, repeated at wide, medium,
+  close and detail, so the edit can cut on the action. Every shot follows the
   mood: a melancholy street recipe and a euphoric one share almost nothing.
 - Shot fields: `how` is one sentence on where to stand, which lens, how long to hold.
   `height` is `low`, `eye`, `high` or `overhead`. `size` uses the label sizes (EWS, WS, MWS,

@@ -212,8 +212,8 @@ def cmd_coverage(args):
             sys.exit(f"{p.coverage_path} exists (use --force to overwrite)")
         labels = p.labels()
         scenes = auto_scenes([c for c in p.clips() if c["id"] in labels], labels)
-        write_json(p.coverage_path, {"summary": "", "scenes": [{**s, "verdict": "", "needs": []} for s in scenes],
-                                     "pickups": [], "film": []})
+        write_json(p.coverage_path, {"summary": "", "scenes": [{**s, "verdict": ""} for s in scenes],
+                                     "shots": [], "film": []})
         print(json.dumps({"wrote": str(p.coverage_path), "scenes": len(scenes)}))
         return
     report = analyze_coverage(p)
@@ -226,7 +226,7 @@ def cmd_coverage(args):
         counts = " ".join(f"{k}={v}" for k, v in s["counts"].items())
         print(f"{s['id']} | {s['importance']} | {s['n']} ({s['usable']}, {len(s['used'])}) | {s['score']} | "
               f"{s['name']} [{s['clips'][0]}..{s['clips'][-1]}] || {counts} || "
-              f"{', '.join(g['code'] for g in s['gaps']) or '-'}{' | needs: ' + str(len(s['needs'])) if s['needs'] else ''}")
+              f"{', '.join(g['code'] for g in s['gaps']) or '-'}")
     for g in report["film"]:
         print(f"FILM sev{g['severity']}: {g['need']} ({g['why']})" if g["why"] else f"FILM: {g['need']}")
     for e in report["errors"]:
@@ -234,7 +234,7 @@ def cmd_coverage(args):
     if report["unassigned"]:
         print(f"UNASSIGNED {len(report['unassigned'])} labeled clips: {' '.join(report['unassigned'][:30])}")
     if not report["reviewed"]:
-        print("next: storian coverage --scaffold, then write verdicts + needs (storian knowledge coverage)")
+        print("next: storian coverage --scaffold, then write verdicts and the film's shot list (storian knowledge coverage)")
 
 
 def cmd_music(args):

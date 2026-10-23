@@ -87,11 +87,11 @@ def test_coverage_review_overrides_scenes(tmp_path):
     from storian.coverage import analyze
     p = make_project(tmp_path, [{"id": "s1", "clip": "A", "in": 1, "out": 4}])
     write_json(p.coverage_path, {"summary": "x", "scenes": [
-        {"id": "sc01", "name": "Pier", "clips": ["A", "B"], "verdict": "v",
-         "needs": [{"shot": "CU hands", "size": "CU", "priority": 1}]},
-        {"id": "sc02", "name": "Ghost", "clips": ["Z"]}]})
+        {"id": "sc01", "name": "Pier", "clips": ["A", "B"], "verdict": "v"},
+        {"id": "sc02", "name": "Ghost", "clips": ["Z"]}],
+        "shots": [{"name": "Still water, close", "for": "the motif, mid-film", "priority": 1}]})
     r = analyze(p)
-    assert r["reviewed"] and r["scenes"][0]["name"] == "Pier" and r["scenes"][0]["needs"][0]["shot"] == "CU hands"
+    assert r["reviewed"] and r["scenes"][0]["name"] == "Pier" and r["shots"][0]["name"] == "Still water, close"
     assert r["scenes"][0]["used"] == ["s1"]
     assert any("unknown clip Z" in e for e in r["errors"])
 

@@ -16,12 +16,11 @@ optional script or a paragraph of ideas. The agent:
 5. directs a sequence with craft encoded in [`knowledge/director.md`](storian/knowledge/director.md): perspective changes, cuts on action and motion, pacing curves, VO vs B-roll sections, motif and bookends
 6. serves a **storyboard on localhost**: theme, mood and idea at the top, then every shot with frames, clip name, labels, in/out timecodes, VO line and a director's note, plus a playable animatic
 
-7. reviews coverage like a director on the dailies: which scenes lack close-ups, a tele
-   perspective, an establishing wide, a human reaction, an entry or exit, or an action covered
-   from two sizes. It turns those gaps into a **shot list for the videographer** (what, lens,
-   angle, move, how long, and why), shown at the top of the storyboard. The list is built for
-   reshoots without the original outfit: each shot says whether the model is needed, with a
-   no-model fallback, plus the scene's original light and wardrobe
+7. reviews coverage like a director on the dailies (a matrix of sizes, lenses and angles per
+   scene), then writes **one shot list for the whole film**. Old scenes can't be finished later,
+   since light, weather and outfits won't match. So it's a mix of shots you can get on any day:
+   the images the story is built on, transitions, details. Each says where it goes in the film,
+   whether the model is needed, and comes with a pencil sketch of the frame
 8. scores the film: takes your reference tracks, writes a cue sheet per act, finds three
    different candidates per cue (Epidemic Sound or Artlist through their MCP servers, or free
    Creative Commons music built in), checks licences for monetised YouTube, and plays it all in a

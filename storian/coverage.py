@@ -284,14 +284,13 @@ def analyze(p: Project) -> dict:
             "score": score, "thumbs": thumbs[:6],
             "reviewed": bool(r),
             "verdict": r.get("verdict", ""),
-            "needs": r.get("needs", []),
         })
     return {
         "summary": review.get("summary", ""),
         "scenes": out,
         "film": film_gaps(labels, p) + [{"code": "agent", "severity": 2, "need": f, "why": ""}
                                         for f in review.get("film", [])],
-        "pickups": review.get("pickups", []),
+        "shots": review.get("shots", []),
         "errors": errors,
         "unassigned": unassigned,
         "reviewed": bool(review),
