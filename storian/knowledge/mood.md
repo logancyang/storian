@@ -36,6 +36,7 @@ the mood. Treatments become different angles on it, not different moods.
      ]}
   ],
   "light": [{"name": "Golden hour", "tip": "Shoot into the sun, the model as a silhouette."}],
+  "kit": [{"name": "Sigma 56mm f/1.4", "use": "Your longest: closes, details, faces."}],
   "arrive": ["Walk the place once with the camera in the bag: light, background, where people move.", "..."],
   "places": [
     {"id": "street", "name": "Street", "intro": "One line on how this mood plays in this kind of place.",
@@ -73,6 +74,10 @@ the mood. Treatments become different angles on it, not different moods.
   `height` is `low`, `eye`, `high` or `overhead`. `size` uses the label sizes (EWS, WS, MWS,
   MS, MCU, CU, ECU, insert). `subject` is `none`, `unrecognizable` (a stand-in or a back is
   fine) or `talent` (needs the model).
+- `kit`: the human's camera and lenses, one line each on what to use it for and the one setting
+  that matters for this trip (an ND filter for log in daylight, stabilisation for walking shots).
+  When there's a kit, every shot names its lens in `lens` (a `kit` name), and `how` says "the
+  56mm" rather than "the longest lens". Use the same names in coverage.json shots.
 
 ## Sketches
 

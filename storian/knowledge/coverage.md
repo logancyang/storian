@@ -102,7 +102,7 @@ the Plan tab's recipes (see `storian knowledge mood`), plus where it goes and wh
 - `name`: a few words ("Still in the rush").
 - `for`: where it goes in the film ("Act 3 ending · the thesis shot", "Transitions between chapters").
 - `how`: one or two sentences: where to stand, which lens, what happens, how long to hold.
-  Translate lenses into the owner's real ones from `clips.json` ("tele means your 18-135 at 100–135 mm").
+  Translate lenses into the owner’s real ones from `mood.json:kit`, or `clips.json` when there is no kit ("tele means your 18-135 at 100–135 mm").
 - `height` (`low`, `eye`, `high`, `overhead`), `size` (label sizes), `secs`, `subject`, and
   optionally `focal` and `move` in the label vocabularies.
 - `priority`: 1 means the story is weaker without it; 2 it makes the edit easier; 3 nice to have.

@@ -462,7 +462,7 @@ function sketch(s) {  // the agent's pencil lines; anything that could run scrip
 }
 function shotLi(s, key, n) {
   const on = isGot(key);
-  const spec = [HEIGHT_WORD[s.height], SIZE_WORD[s.size] || s.size, s.focal && s.focal !== "normal" && `${s.focal} lens`,
+  const spec = [HEIGHT_WORD[s.height], SIZE_WORD[s.size] || s.size, s.lens, s.focal && s.focal !== "normal" && `${s.focal} lens`,
     s.move && !["static", "handheld-still"].includes(s.move) && s.move, s.secs && `${s.secs} s`].filter(Boolean).map(esc);
   if (s.subject) spec.push(`<span class="${esc(s.subject)}">${esc(SUBJ_LABEL[s.subject] || s.subject)}</span>`);
   return `<li class="rcp ${on ? "got" : ""}">${sketch(s)}<div>${s.for ? `<div class="for">${esc(s.for)}</div>` : ""}
@@ -576,6 +576,7 @@ function renderPlan() {
     ${M.shots?.length || M.music ? `<details class="more"><summary>How this mood looks and sounds</summary>
       <div class="moodcols">${list("Lean on", M.shots, true)}${list("Avoid", M.avoid)}</div>
       ${M.music ? `<div class="match" style="font-size:15px"><b>Music</b> · ${esc(M.music)}</div>` : ""}</details>` : ""}
+    ${M.kit?.length ? `<details class="more"><summary>Your kit</summary><ul class="plain">${M.kit.map(k => `<li><b>${esc(k.name)}</b> · ${esc(k.use)}</li>`).join("")}</ul></details>` : ""}
     ${renderSpots(M)}
     ${places.length ? `<h2 class="section-h" id="recipes">New location</h2><p class="lede">Pick the kind of place and shoot down the list, top to bottom.</p>
       ${(M.arrive || []).length ? `<details class="more"><summary>The first 10 minutes anywhere</summary><ol class="arrive">${M.arrive.map(x => `<li>${esc(x)}</li>`).join("")}</ol></details>` : ""}
