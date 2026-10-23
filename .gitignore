@@ -3,3 +3,21 @@ __pycache__/
 *.pyc
 *.storian/
 .DS_Store
+
+# Project data (footage logs, plans, the trip itself) lives outside this repo and is only ever
+# deployed to the project's own worker. These keep it out if a project is made in here by mistake.
+project.json
+mood.json
+coverage.json
+clips.json
+story.json
+sequence.json
+music.json
+digest.txt
+*.cube
+frames/
+labels/
+sheets/
+previews/
+music/
+.publish/

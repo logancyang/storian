@@ -355,10 +355,10 @@ footer { border-top: 1.5px solid var(--ink); margin-top: 80px; padding: 20px 0 4
 <section id="data">
   <div class="sec-head"><div class="sec-num">06</div><h2>Data model &amp; agent loop</h2></div>
   <div class="cols">
-<pre>// labels/C5493.json  (abridged)
+<pre>// labels/C0012.json  (abridged)
 {
-  "summary": "Follow shot behind the woman through a
-              glowing colour tunnel, red → violet",
+  "summary": "Follow shot behind a walker through a
+              lit underpass, warm → cool",
   "shot_size": "MS", "focal_feel": "wide",
   "angle": "eye", "camera_move": "walk-follow",
   "mood": ["wonder", "playful"],
@@ -366,7 +366,7 @@ footer { border-top: 1.5px solid var(--ink); margin-top: 80px; padding: 20px 0 4
   "quality": 5,
   "moments": [
     {"in": 0.5, "out": 8.5, "score": 5,
-     "desc": "red tunnel into orange glow",
+     "desc": "underpass into the street glow",
      "match_action": "walks away from camera"},
     {"in": 46.0, "out": 53.0, "score": 5,
      "desc": "steps out, turns back to camera",
@@ -375,38 +375,38 @@ footer { border-top: 1.5px solid var(--ink); margin-top: 80px; padding: 20px 0 4
 }</pre>
 <pre>// sequence.json  (abridged)
 {
-  "title": "Still Water",
+  "title": "Example Film",
   "theme": "Stillness inside motion",
   "mood": "Contemplative, opening up to warm",
-  "central_idea": "…the city didn't get quieter, we did.",
+  "central_idea": "…a one-line idea the film keeps returning to.",
   "motif": "Water",
   "acts": [{
     "title": "Pockets of quiet",
-    "vo": "Hong Kong has pockets…",
+    "vo": "The city has pockets…",
     "shots": [{
-      "id": "s047", "clip": "C5495",
+      "id": "s047", "clip": "C0014",
       "in": 0.5, "out": 5.0, "role": "vo",
-      "vo_line": "A room made only of colour.",
+      "vo_line": "A line of voiceover.",
       "cut": "match-on-action",
-      "why": "Continues her walk-away from the
-              tunnel; silhouette shrinking."
+      "why": "Continues the walk-away from the
+              underpass; silhouette shrinking."
     }]
   }]
 }</pre>
   </div>
   <h3>What talking to it looks like</h3>
   <div class="chat">
-    <div class="m h"><span class="who2">Human</span>Act 3 drags a bit. And I want more of her turning to the camera. Blend in the "Through Her Lens" idea.</div>
-    <div class="m a"><span class="who2">Agent</span>Trimmed 9 shots in act 3 to 1.8–2.4 s (ASL 2.9 → 2.2 s), dropped s032 (the second escalator). Added C5730 12.0–14.4 (she exits the market and looks over her shoulder) after s043, and C5715 6.0–8.4 (she turns into the lens) as the act 3 out. <code>storian check</code>: 0 errors, 0 warnings. Previews re-rendered for 3 new shots; the storyboard has already updated.</div>
+    <div class="m h"><span class="who2">Human</span>Act 3 drags a bit. And I want more of the walker turning to the camera. Blend in the second treatment's idea.</div>
+    <div class="m a"><span class="who2">Agent</span>Trimmed 9 shots in act 3 to 1.8–2.4 s (ASL 2.9 → 2.2 s), dropped s032 (the second escalator). Added C0201 12.0–14.4 (the walker leaves the market and looks over a shoulder) after s043, and C0188 6.0–8.4 (the walker turns toward the lens) as the act 3 out. <code>storian check</code>: 0 errors, 0 warnings. Previews re-rendered for 3 new shots; the storyboard has already updated.</div>
     <div class="m h"><span class="who2">Human</span>s080, the robot: too goofy for this film?</div>
-    <div class="m a"><span class="who2">Agent</span>It's the only laugh in act 5, which keeps the tone from going precious. Two alternatives: C5722 (robot rolling through the hall, wider and subtler) or cut it and move the VO line to the kitten. Which do you want?</div>
+    <div class="m a"><span class="who2">Agent</span>It's the only laugh in act 5, which keeps the tone from going precious. Two alternatives: C0230 (robot rolling through the hall, wider and subtler) or cut it and move the VO line to the kitten. Which do you want?</div>
   </div>
 </section>
 
 <!-- 07 -->
 <section id="mvp">
   <div class="sec-head"><div class="sec-num">07</div><h2>MVP on real footage</h2></div>
-  <p>Test input: <span class="mono">2025_china_trip/2025HK</span>, Sony a6700 + Sigma 17–40 F1.8, S-Log3 / S-Gamut3.Cine, XAVC HS 4K 23.976p 4:2:2 10-bit, on an M3 Max. No script was given, so the agent wrote three treatments and picked "Still Water" as the default.</p>
+  <p>Test input: one city's folder from a real travel shoot, S-Log3 / S-Gamut3.Cine, XAVC HS 4K 23.976p 4:2:2 10-bit, on an Apple-silicon laptop. No script was given, so the agent wrote three treatments and picked one as the default.</p>
   <div class="results">
     <div><div class="n">352</div><div class="l">clips</div></div>
     <div><div class="n">74.5 GB</div><div class="l">raw footage</div></div>
@@ -419,7 +419,7 @@ footer { border-top: 1.5px solid var(--ink); margin-top: 80px; padding: 20px 0 4
     <div><div class="n">7:28</div><div class="l">film runtime</div></div>
     <div><div class="n">52 s</div><div class="l">preview render</div></div>
   </div>
-  <p style="margin-top:22px">The sequence runs 8 minutes rather than the 15-minute default. A director would say this one city's folder supports about 8 minutes at full quality; 15 would mean quality-2 filler, or folding in the rest of the China trip. That is exactly the kind of call the agent should make and explain. Labeling took ~0.9M tokens across the shards, the main cost to optimize (see v0.4).</p>
+  <p style="margin-top:22px">The sequence runs 8 minutes rather than the 15-minute default. A director would say this one city's folder supports about 8 minutes at full quality; 15 would mean quality-2 filler, or folding in the rest of the trip. That is exactly the kind of call the agent should make and explain. Labeling took ~0.9M tokens across the shards, the main cost to optimize (see v0.4).</p>
 </section>
 
 <!-- 08 -->

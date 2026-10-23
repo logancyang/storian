@@ -7,7 +7,7 @@
   "footage_summary": "2-4 sentences: what the footage actually contains (places, times of day, people, standout shots).",
   "options": [
     {
-      "title": "Still Water",
+      "title": "Example Film",
       "logline": "One sentence pitch.",
       "theme": "Stillness inside motion",
       "mood": "contemplative, melancholic, warm at the end",
@@ -28,7 +28,7 @@
 
 ```json
 {
-  "title": "Still Water",
+  "title": "Example Film",
   "logline": "...",
   "theme": "...",
   "mood": "...",
